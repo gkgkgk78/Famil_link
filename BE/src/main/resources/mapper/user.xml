@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.comunit.model.mapper.UserMapper">
+    <select id="findUserById" parameterType="string" resultType="UserDTO">
+        SELECT `uid`,
+               `email`,
+               `id`,
+               `pw`,
+               `name`,
+               `nickname`,
+               `refresh_token`,
+               `role`,
+               `salt`,
+               `level`
+        FROM user
+        WHERE `id` = #{id}
+    </select>
+
+    <select id="findUserByEmail" parameterType="string" resultType="UserDTO">
+        SELECT `uid`,
+               `email`,
+               `id`,
+               `pw`,
+               `name`,
+               `nickname`,
+               `refresh_token`,
+               `role`,
+               `salt`,
+               `level`
+
+        FROM user
+        WHERE `email` = #{email}
+    </select>
+
+    <select id="findUserByUid" parameterType="long" resultType="UserDTO">
+        SELECT `uid`,
+               `email`,
+               `id`,
+--                `pw`,
+               `name`,
+               `nickname`,
+--                `refresh_token`,
+               `role`,
+--                `salt`,
+               `level`
+        FROM user
+        WHERE `uid` = #{uid}
+    </select>
+
+    <select id="findUserByNickname" parameterType="string" resultType="UserDTO">
+        SELECT `uid`,
+               `email`,
+               `id`,
+               `pw`,
+               `name`,
+               `nickname`,
+               `refresh_token`,
+               `role`,
+               `salt`,
+               `level`
+        FROM user
+        WHERE `nickname` = #{nickname}
+    </select>
+
+    <insert id="signup" parameterType="UserDTO">
+        INSERT INTO user (`email`, `id`, `pw`, `name`, `nickname`)
+        VALUES (#{email}, #{id}, #{pw}, #{name}, #{nickname})
+        <selectKey resultType="long" keyProperty="uid" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="setRefreshToken" parameterType="UserDTO">
+        UPDATE user
+        SET `refresh_token` = #{refresh_token}
+        WHERE `uid` = #{uid};
+    </update>
+
+    <update id="setSalt">
+        UPDATE user
+        SET `salt` = #{salt}
+        WHERE `uid` = #{uid}
+    </update>
+
+    <select id="getSalt" parameterType="long" resultType="string">
+        SELECT `salt`
+        FROM user
+        WHERE uid = #{uid};
+    </select>
+
+    <update id="checkEmail" parameterType="long">
+        UPDATE user
+        SET `level` = 1
+        WHERE `uid` = #{uid};
+    </update>
+
+    <update id="setPassword">
+        UPDATE user
+        SET `pw` = #{pw}
+        WHERE `email` = #{email};
+    </update>
+
+    <select id="getMypage" parameterType="long" resultType="UserDTO">
+        SELECT uid,
+               email,
+               id,
+               name,
+               nickname,
+               sdate
+        FROM user
+        WHERE uid = #{uid};
+    </select>
+
+</mapper>
