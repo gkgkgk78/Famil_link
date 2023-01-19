@@ -61,8 +61,10 @@ with mp_face_detection.FaceDetection(
                     relative_bounding_box.ymin + relative_bounding_box.height, image_cols,
                     image_rows)
                 if rect_start_point is None or rect_end_point is None:
+                    cv2.rectangle(image, (0, 0), (224, 224), 0, -1)
                     break
                 if None in rect_start_point or None in rect_end_point:
+                    cv2.rectangle(image, (0, 0), (224, 224), 0, -1)
                     break
                 cv2.rectangle(image, (0, 0), (224, rect_start_point[1]), 0, -1)  # 상단
                 cv2.rectangle(image, (0, rect_end_point[1]), (224, 224), 0, -1)  # 하단
