@@ -19,6 +19,7 @@ model = load_model('keras_model.h5')
 # Grab the labels from the labels.txt file. This will be used later.
 labels = open('labels.txt', 'r', encoding='UTF8').readlines()
 
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     json_data = request.get_json()
