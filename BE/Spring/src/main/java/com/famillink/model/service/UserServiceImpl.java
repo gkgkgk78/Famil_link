@@ -42,15 +42,18 @@ public class UserServiceImpl implements UserService {
             // 이미 존재하는 이메일
             throw new BaseException(ErrorMessage.EXIST_EMAIL);
         }
-
-        userDTO.setPw(passwordEncoder.encode(userDTO.getPassword()));
+        
+        //권한 부분은 현재 코드 상으로 userDTO에 이미 지정이 되어 있어서 따로 parameter로 오지 않은것 같음
+        //해당 부분은 로그인시 가족계정, 개인 계정 으로 권한이 분리 되어서 접근이 되는곳이 생길 경우, 프론트 단에서 넘겨줄때 고려해서 넘겨 줘야 할것으로 생각
+        
+        userDTO.setPw(passwordEncoder.encode(userDTO.getPassword()));//회원가입시 비밀번호는 암호화 해서 저장해야 하기에 이렇게 지정함
         userMapper.signup(userDTO);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         String salt = userDTO.getUid().toString() + calendar.getTime();
 
-        salt = (BCrypt.hashpw(salt, BCrypt.gensalt()));
+        salt = (BCrypt.hashpw(salt, BCrypt.gensalt()));// salt를 설정하는 부분은 무엇일까?
         userMapper.setSalt(userDTO.getUid(), salt);
 
         return userMapper.findUserById(userDTO.getUsername()).get();
@@ -58,15 +61,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> login(LoginDTO loginDto) throws Exception {
-        UserDTO userDto = userMapper.findUserById(loginDto.getId())
+        UserDTO userDto = userMapper.findUserById(loginDto.getId())//id를 기반으로 userDTO에 해당되는 정보를 찾음
                 .orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_ID));
 
         if (userDto.getLevel() == 0) {
             throw new BaseException(ErrorMessage.SIGNUP_LISTEN);
         }
-        if (!passwordEncoder.matches(loginDto.getPw(), userDto.getPassword())) {
+        if (!passwordEncoder.matches(loginDto.getPw(), userDto.getPassword())) {//passwordEncoder를 활용하여 db에 저장된것과 일치하는 지 판단
             throw new BaseException(ErrorMessage.NOT_PASSWORD);
         }
+        //존재하는 회원이고 비밀번호도 일치를 했다면, jwttokenprovider를 통해서 ,id와 role값을 전달하여 토큰을 생성후 프론트 단에 전달해줌
         String accessToken = jwtTokenProvider.createToken(userDto.getUid(), Collections.singletonList(userDto.getRole()));
         String refreshToken = jwtTokenProvider.createRefresh(userDto.getUid(), Collections.singletonList(userDto.getRole()));
         userDto.setRefresh_token(refreshToken);

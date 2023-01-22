@@ -41,6 +41,8 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Validated(ValidationGroups.login.class) LoginDTO user) throws Exception {
         Map<String, Object> token = userService.login(user);
+
+
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "로그인을 성공하였습니다.");
