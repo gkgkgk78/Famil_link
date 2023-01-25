@@ -3,7 +3,6 @@ package com.famillink.model.service;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.LoginDTO;
-import com.famillink.model.mapper.UserMapper;
 import com.famillink.util.EmailHandler;
 import com.famillink.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;

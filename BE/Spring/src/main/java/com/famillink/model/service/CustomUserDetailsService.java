@@ -1,7 +1,8 @@
 package com.famillink.model.service;
 
 
-import com.famillink.model.mapper.UserMapper;
+import com.famillink.model.domain.user.Account;
+import com.famillink.model.mapper.AccountMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,18 +15,18 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserMapper userMapper;
+    private final AccountMapper accountMapper;
 
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        return userMapper.findUserByUid(Long.valueOf(userId))
+    public UserDetails loadUserByUsername(String uid) throws UsernameNotFoundException {
+        return accountMapper.findUserByUid(Long.valueOf(uid))
                 .map(this::addAuthorities)
-                .orElseThrow(() -> new RuntimeException(userId + "> 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException(uid + "> 찾을 수 없습니다."));
     }
 
-    private UserDTO addAuthorities(UserDTO userDto) {
-        userDto.setAuthorities(Arrays.asList(new SimpleGrantedAuthority(userDto.getRole())));
+    private Account addAuthorities(Account account) {
+        account.setAuthorities(Arrays.asList(new SimpleGrantedAuthority(account.getRole())));
 
-        return userDto;
+        return account;
     }
 }

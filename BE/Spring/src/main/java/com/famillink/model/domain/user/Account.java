@@ -31,9 +31,6 @@ public class Account implements UserDetails {
     @Size(min = 8, max = 11, groups = {ValidationGroups.signup.class})
     protected String phone;
 
-    @NotNull(groups = {ValidationGroups.signup.class}, message = "별명은 공백일 수 없습니다.")
-    @Size(min = 2, max = 30, groups = {ValidationGroups.signup.class}, message = "별명은 2글자이상 20글자 이하입니다.")
-    @Pattern(regexp = "^[a-zA-Z가-힣0-9]{1,20}$", groups = {ValidationGroups.signup.class}, message = "별명은 특수문자와 초성은 사용불가능합니다")
     protected String nickname;
 
     @ApiModelProperty(hidden = true)
@@ -47,6 +44,9 @@ public class Account implements UserDetails {
 
     @ApiModelProperty(hidden = true)
     protected Short level;
+
+    @ApiModelProperty(hidden = true)
+    private Collection<? extends GrantedAuthority> authorities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

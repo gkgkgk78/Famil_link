@@ -2,7 +2,6 @@ package com.famillink.util;
 
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
-import com.famillink.model.mapper.UserMapper;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
@@ -85,6 +84,7 @@ public class JwtTokenProvider {
     //usernamePasswordAuthenticationToken을 사용하여 Authentication을 구현 하였습니다.
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
+
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
