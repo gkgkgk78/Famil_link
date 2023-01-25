@@ -13,8 +13,7 @@ public interface AccountMapper {
 
     Optional<Account> findUserByUid(Long uid);
 
-    Optional<Account> findUserByNickname(String nickname);
-    // 전체 가족 구성원 조회? 필요?
+    // 전체 가족 구성원 조회 : 편지 보낼 때 구성원 선택 시 필요
     List<Account> findUserFamily(String email) throws Exception;
 
     void signup(Account account) throws Exception;

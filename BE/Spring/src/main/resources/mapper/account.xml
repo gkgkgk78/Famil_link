@@ -15,14 +15,15 @@
         FROM account
         WHERE `uid` = #{uid}
     </select>
-
-    <select id="findUserByNickname" parameterType="string" resultType="Account">
+    
+    <select id="findUserFamily" parameterType="string" resultType="account">
         SELECT *
-        FROM account
-        WHERE `nickname` = #{nickname}
+        FROM account a JOIN member m
+            ON a.uid = m.user_uid
+        WHERE #{email} = a.email
     </select>
 
-    <insert id="signup" parameterType="Account" useGeneratedKeys="true" keyProperty="uid">
+    <insert id="signup" parameterType="Account">
         INSERT INTO account (`email`, `pw`, `address`, `phone`, `nickname`)
         VALUES (#{email}, #{pw}, #{address}, #{phone}, #{nickname})
         <selectKey resultType="long" keyProperty="uid" order="AFTER">
@@ -30,45 +31,34 @@
         </selectKey>
     </insert>
 
-    <update id="setRefreshToken" parameterType="UserDTO">
-        UPDATE user
+    <update id="setRefreshToken" parameterType="account">
+        UPDATE account
         SET `refresh_token` = #{refresh_token}
         WHERE `uid` = #{uid};
     </update>
 
     <update id="setSalt">
-        UPDATE user
+        UPDATE account
         SET `salt` = #{salt}
         WHERE `uid` = #{uid}
     </update>
 
     <select id="getSalt" parameterType="long" resultType="string">
         SELECT `salt`
-        FROM user
+        FROM account
         WHERE uid = #{uid};
     </select>
 
     <update id="checkEmail" parameterType="long">
-        UPDATE user
+        UPDATE account
         SET `level` = 1
         WHERE `uid` = #{uid};
     </update>
 
     <update id="setPassword">
-        UPDATE user
+        UPDATE account
         SET `pw` = #{pw}
         WHERE `email` = #{email};
     </update>
-
-    <select id="getMypage" parameterType="long" resultType="UserDTO">
-        SELECT uid,
-               email,
-               id,
-               name,
-               nickname,
-               sdate
-        FROM user
-        WHERE uid = #{uid};
-    </select>
 
 </mapper>

@@ -2,6 +2,7 @@ package com.famillink.util;
 
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
+import com.famillink.model.mapper.AccountMapper;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
@@ -44,7 +45,7 @@ public class JwtTokenProvider {
     @Value("${jwt.refresh-validity-in-minutes}")
     private long refreshValidMinutes;
 
-    private final UserMapper userMapper;
+    private final AccountMapper accountMapper;
 
 
     @PostConstruct
@@ -64,7 +65,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + expire)) // 토큰 만료일 설정
-                .signWith(SignatureAlgorithm.HS256, (secretKey + userMapper.getSalt(uid)).getBytes()) // 암호화
+                .signWith(SignatureAlgorithm.HS256, (secretKey + accountMapper.getSalt(uid)).getBytes()) // 암호화
                 .compact();
     }
 
@@ -93,7 +94,7 @@ public class JwtTokenProvider {
     //토큰 기반으로 회원 정보를 추출하는 메서드 입니다.
     public String getUserId(String token) {
         return Jwts.parser()//jwt parser를 통해 secretkey를 설정하고 클레임을 추출해서 토큰을 생성할시 넣었던 sub값을 추출합니다.
-                .setSigningKey((secretKey + userMapper.getSalt(getUid(token))).getBytes())
+                .setSigningKey((secretKey + accountMapper.getSalt(getUid(token))).getBytes())
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -116,7 +117,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey((secretKey + userMapper.getSalt(getUid(token))).getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parser().setSigningKey((secretKey + accountMapper.getSalt(getUid(token))).getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token);
 
             return !claims.getBody().getExpiration().before(new Date());
         } catch (SecurityException | MalformedJwtException | IllegalArgumentException exception) {
