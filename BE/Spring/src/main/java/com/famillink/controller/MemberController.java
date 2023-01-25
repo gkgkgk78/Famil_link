@@ -1,9 +1,10 @@
 package com.famillink.controller;
 
 import com.famillink.annotation.ValidationGroups;
+import com.famillink.model.domain.user.Member;
 import com.famillink.model.domain.user.UserDTO;
-import com.famillink.model.domain.param.LoginDTO;
-import com.famillink.model.service.UserService;
+import com.famillink.model.service.MemberService;
+import com.famillink.model.service.MemberServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 @RestController
-public class UserController {
-    private final UserService userService;
+public class MemberController {
+    private final MemberServiceImpl memberservice;
+
+
 
     @ApiOperation(value = "회원가입", notes = "req_data : [id, pw, email, name, nickname]")
     @PostMapping("/signup")
@@ -39,9 +42,10 @@ public class UserController {
 
     @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Validated(ValidationGroups.login.class) UserDTO user) throws Exception {
+//    public ResponseEntity<?> login(@RequestBody @Validated(ValidationGroups.login.class) UserDTO user) throws Exception {
+    public ResponseEntity<?> login(Member member) throws Exception {
 
-        Map<String, Object> token = userService.login(user);
+        Map<String, Object> token = .login(member);
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
