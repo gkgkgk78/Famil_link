@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Api("User Controller")
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/member")
 @RestController
 public class MemberController {
     private final MemberServiceImpl memberservice;
@@ -31,7 +31,7 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody @Validated(ValidationGroups.signup.class) UserDTO userDTO) throws Exception {
 
-        UserDTO savedUser = userService.signup(userDTO);
+        UserDTO savedUser = memberservice.signup(userDTO);
 
         userService.sendSignupEmail(savedUser);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
