@@ -1,7 +1,6 @@
 package com.famillink.controller;
 
 import com.famillink.annotation.ValidationGroups;
-import com.famillink.model.domain.user.UserDTO;
 import com.famillink.model.domain.param.LoginDTO;
 import com.famillink.model.service.UserService;
 import io.swagger.annotations.Api;

@@ -1,6 +1,5 @@
 package com.famillink.model.mapper;
 
-import com.famillink.model.domain.user.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

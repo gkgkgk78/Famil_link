@@ -1,7 +1,6 @@
 package com.famillink.model.service;
 
 
-import com.famillink.model.domain.user.UserDTO;
 import com.famillink.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
