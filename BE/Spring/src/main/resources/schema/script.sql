@@ -50,7 +50,14 @@ CREATE TABLE IF NOT EXISTS `famil_link`.`member` (
   `name` VARCHAR(50) CHARACTER SET 'utf8mb4' NOT NULL COMMENT '이름',
   `sdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '가입일시',
   `model_path` VARCHAR(50) CHARACTER SET 'utf8mb4' NOT NULL COMMENT '인식 모델 경로',
+
   `nickname` VARCHAR(45) NULL,
+  `role` ENUM('ROLE_USER', 'ROLE_ADMIN') NOT NULL DEFAULT 'ROLE_USER',
+  `refresh_token` VARCHAR(200) NULL DEFAULT NULL,
+  `salt` VARCHAR(100) NULL DEFAULT NULL,
+  `level` TINYINT NOT NULL DEFAULT '0',
+
+
   PRIMARY KEY (`uid`),
   UNIQUE INDEX `user_uid_name` (`user_uid` ASC, `name` ASC) VISIBLE,
   CONSTRAINT `member_user_uid_FK`
