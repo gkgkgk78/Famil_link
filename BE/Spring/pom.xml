@@ -66,6 +66,9 @@
             <scope>test</scope>
         </dependency>
 
+
+
+
         <!-- 추가된 개인 디펜던시 -->
 
         <!-- https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter -->
@@ -128,6 +131,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+
+
+
+        <!-- json사용을 위해 넣은 부분 -->
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+
 
     </dependencies>
 
