@@ -1,6 +1,7 @@
 // 재생할 영상이 더 이상 없을 때 띄워지는 페이지
+import React from 'react';
 import "./Main.css"
-
+import Caption from '../components/Caption';
 const Main = () => {
     return ( 
         <div>
@@ -23,8 +24,9 @@ const Main = () => {
                     강아지 미용 맡기기
                 </li>
                 </div>
-            </ul>
+            </ul>        
           </div>
+          <Caption name="현재사용자"></Caption>
         </div>
      );
 }

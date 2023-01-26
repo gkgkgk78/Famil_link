@@ -1,6 +1,6 @@
 import './App.css';
 
-import Clock from './modules/Clock';
+import Clock from './components/Clock';
 
 import FaceValid from './pages/FaceValid';
 import PlayVideo from './pages/PlayVideo';
@@ -30,7 +30,8 @@ function App() {
         <Clock />
         <div>날씨</div>
       </Box>
-      
+      <Main></Main>
+      <footer></footer>
       <div>
         <Routes>
           <Route path="/" element= { <Main />} />
