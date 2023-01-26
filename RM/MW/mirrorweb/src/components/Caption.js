@@ -3,10 +3,11 @@ import "./Caption.css"
 
 const Caption = props => {
     
-    // const [caption, setCaption] = useState('123');
-    // const hi = () => setCaption('안녕하세요 ' + {caption} + '님');
-    // hi();
-    return <div className='Caption'>안녕하세요, {props.name}님 </div>
+    const [caption, setCaption] = useState('123');
+    
+    const captionControl = () => setCaption('여기는 자막입니다');
+
+    return <div className='Caption'> {caption} </div>
     
 };
 
