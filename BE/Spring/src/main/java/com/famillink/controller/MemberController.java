@@ -1,6 +1,7 @@
 package com.famillink.controller;
 
 import com.famillink.annotation.ValidationGroups;
+import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.domain.user.UserDTO;
 import com.famillink.model.service.MemberService;
@@ -25,27 +26,29 @@ import java.util.Map;
 public class MemberController {
     private final MemberServiceImpl memberservice;
 
-
-
+    //Account account, Member member,String photo
     @ApiOperation(value = "회원가입", notes = "req_data : [id, pw, email, name, nickname]")
-    @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody @Validated(ValidationGroups.signup.class) UserDTO userDTO) throws Exception {
+    @PostMapping("/signup/{photo}")
+    public ResponseEntity<?> signup(@RequestBody Account account,@RequestBody Member member,@PathVariable String  photo) throws Exception {
 
-        UserDTO savedUser = memberservice.signup(userDTO);
+        Member savedUser = memberservice.signup(account,member,photo);
 
-        userService.sendSignupEmail(savedUser);
+
+
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "회원가입을 성공하였습니다.\n이메일을 확인해주세요.\n30분 이내 인증을 완료하셔야합니다.");
         }}, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
-    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody @Validated(ValidationGroups.login.class) UserDTO user) throws Exception {
-    public ResponseEntity<?> login(Member member) throws Exception {
 
-        Map<String, Object> token = .login(member);
+
+    @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
+    @PostMapping("/login/{photo}")
+
+    public ResponseEntity<?> login(@RequestBody Account account,@RequestBody Member member,@PathVariable  String photo) throws Exception {
+
+        Map<String, Object> token = memberservice.login(account,member,photo);
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
@@ -64,7 +67,7 @@ public class MemberController {
     public ResponseEntity<?> refreshToken(@RequestBody Long uid, HttpServletRequest request) throws Exception {
         HttpStatus status = HttpStatus.ACCEPTED;
         String token = request.getHeader("refresh-token");
-        String result = userService.refreshToken(uid, token);
+        String result = memberservice.refreshToken(uid, token);
         if (result != null && !result.equals("")) {
             // 발급 성공
             return new ResponseEntity<Object>(new HashMap<String, Object>() {{
@@ -78,50 +81,19 @@ public class MemberController {
         }
     }
 
-    @ApiOperation(value = "인증 이메일 재발송", notes = "인증 메일을 재발송한다.")
-    @PostMapping("/mail")
-    public ResponseEntity<?> resendCheckMail(@RequestBody LoginDTO loginDTO) throws Exception {
-        userService.resendCheckMail(loginDTO);
-        return new ResponseEntity<Object>(
-                new HashMap<String, Object>() {{
-                    put("result", true);
-                    put("msg", "이메일 재전송에 성공하였습니다.");
-                }}, HttpStatus.OK
-        );
-    }
 
-//    @ApiOperation(value = "이메일 인증 확인", notes = "회원가입 이메일 인증을 완료한다.")
-//    @GetMapping("/check/{token}")
-//    public ResponseEntity<?> checkSignup(@PathVariable("token") String token) throws Exception {
-//        userService.checkEmail(token);
-//        return new ResponseEntity<Object>(
-//                new HashMap<String, Object>() {{
-//                    put("result", true);
-//                    put("msg", "이메일 인증에 성공하였습니다.");
-//                }}, HttpStatus.OK
-//        );
-//    }
 
 
     @ApiOperation(value = "회원 확인", notes = "회원정보를 반환합니다.")
     @GetMapping("/auth")
     public ResponseEntity<?> authUser(final Authentication authentication) {
-        UserDTO auth = (UserDTO) authentication.getPrincipal();
+        Member auth = (Member) authentication.getPrincipal();
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("data", auth);
         }}, HttpStatus.OK);
     }
 
-//    @ApiOperation(value = "비밀번호 찾기", notes = "회원의 임시 비밀번호를 메일로 전송합니다.")
-//    @PostMapping("/find/password")
-//    public ResponseEntity<?> findMyPW(@RequestBody @Validated(ValidationGroups.find_password.class) UserDTO user) throws Exception {
-//        userService.findMyPW(user);
-//        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-//            put("result", true);
-//            put("msg", "이메일로 임시 비밀번호를 발급하였습니다.");
-//        }}, HttpStatus.OK);
-//    }
 
 
 

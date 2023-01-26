@@ -36,7 +36,6 @@ public class MemberServiceImpl implements MemberService {
         FaceDetection temp= new FaceDetection();
         boolean flag=temp.send(account.toString(),new String());//가족 구분 path와 판단하고자 하는 이미지 경로를 넘겨주어야 함
 
-
         if (flag) {
             // 이미 등록이 된 가족의 얼굴 이라면 등록을 하지는 않을 것이다.
             throw new BaseException(ErrorMessage.EXIST_ID);

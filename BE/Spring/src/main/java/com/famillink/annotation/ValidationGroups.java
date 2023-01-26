@@ -7,7 +7,12 @@ public class ValidationGroups {
     private ValidationGroups() {
     }
 
+
+
+
     public interface signup extends Default {};
+
+
 
 
 
@@ -15,5 +20,9 @@ public class ValidationGroups {
     public interface login extends Default {};
 
     public interface find_password extends Default {};
+
+
+
+
 
 }
