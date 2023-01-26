@@ -3,6 +3,7 @@ package com.famillink.model.service;
 
 import com.famillink.model.domain.user.Account;
 
+import java.util.List;
 import java.util.Map;
 
 public interface AccountService {
@@ -11,6 +12,9 @@ public interface AccountService {
 
     Map<String, Object> login(Account loginAccount) throws Exception;
 
+    //전체 회원 조회
+
+    List<Account> allMembers(Account loginAccount) throws Exception;
 
     String refreshToken(Long uid, String token) throws Exception;
 

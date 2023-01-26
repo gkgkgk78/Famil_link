@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -69,6 +68,14 @@ public class AccountServiceImpl implements AccountService {
             put("access-token", accessToken);
             put("refresh-token", refreshToken);
         }};
+    }
+
+    @Override
+    public List<Account> allMembers(Account loginAccount) throws Exception {
+
+        List<Account> members = accountMapper.findUserFamily(loginAccount.getEmail());
+
+        return members;
     }
 
 
