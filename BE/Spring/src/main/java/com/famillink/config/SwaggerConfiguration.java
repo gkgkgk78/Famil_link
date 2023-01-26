@@ -26,7 +26,7 @@ public class SwaggerConfiguration {
 //	Swagger-UI 3.x 확인
 //	http://localhost:8080/{your-app-root}/swagger-ui/index.html
     private String version = "V1";
-    private String title = "CJW API " + version;
+    private String title = "A208 API " + version;
 
     @Bean
     public Docket api() {
@@ -35,7 +35,7 @@ public class SwaggerConfiguration {
                 .produces(getProduceContentTypes())
 
                 .apiInfo(apiInfo()).groupName(version).select()
-                .apis(RequestHandlerSelectors.basePackage("com.comunit.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.famillink.controller"))
                 .paths(PathSelectors.any()).build()
                 .securitySchemes(Arrays.asList(apiKey()))
                 .securityContexts(Arrays.asList(securityContext()))
@@ -79,10 +79,8 @@ public class SwaggerConfiguration {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder().title(title)
-                .description("<h3>CJW API</h3>Swagger를 이용한 ALL INFO API<br>")
-                .contact(new Contact("cjw", "https://github.com/hyeonslove", "cjw.git@gmail.com"))
-                .license("CJW License")
-                .licenseUrl("https://cjw-git.tistory.com/")
+                .description("<h3>A208 API</h3>Swagger를 이용한 ALL INFO API<br>")
+                .license("A208 License")
                 .version("1.0").build();
     }
 
