@@ -2,14 +2,15 @@ import './App.css';
 
 import Clock from './components/Clock';
 import Weather from './components/Weather';
+import Caption from './components/Caption';
 
+import Main from './pages/Main';
+import LoginMirror from './pages/loginMirror';
 import FaceValid from './pages/FaceValid';
 import PlayVideo from './pages/PlayVideo';
-import Main from './pages/Main';
 import Record from './pages/Record';
 
 import { Box } from '@mui/system';
-
 import { Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -20,9 +21,7 @@ function App() {
   // App.js에서 제스쳐나 음성 신호 등이 들어오면 영상 녹화 화면으로 이동한다.
 
   return (
-    <div 
-    className="App"
-    >
+    <div className="App">
       <Box sx={{
         display: "flex",
         justifyContent:"space-between",
@@ -32,14 +31,19 @@ function App() {
         <Weather />
       </Box>
       <footer></footer>
+      <main>
       <div>
         <Routes>
           <Route path="/" element= { <Main />} />
+          {/* <Route path="/loginmirror" element= { <LoginMirror />} /> */}
           <Route path="/facevalid" element={ <FaceValid /> } />
           <Route path="/playvideo" element={ <PlayVideo /> } />
           <Route path="/record" element={<Record/>} />
         </Routes>
       </div>
+      </main>
+      <footer> <Caption></Caption> </footer>
+
     </div>
   );
 }
