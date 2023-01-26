@@ -3,6 +3,7 @@ import './App.css';
 import Clock from './components/Clock';
 import Weather from './components/Weather';
 import Caption from './components/Caption';
+import Todo from './components/Todo';
 
 import Main from './pages/Main';
 import LoginMirror from './pages/loginMirror';
@@ -30,18 +31,13 @@ function App() {
         <Clock />
         <Weather />
       </Box>
-      <footer></footer>
-      <main>
-      <div>
-        <Routes>
-          <Route path="/" element= { <Main />} />
-          {/* <Route path="/loginmirror" element= { <LoginMirror />} /> */}
-          <Route path="/facevalid" element={ <FaceValid /> } />
-          <Route path="/playvideo" element={ <PlayVideo /> } />
-          <Route path="/record" element={<Record/>} />
-        </Routes>
-      </div>
-      </main>
+      <Routes>
+        <Route path="/" element= { <Main />} />
+        {/* <Route path="/loginmirror" element= { <LoginMirror />} /> */}
+        <Route path="/facevalid" element={ <FaceValid /> } />
+        <Route path="/playvideo" element={ <PlayVideo /> } />
+        <Route path="/record" element={<Record/>} />
+      </Routes>
       <footer> <Caption></Caption> </footer>
 
     </div>
