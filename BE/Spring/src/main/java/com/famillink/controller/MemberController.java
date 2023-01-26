@@ -3,7 +3,6 @@ package com.famillink.controller;
 import com.famillink.annotation.ValidationGroups;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
-import com.famillink.model.domain.user.UserDTO;
 import com.famillink.model.service.MemberService;
 import com.famillink.model.service.MemberServiceImpl;
 import io.swagger.annotations.Api;
