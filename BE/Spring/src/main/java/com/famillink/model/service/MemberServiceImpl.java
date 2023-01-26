@@ -3,7 +3,6 @@ package com.famillink.model.service;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.user.Account;
-import com.famillink.model.domain.user.UserDTO;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.MemberMapper;
 import com.famillink.util.FaceDetection;
@@ -64,7 +63,7 @@ public class MemberServiceImpl implements MemberService {
 
         if (!flag) {//로그인 하고자 할시에 없는 얼굴 등록 정보라면은 로그인이 불가능함
             // 이미 등록이 된 가족의 얼굴 이라면 등록을 하지는 않을 것이다.
-            throw new BaseException(ErrorMessage.NOT_EXIST_ID);
+            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
         }
 
         if (member.getLevel() == 0) {

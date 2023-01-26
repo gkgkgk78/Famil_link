@@ -26,7 +26,7 @@ public class AccountController {
 
     @ApiOperation(value = "회원가입", notes = "req_data : [id, pw, email, name, nickname]")
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody @Validated(ValidationGroups.class) Account account) throws Exception {
+    public ResponseEntity<?> signup(Account account) throws Exception {
         Account savedAccount = accountService.signup(account);
 
         //비동기 처리
@@ -41,11 +41,11 @@ public class AccountController {
 
     @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Validated(ValidationGroups.login.class) Account account) throws Exception {
+    public ResponseEntity<?> loginUser(Account account) throws Exception {
+
         Map<String, Object> token = accountService.login(account);
 
-
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+        return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "로그인을 성공하였습니다.");
             put("access-token", token.get("access-token"));
@@ -53,7 +53,7 @@ public class AccountController {
             put("uid", token.get("uid"));
             put("name", token.get("name"));
 
-        }}, HttpStatus.OK);
+        }});
     }
 
     @ApiOperation(value = "Access Token 재발급", notes = "만료된 access token을 재발급받는다.")

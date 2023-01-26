@@ -2,7 +2,9 @@ package com.famillink.model.domain.user;
 
 import com.famillink.annotation.ValidationGroups;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,6 +12,8 @@ import javax.validation.constraints.*;
 import java.util.Collection;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account implements UserDetails {
 
     @NotNull
@@ -50,37 +54,42 @@ public class Account implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.authorities;
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return this.pw;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return this.email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
+    }
+
+    public Account(String email, String password){
+        this.pw = password;
+        this.email = email;
     }
 
 }

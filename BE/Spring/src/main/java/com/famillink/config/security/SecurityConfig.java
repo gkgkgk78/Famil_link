@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()//경로에 권한, 인증 설정을 한다는 것임
                 .antMatchers(//밑에 게시된 경로들에 대한 요청을 승인할수 있다
                         "/account/signup",
-                        "/account/signup",
+                        "/account/login",
                         "/account/refresh",
                         "/account/mail",
                         "/account/check/**",
