@@ -50,13 +50,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()//경로에 권한, 인증 설정을 한다는 것임
                 .antMatchers(//밑에 게시된 경로들에 대한 요청을 승인할수 있다
-                        "/user/login",
-                        "/user/signup",
-                        "/user/refresh",
-                        "/user/mail",
-                        "/user/check/**",
-                        "/user/find/**",
-                        "/axios/**")
+                        "/account/signup",
+                        "/account/signup",
+                        "/account/refresh",
+                        "/account/mail",
+                        "/account/check/**",
+                        "/account/find/**")
                 .permitAll()//모든 인증을 요구를 하지는 않지만
                 .anyRequest().hasRole("USER")//USER라는 권한을 가진 회원은 , 위에 설정된 경로에 대해서 권한, 인증설정을 한다
                 //hasRole("USER")라고 저장을 하였지만 “ROLE_USER”로 UsernamePasswordAuthenticationToken객체에 값을 담아야 한다.
