@@ -1,6 +1,7 @@
 import './App.css';
 
 import Clock from './components/Clock';
+import Weather from './components/Weather';
 
 import FaceValid from './pages/FaceValid';
 import PlayVideo from './pages/PlayVideo';
@@ -28,9 +29,8 @@ function App() {
         p: 3
       }}>
         <Clock />
-        <div>날씨</div>
+        <Weather />
       </Box>
-      <Main></Main>
       <footer></footer>
       <div>
         <Routes>
