@@ -4,6 +4,7 @@ package com.famillink.controller;
 import com.famillink.annotation.ValidationGroups;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.service.AccountService;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +21,12 @@ import java.util.Map;
 @Api("Account Controller")
 @RequiredArgsConstructor
 @RequestMapping("/account")
+@JsonAutoDetect
 @RestController
 public class AccountController {
     private final AccountService accountService;
 
-    @ApiOperation(value = "회원가입", notes = "req_data : [id, pw, email, name, nickname]")
+    @ApiOperation(value = "회원가입", notes = "req_data : [pw, email, name]")
     @PostMapping("/signup")
     public ResponseEntity<?> signup(Account account) throws Exception {
         Account savedAccount = accountService.signup(account);
@@ -32,16 +34,20 @@ public class AccountController {
         //비동기 처리
         accountService.sendSignupEmail(savedAccount);
 
+        Map<String, Object> result = new HashMap<>();
+
+        if(savedAccount != null){
+            result.put("result", true);
+            result.put("msg", "회원가입을 성공하였습니다.\\n이메일을 확인해주세요.\\n30분 이내 인증을 완료하셔야합니다.");
+        }
+
         //결과 수정 (true, false)
-        return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>(){{
-            put("result", true);
-            put("msg", "회원가입을 성공하였습니다.\\n이메일을 확인해주세요.\\n30분 이내 인증을 완료하셔야합니다.");
-        }});
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(Account account) throws Exception {
+    public ResponseEntity<?> loginUser(@RequestBody Account account) throws Exception {
 
         Map<String, Object> token = accountService.login(account);
 
@@ -52,7 +58,6 @@ public class AccountController {
             put("refresh-token", token.get("refresh-token"));
             put("uid", token.get("uid"));
             put("name", token.get("name"));
-
         }});
     }
 

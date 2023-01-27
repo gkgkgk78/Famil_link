@@ -44,8 +44,9 @@ public class SwaggerConfiguration {
 
     private Set<String> getConsumeContentTypes() {
         Set<String> consumes = new HashSet<>();
-        consumes.add("application/json;charset=UTF-8");
+        consumes.add("application/json;charset=utf-8");
         consumes.add("application/x-www-form-urlencoded");
+        System.out.println(consumes);
         return consumes;
     }
 
