@@ -26,14 +26,12 @@ public class MemberController {
     private final MemberServiceImpl memberservice;
 
     //Account account, Member member,String photo
-    @ApiOperation(value = "회원가입", notes = "req_data : [id, pw, email, name, nickname]")
+    @ApiOperation(value = "개인 멤버가입", notes = "req_data : [member 정보, 보낸 사진 경로명]")
     @PostMapping("/signup/{photo}")
     public ResponseEntity<?> signup(@RequestBody Account account,@RequestBody Member member,@PathVariable String  photo) throws Exception {
 
         Member savedUser = memberservice.signup(account,member,photo);
-
-
-
+        
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "회원가입을 성공하였습니다.\n이메일을 확인해주세요.\n30분 이내 인증을 완료하셔야합니다.");
@@ -42,7 +40,7 @@ public class MemberController {
 
 
 
-    @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
+    @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login/{photo}")
 
     public ResponseEntity<?> login(@RequestBody Account account,@RequestBody Member member,@PathVariable  String photo) throws Exception {
@@ -61,7 +59,7 @@ public class MemberController {
     }
 
 
-    @ApiOperation(value = "Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
+    @ApiOperation(value = "Member Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestBody Long uid, HttpServletRequest request) throws Exception {
         HttpStatus status = HttpStatus.ACCEPTED;
@@ -83,7 +81,7 @@ public class MemberController {
 
 
 
-    @ApiOperation(value = "회원 확인", notes = "회원정보를 반환합니다.")
+    @ApiOperation(value = "Member회원 확인", notes = "회원정보를 반환합니다.")
     @GetMapping("/auth")
     public ResponseEntity<?> authUser(final Authentication authentication) {
         Member auth = (Member) authentication.getPrincipal();

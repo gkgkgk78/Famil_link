@@ -82,14 +82,24 @@ public class Account implements UserDetails {
         return true;
     }
 
+
+
+
     @Override
     public boolean isEnabled() {
         return true;
     }
 
+
+
+
     public Account(String email, String password){
         this.pw = password;
         this.email = email;
     }
+
+
+
+
 
 }
