@@ -7,8 +7,9 @@ import Calendar from '../components/Calendar';
 const Main = () => {
     return ( 
         <div>
-          {/* <Calendar />
-          <Todo /> */}
+          {/* <div>123</div> */}
+          <Calendar />
+          <Todo />
         </div>
      );
 }
