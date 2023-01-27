@@ -28,7 +28,7 @@ public class AccountController {
 
     @ApiOperation(value = "회원가입", notes = "req_data : [pw, email, name]")
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(Account account) throws Exception {
+    public ResponseEntity<?> signup(@RequestBody Account account) throws Exception {
         Account savedAccount = accountService.signup(account);
 
         //비동기 처리
@@ -39,6 +39,9 @@ public class AccountController {
         if(savedAccount != null){
             result.put("result", true);
             result.put("msg", "회원가입을 성공하였습니다.\\n이메일을 확인해주세요.\\n30분 이내 인증을 완료하셔야합니다.");
+        } else {
+            result.put("result", false);
+            result.put("msg", "회원가입을 실패했습니다");
         }
 
         //결과 수정 (true, false)
