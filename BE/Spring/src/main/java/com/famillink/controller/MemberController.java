@@ -3,6 +3,7 @@ package com.famillink.controller;
 import com.famillink.annotation.ValidationGroups;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.service.FaceDetection;
 import com.famillink.model.service.MemberService;
 import com.famillink.model.service.MemberServiceImpl;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -101,6 +102,20 @@ public class MemberController {
             put("data", auth);
         }}, HttpStatus.OK);
     }
+
+    private final FaceDetection fservice;
+
+    @ApiOperation(value = "사진보내기", notes = "제발.")
+    @GetMapping("/pick")
+    public ResponseEntity<?> picture() {
+        fservice.send("","src/test/image/cjw.jpg");
+        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+            put("result", true);
+
+        }}, HttpStatus.OK);
+    }
+
+
 
 
 
