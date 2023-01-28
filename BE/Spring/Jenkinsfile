@@ -9,6 +9,12 @@ node{
                 branch: 'master'
         }
 
+        stage('Copy application.properties'){
+            sh '''
+                cp /home/env/application.properties ./BE/Spring/src/main/resources
+            '''
+        }
+
         stage('Build docker'){
             dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}", "./BE/Spring")
         }
