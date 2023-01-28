@@ -2,21 +2,16 @@ package com.famillink.model.service;
 
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
-import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.MemberMapper;
-import com.famillink.util.FaceDetection;
 import com.famillink.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -66,13 +61,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Map<String, Object> login( Member member,String photo) throws Exception {
 
-//        FaceDetection temp= new FaceDetection();
-//        boolean flag=temp.send(member.toString(),new String());//가족 구분 path와 판단하고자 하는 이미지 경로를 넘겨주어야 함
-//
-//        if (!flag) {//로그인 하고자 할시에 없는 얼굴 등록 정보라면은 로그인이 불가능함
-//            // 이미 등록이 된 가족의 얼굴 이라면 등록을 하지는 않을 것이다.
-//            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
-//        }
+        FaceDetection temp= new FaceDetection();
+        boolean flag=temp.send(member.toString(),new String());//가족 구분 path와 판단하고자 하는 이미지 경로를 넘겨주어야 함
+
+        if (!flag) {//로그인 하고자 할시에 없는 얼굴 등록 정보라면은 로그인이 불가능함
+            // 이미 등록이 된 가족의 얼굴 이라면 등록을 하지는 않을 것이다.
+            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
+        }
+
+
+
         Member member1 = mapper.findUserByUid(member.getUid())
                 .orElseThrow(() -> new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO));
 
