@@ -11,7 +11,7 @@ public enum ErrorMessage {
 
     REQUEST_EXCEPTION(10, "", HttpStatus.BAD_REQUEST),
     NOT_EXIST_CONTENT(20, "존재하지 않는 컨텐츠입니다.", HttpStatus.BAD_REQUEST),
-    NOT_EXIST_ID(100, "서버에 존재하지 않는 아이디입니다.", HttpStatus.BAD_REQUEST),
+    NOT_EXIST_EMAIL(100, "서버에 존재하지 않는 이메일입니다.", HttpStatus.BAD_REQUEST),
     NOT_PASSWORD(101, "잘못된 비밀번호입니다.", HttpStatus.BAD_REQUEST),
     DONT_EXIST_ACCOUNT(102, "이미 삭제 된 계정입니다.", HttpStatus.BAD_REQUEST),
     NOT_MATCH_ACCOUNT_INFO(103, "입력하신 계정과 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
