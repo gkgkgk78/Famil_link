@@ -10,7 +10,7 @@ node{
         }
 
         stage('Build docker'){
-            dockerImage = docker.build("/var/jenkins_home/workspace/BE_SpringBoot_Famil-link/springboot-deploy:${env.BUILD_NUMBER}")
+            dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}")
         }
 
         stage('Deploy docker'){
