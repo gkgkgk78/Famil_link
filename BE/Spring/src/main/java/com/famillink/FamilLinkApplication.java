@@ -8,7 +8,7 @@ public class FamilLinkApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FamilLinkApplication.class, args);
-        OpenCV.loadShared();
+//        OpenCV.loadShared();
     }
 
 }
