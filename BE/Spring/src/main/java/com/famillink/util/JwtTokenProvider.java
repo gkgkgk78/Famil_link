@@ -40,7 +40,7 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.token-validity-in-minutes}")
+    @Value("${jwt.token-validity-in-minutes}0")
     private long tokenValidMinutes;
 
     @Value("${jwt.refresh-validity-in-minutes}")
@@ -61,6 +61,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(Long.toString(uid));//jwt의 토큰의 내용에 값을 넣기 위해 claims객체를 생성을 합니다.,
         // setsubject 메서드를 통하여 sub속성에 값을 추가하고자 할시에 User의 uid를 사용합니다
         claims.put("roles", roles);//해당 부분은 해당 토큰을 사용하는 사용자의 권한을 확인 할수 있는 role값을 추가한 부분입니다.
+        claims.put("level","account");
         Date now = new Date();
 
         return Jwts.builder()//Jwts.builder를통해서 토큰을 생성합니다.
@@ -75,6 +76,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(Long.toString(uid));//jwt의 토큰의 내용에 값을 넣기 위해 claims객체를 생성을 합니다.,
         // setsubject 메서드를 통하여 sub속성에 값을 추가하고자 할시에 User의 uid를 사용합니다
         claims.put("roles", roles);//해당 부분은 해당 토큰을 사용하는 사용자의 권한을 확인 할수 있는 role값을 추가한 부분입니다.
+        claims.put("level","member");
         Date now = new Date();
 
         return Jwts.builder()//Jwts.builder를통해서 토큰을 생성합니다.
@@ -108,7 +110,6 @@ public class JwtTokenProvider {
     //usernamePasswordAuthenticationToken을 사용하여 Authentication을 구현 하였습니다.
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
-
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }

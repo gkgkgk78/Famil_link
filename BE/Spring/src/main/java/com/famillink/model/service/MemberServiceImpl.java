@@ -20,6 +20,9 @@ public class MemberServiceImpl implements MemberService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final FaceDetection face;
+
+
     //private final PasswordEncoder passwordEncoder;
 
 
@@ -61,23 +64,18 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Map<String, Object> login( Member member,String photo) throws Exception {
 
-        FaceDetection temp= new FaceDetection();
-        boolean flag=temp.send(member.toString(),new String());//가족 구분 path와 판단하고자 하는 이미지 경로를 넘겨주어야 함
 
-        if (!flag) {//로그인 하고자 할시에 없는 얼굴 등록 정보라면은 로그인이 불가능함
-            // 이미 등록이 된 가족의 얼굴 이라면 등록을 하지는 않을 것이다.
-            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
-        }
+//
+//        if (!face.send("","")) {//로그인 하고자 할시에 없는 얼굴 등록 정보라면은 로그인이 불가능함
+//            // 이미 등록이 된 가족의 얼굴 이라면 등록을 하지는 않을 것이다.
+//            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
+//        }
 
 
 
         Member member1 = mapper.findUserByUid(member.getUid())
                 .orElseThrow(() -> new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO));
 
-        if (!flag) {//로그인 하고자 할시에 없는 얼굴 등록 정보라면은 로그인이 불가능함
-            // 이미 등록이 된 가족의 얼굴 이라면 등록을 하지는 않을 것이다.
-            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
-        }
 
 
         //존재하는 회원이고 비밀번호도 일치를 했다면, jwttokenprovider를 통해서 ,id와 role값을 전달하여 토큰을 생성후 프론트 단에 전달해줌
