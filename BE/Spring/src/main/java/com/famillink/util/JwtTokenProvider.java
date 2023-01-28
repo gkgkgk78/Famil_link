@@ -71,7 +71,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String create(Long uid, List<String> roles, long expire,int flag) {
+    public String create1(Long uid, List<String> roles, long expire) {
         Claims claims = Jwts.claims().setSubject(Long.toString(uid));//jwt의 토큰의 내용에 값을 넣기 위해 claims객체를 생성을 합니다.,
         // setsubject 메서드를 통하여 sub속성에 값을 추가하고자 할시에 User의 uid를 사용합니다
         claims.put("roles", roles);//해당 부분은 해당 토큰을 사용하는 사용자의 권한을 확인 할수 있는 role값을 추가한 부분입니다.
@@ -87,16 +87,20 @@ public class JwtTokenProvider {
 
     // JWT 토큰 생성
     public String createToken(Long uid, List<String> roles) {
-//        return create(uid, roles, 1000 * 5);
-
-
-
         return create(uid, roles, 1000 * 10 * tokenValidMinutes);
     }
 
     public String createRefresh(Long uid, List<String> roles) {
-//        return create(uid, roles, 1000 * 10 * 60);
         return create(uid, roles, 1000 * 10 * refreshValidMinutes);
+    }
+
+    //우선은 member용으로 추가를 함, 다른 acoount부분들도 수정이 동반 되어야 할거 같기에 우선 이렇게 수정을 함
+    public String createToken1(Long uid, List<String> roles) {
+        return create1(uid, roles, 1000 * 10 * tokenValidMinutes);
+    }
+
+    public String createRefresh1(Long uid, List<String> roles) {
+        return create1(uid, roles, 1000 * 10 * refreshValidMinutes);
     }
 
     // JWT 토큰에서 인증 정보 조회
@@ -119,7 +123,7 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    public String getUserId(String token,int flag) {
+    public String getUserId1(String token) {
         return Jwts.parser()//jwt parser를 통해 secretkey를 설정하고 클레임을 추출해서 토큰을 생성할시 넣었던 sub값을 추출합니다.
                 .setSigningKey((secretKey + memberMapper.getSalt(getUid(token))).getBytes())
                 .parseClaimsJws(token)
@@ -160,7 +164,7 @@ public class JwtTokenProvider {
         return false;
     }
 
-    public boolean validateToken(String token,int flag) {
+    public boolean validateToken1(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey((secretKey + memberMapper.getSalt(getUid(token))).getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token);
 

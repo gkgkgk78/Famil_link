@@ -21,8 +21,8 @@
 
 
     <insert id="signup" parameterType="Member">
-        INSERT INTO member (`name`, `model_path`,`nickname`)
-        VALUES (#{name}, #{model_path},  #{nickname})
+        INSERT INTO member (`name`, `model_path`,`nickname`,`user_uid`)
+        VALUES (#{name}, #{model_path},  #{nickname},#{user_uid})
         <selectKey resultType="long" keyProperty="uid" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>

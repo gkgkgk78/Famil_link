@@ -11,25 +11,21 @@ import java.util.Collection;
 
 @Data
 public class Member implements UserDetails {
+
+
     @NotNull
-    @ApiModelProperty(hidden = true)
+//    @ApiModelProperty(hidden = true)
     protected Long uid;
 
 
     protected String user_uid;
 
-//    @NotNull(groups = {ValidationGroups.signup.class, ValidationGroups.login.class}, message = "비밀번호는 공백일 수 없습니다.")
-//    @Size(min = 8, max = 30, groups = {ValidationGroups.signup.class}, message = "비밀번호는은 8글자 이상 30글자 이하입니다.")
-//    protected String pw;
-
-    @NotNull(groups = {ValidationGroups.signup.class, ValidationGroups.find_password.class}, message = "이름은 공백일 수 없습니다.")
-    @Size(min = 2, max = 20, groups = {ValidationGroups.signup.class, ValidationGroups.find_password.class}, message = "이름은 2글자이상 20글자 이하입니다.")
-    @Pattern(regexp = "^[a-zA-Z가-힣0-9]{1,20}$", groups = {ValidationGroups.signup.class, ValidationGroups.find_password.class}, message = "이름은 특수문자와 초성은 사용불가능합니다")
     protected String name;
 
-
+    @ApiModelProperty(hidden = true)
     protected String sdate;
 
+    protected String nickname;
     protected String model_path;
 
 
@@ -46,7 +42,7 @@ public class Member implements UserDetails {
     @ApiModelProperty(hidden = true)
     protected Short level;
 
-    protected String pw;
+
 
     // 이하 코드는 security 를 위한 용도
     @ApiModelProperty(hidden = true)
@@ -86,5 +82,33 @@ public class Member implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+
+    //입력 받아야 하는 정보는, name,model_path,nickname
+
+
+    public Member(String name, String nickname, String model_path) {
+        this.name = name;
+        this.nickname = nickname;
+        this.model_path = model_path;
+    }
+
+    public Member(Long uid, String user_uid, String name, String nickname, String model_path) {
+        this.uid = uid;
+        this.user_uid = user_uid;
+        this.name = name;
+        this.nickname = nickname;
+        this.model_path = model_path;
+    }
+
+    public Member(Long uid) {
+        this.uid = uid;
+    }
+
+    public Member() {
+
+
+
     }
 }

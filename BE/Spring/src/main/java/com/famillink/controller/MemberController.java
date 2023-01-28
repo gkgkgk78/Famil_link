@@ -5,6 +5,7 @@ import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.MemberService;
 import com.famillink.model.service.MemberServiceImpl;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +19,34 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-@Api("User Controller")
+@Api("Member Controller")
 @RequiredArgsConstructor
 @RequestMapping("/member")
 @RestController
-public class MemberController {
-    private final MemberServiceImpl memberservice;
 
-    //Account account, Member member,String photo
-    @ApiOperation(value = "회원가입", notes = "req_data : [id, pw, email, name, nickname]")
+public class MemberController {
+    private final MemberService memberservice;
+
+
+
+    @ApiOperation(value = "회원가입", notes = "req_data : [model_path,name,nickname,user_uid]")
     @PostMapping("/signup/{photo}")
     public ResponseEntity<?> signup(@RequestBody Member member,@PathVariable String  photo) throws Exception {
 
         Member savedUser = memberservice.signup(member,photo);
 
+        if (savedUser==null){
+            return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+                put("result", false);
+                put("msg", "멤버 회원 가입 실패");
+            }}, HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
-            put("msg", "회원가입을 성공하였습니다.\n이메일을 확인해주세요.\n30분 이내 인증을 완료하셔야합니다.");
+            put("msg", "멤버 가입 성공");
         }}, HttpStatus.OK);
+
     }
 
 
