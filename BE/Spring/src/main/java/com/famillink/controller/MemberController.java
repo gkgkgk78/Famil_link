@@ -3,8 +3,10 @@ package com.famillink.controller;
 import com.famillink.annotation.ValidationGroups;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.service.FaceDetection;
 import com.famillink.model.service.MemberService;
 import com.famillink.model.service.MemberServiceImpl;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +20,34 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-@Api("User Controller")
+@Api("Member Controller")
 @RequiredArgsConstructor
 @RequestMapping("/member")
 @RestController
+
 public class MemberController {
-    private final MemberServiceImpl memberservice;
+    private final MemberService memberservice;
 
-    //Account account, Member member,String photo
-    @ApiOperation(value = "개인 멤버가입", notes = "req_data : [member 정보, 보낸 사진 경로명]")
+
+
+    @ApiOperation(value = "회원가입", notes = "req_data : [model_path,name,nickname,user_uid]")
     @PostMapping("/signup/{photo}")
-    public ResponseEntity<?> signup(@RequestBody Account account,@RequestBody Member member,@PathVariable String  photo) throws Exception {
+    public ResponseEntity<?> signup(@RequestBody Member member,@PathVariable String  photo) throws Exception {
 
-        Member savedUser = memberservice.signup(account,member,photo);
-        
+        Member savedUser = memberservice.signup(member,photo);
+
+        if (savedUser==null){
+            return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+                put("result", false);
+                put("msg", "멤버 회원 가입 실패");
+            }}, HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
-            put("msg", "회원가입을 성공하였습니다.\n이메일을 확인해주세요.\n30분 이내 인증을 완료하셔야합니다.");
+            put("msg", "멤버 가입 성공");
         }}, HttpStatus.OK);
+
     }
 
 
@@ -43,9 +55,9 @@ public class MemberController {
     @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login/{photo}")
 
-    public ResponseEntity<?> login(@RequestBody Account account,@RequestBody Member member,@PathVariable  String photo) throws Exception {
+    public ResponseEntity<?> login(@RequestBody Member member,@PathVariable  String photo) throws Exception {
 
-        Map<String, Object> token = memberservice.login(account,member,photo);
+        Map<String, Object> token = memberservice.login(member,photo);
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
@@ -90,6 +102,20 @@ public class MemberController {
             put("data", auth);
         }}, HttpStatus.OK);
     }
+
+    private final FaceDetection fservice;
+
+    @ApiOperation(value = "사진보내기", notes = "제발.")
+    @GetMapping("/pick")
+    public ResponseEntity<?> picture() {
+        fservice.send("","src/test/image/cjw.jpg");
+        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+            put("result", true);
+
+        }}, HttpStatus.OK);
+    }
+
+
 
 
 

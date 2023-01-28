@@ -55,7 +55,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/account/refresh",
                         "/account/mail",
                         "/account/check/**",
-                        "/account/find/**")
+                        "/account/find/**",
+                        "/member/signup/**",
+                        "/member/login/**",
+                        "/member/refresh",
+                        "/member/auth",
+                        "/member/pick"
+                )
                 .permitAll()//모든 인증을 요구를 하지는 않지만
                 .anyRequest().hasRole("USER")//USER라는 권한을 가진 회원은 , 위에 설정된 경로에 대해서 권한, 인증설정을 한다
                 //hasRole("USER")라고 저장을 하였지만 “ROLE_USER”로 UsernamePasswordAuthenticationToken객체에 값을 담아야 한다.
