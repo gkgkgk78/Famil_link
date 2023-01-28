@@ -7,9 +7,9 @@ import com.famillink.model.domain.user.Member;
 import java.util.Map;
 
 public interface MemberService {
-    Member signup(Account account, Member userDto,String photo) throws Exception;
+    Member signup(Member userDto,String photo) throws Exception;
 
-    Map<String, Object> login(Account account, Member member,String photo) throws Exception;
+    Map<String, Object> login( Member member,String photo) throws Exception;
 
 
     String refreshToken(Long uid, String token) throws Exception;

@@ -7,11 +7,13 @@ import com.famillink.model.mapper.AccountMapper;
 import com.famillink.util.EmailHandler;
 import com.famillink.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -28,7 +30,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public Account signup(Account account) throws Exception {
+    public Account signup(@RequestBody Account account) throws Exception {
+        System.out.println(account.toString());
         if (accountMapper.findUserByEmail(account.getEmail()).isPresent()) {
             throw new BaseException(ErrorMessage.EXIST_EMAIL);
         }

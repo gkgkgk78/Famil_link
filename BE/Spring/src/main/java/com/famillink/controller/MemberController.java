@@ -3,7 +3,6 @@ package com.famillink.controller;
 import com.famillink.annotation.ValidationGroups;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
-import com.famillink.model.domain.user.UserDTO;
 import com.famillink.model.service.MemberService;
 import com.famillink.model.service.MemberServiceImpl;
 import io.swagger.annotations.Api;
@@ -29,11 +28,9 @@ public class MemberController {
     //Account account, Member member,String photo
     @ApiOperation(value = "회원가입", notes = "req_data : [id, pw, email, name, nickname]")
     @PostMapping("/signup/{photo}")
-    public ResponseEntity<?> signup(@RequestBody Account account,@RequestBody Member member,@PathVariable String  photo) throws Exception {
+    public ResponseEntity<?> signup(@RequestBody Member member,@PathVariable String  photo) throws Exception {
 
-        Member savedUser = memberservice.signup(account,member,photo);
-
-
+        Member savedUser = memberservice.signup(member,photo);
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
@@ -46,9 +43,9 @@ public class MemberController {
     @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login/{photo}")
 
-    public ResponseEntity<?> login(@RequestBody Account account,@RequestBody Member member,@PathVariable  String photo) throws Exception {
+    public ResponseEntity<?> login(@RequestBody Member member,@PathVariable  String photo) throws Exception {
 
-        Map<String, Object> token = memberservice.login(account,member,photo);
+        Map<String, Object> token = memberservice.login(member,photo);
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);

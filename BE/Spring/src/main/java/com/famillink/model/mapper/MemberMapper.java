@@ -21,10 +21,7 @@ public interface MemberMapper {
 
     String getSalt(Long uid);
 
-    void checkEmail(Long uid) throws Exception;
 
-    void setPassword(@Param(value = "email") String email, @Param(value = "pw") String pw);
 
-    Optional<Member> findUserByNickname(String nickname);
 
 }
