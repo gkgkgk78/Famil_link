@@ -36,16 +36,26 @@ public class AccountController {
 
         Map<String, Object> result = new HashMap<>();
 
+
+        HttpStatus sts = HttpStatus.UNAUTHORIZED;
+
         if(savedAccount != null){
             result.put("result", true);
             result.put("msg", "회원가입을 성공하였습니다.\\n이메일을 확인해주세요.\\n30분 이내 인증을 완료하셔야합니다.");
+            //얼굴인식 파일 가져와서 보내주기
+
+
+            //Http 응답 결과 변경
+            sts = HttpStatus.OK;
         } else {
             result.put("result", false);
             result.put("msg", "회원가입을 실패했습니다");
         }
 
+
+
         //결과 수정 (true, false)
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(sts).body(result);
     }
 
     @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
