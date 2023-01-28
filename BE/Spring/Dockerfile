@@ -1,6 +1,14 @@
+FROM maven:3-jdk-8-alpine AS build
+
+WORKDIR /opt/app
+
+COPY ./ /opt/app
+RUN mvn clean install -DskipTests
+
 FROM openjdk:8-jdk-alpine
-RUN addgroup -S spring && adduser -S spring -G spring
-USER spring:spring
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+
+COPY --from=build /opt/app/target/*.jar app.jar
+ENV PORT 3000
+EXPOSE $PORT
+
+EXTRYPOINT ["java", "-jar", "-Xmx1024M", "-Dserver.port=${PORT}", "app.jar"]
