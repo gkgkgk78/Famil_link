@@ -51,7 +51,7 @@ public class MemberController {
 
 
 
-    @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
+    @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login/{photo}")
 
     public ResponseEntity<?> login(@RequestBody Member member,@PathVariable  String photo) throws Exception {
@@ -70,7 +70,7 @@ public class MemberController {
     }
 
 
-    @ApiOperation(value = "Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
+    @ApiOperation(value = "Member Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestBody Long uid, HttpServletRequest request) throws Exception {
         HttpStatus status = HttpStatus.ACCEPTED;
@@ -92,7 +92,7 @@ public class MemberController {
 
 
 
-    @ApiOperation(value = "회원 확인", notes = "회원정보를 반환합니다.")
+    @ApiOperation(value = "Member회원 확인", notes = "회원정보를 반환합니다.")
     @GetMapping("/auth")
     public ResponseEntity<?> authUser(final Authentication authentication) {
         Member auth = (Member) authentication.getPrincipal();

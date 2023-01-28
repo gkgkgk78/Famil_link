@@ -150,6 +150,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
+            //페이로드를 읽어와서 가족/개인 구분하고 가족이면 가족에 맞는 파일을 돌려준다
             Jws<Claims> claims = Jwts.parser().setSigningKey((secretKey + accountMapper.getSalt(getUid(token))).getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token);
 
             return !claims.getBody().getExpiration().before(new Date());
