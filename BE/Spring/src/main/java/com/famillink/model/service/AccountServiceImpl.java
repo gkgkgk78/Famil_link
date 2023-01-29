@@ -66,11 +66,37 @@ public class AccountServiceImpl implements AccountService {
         String refreshToken = jwtTokenProvider.createRefresh(account.getUid(), Collections.singletonList(account.getRole()));
         accountMapper.setRefreshToken(account);
 
-        // 나중에 프론트에서 더 필요한 정보 추가
+
+
+        // 여기는 토큰 발행
         return new HashMap<String, Object>() {{
             put("access-token", accessToken);
             put("refresh-token", refreshToken);
+            put("uid", account.getUid());
+            put("nickname", account.getNickname());
         }};
+    }
+
+    //TODO; 계정 정보로 model_path 가져오기
+    @Override
+    public Map<String, Object> path(Account loginAccount) throws Exception {
+
+        Account account = accountMapper.findUserByEmail(loginAccount.getEmail())
+                .orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_EMAIL));
+
+        //프론트에서 사용시 path + model.json (and) path + metadata.json
+        String url = account.getPath();
+
+        Map<String, Object> result = new HashMap<>();
+
+        if(url != null){
+            result.put("msg", account.getNickname()+"'s teachable model-path");
+            result.put("model-path", url);
+        } else {
+            result.put("msg", "등록된 가족 모델이 없습니다");
+        }
+
+        return result;
     }
 
     @Override
