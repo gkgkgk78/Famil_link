@@ -36,13 +36,14 @@ public class JwtFilter extends GenericFilterBean {
         DecodedJWT decodedJWT = null;
         String level_type = null;
         String[] route = null;//보낸 restapi경로를 파악을 하여 처리를 하고자 하는 부분임 ,1:member/account, 2: login/signup등등
+        route = requestURI.split("/");//rest api 경로를 의미를 함 1:member/account , 2:구체적인 경로
         boolean flag = false;
 
         if (token != null)//여기에 해당이 되지 않는 다면 아직 토큰을 가지고 있지 않은 상태를 의미를 한다.
         {
             decodedJWT = JWT.decode(token);
             level_type = decodedJWT.getClaims().get("level").toString();//level은 member,account 둘중 하나를 내포 하고 있다.
-            route = requestURI.split("/");//rest api 경로를 의미를 함 1:member/account , 2:구체적인 경로
+
             level_type=level_type.substring(1,level_type.length()-1);
         }
         //member인지, account인지에 따라 다른 메서드를 호출을 해야함
@@ -50,6 +51,11 @@ public class JwtFilter extends GenericFilterBean {
 
             if (token == null) {
                 logger.debug("유효한 Jwt 토큰이 없습니다, uri: {}", requestURI);
+                //권한이 없는 경우에는 접근하고자 하는 경로가 signup과 login일때만 가능하게 해야겠다
+                if (route[1].equals("member")) {
+                    throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);//token정보가 없을시에는 member에 접근하는건 불가능하게 함
+                }
+
             } else {//토큰이 존재하는 경우를 의미를 함
                 if (level_type.equals("account")) {
                     flag = jwtTokenProvider.validateToken(token);
@@ -62,7 +68,12 @@ public class JwtFilter extends GenericFilterBean {
                         if (level_type.equals("account"))//account가 member의 컨트롤러로 갈수 있는 경우는
                         //회원가입이나, 로그인을 할시에만 가능하다
                         {
-                            if (!route[2].equals("login") || !route[2].equals("signup"))
+                            boolean next=false;
+                            if ((route[2].equals("login")))
+                                next=true;
+                            if ((route[2].equals("signup")))
+                                next=true;
+                            if (next==false)
                                 throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);//account의 계정으로는 member의 login,signup을 제외하고 접근 불가
                         }
                     }
