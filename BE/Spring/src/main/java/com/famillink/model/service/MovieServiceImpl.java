@@ -4,6 +4,7 @@ import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,17 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Transactional
     public void sender(MovieSenderDTO sender, MultipartFile file) throws Exception {
+        // TODO: CJW, sender의 uid들이 같은 가족인지 valid 필요
         fileService.store(file);
+
+        // TODO: CJW, file path를 가족마다 나누고 filename을 중복되지 않는 임의 값으로 변경해서 관리하면 편함.
         movieMapper.sendMovie(sender, moviePath + "/" + file.getOriginalFilename());
+    }
+
+    @Override
+    public InputStreamResource download(Long movie_uid) throws Exception {
+        // TODO: CJW, movie가 자신한테 온 것인지 valid 필요
+        String filename = movieMapper.getMoviePath(movie_uid);
+        return fileService.loadAsResource(filename);
     }
 }

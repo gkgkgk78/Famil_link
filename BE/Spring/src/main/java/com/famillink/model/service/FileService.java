@@ -1,5 +1,6 @@
 package com.famillink.model.service;
 
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,5 +13,5 @@ public interface FileService {
 
     Path load(String filename);
 
-    Resource loadAsResource(String filename);
+    InputStreamResource loadAsResource(String filename) throws Exception;
 }

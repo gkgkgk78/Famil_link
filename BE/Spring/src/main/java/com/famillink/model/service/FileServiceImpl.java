@@ -2,11 +2,14 @@ package com.famillink.model.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -57,16 +60,10 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Resource loadAsResource(String filename) {
+    public InputStreamResource loadAsResource(String filename) throws Exception {
         try {
-            Path file = load(filename);
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            } else {
-                throw new RuntimeException("Could not read file: " + filename);
-            }
-        } catch (MalformedURLException e) {
+            return new InputStreamResource(new FileInputStream("C:/Users/CJW/IdeaProjects/S08P12A208/upfiles/test1.mp4"));
+        } catch (FileNotFoundException e) {
             throw new RuntimeException("Could not read file: " + filename, e);
         }
     }
