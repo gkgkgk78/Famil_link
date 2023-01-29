@@ -14,7 +14,6 @@ function Weather() {
         const weather = document.querySelector("#weather span:last-child");
         city.innerText = data.name;
         weather.innerText = `${data.weather[0].description} / ${data.main.temp}ºC`;
-        console.log(data)
         })
     }
 
