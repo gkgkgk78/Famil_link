@@ -42,6 +42,7 @@ public class MovieController {
     public ResponseEntity<?> getMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
 
         InputStreamResource resource = movieService.download(movie_uid);
+
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .cacheControl(CacheControl.noCache())

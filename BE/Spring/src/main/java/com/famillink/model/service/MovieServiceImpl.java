@@ -43,6 +43,8 @@ public class MovieServiceImpl implements MovieService {
     public InputStreamResource download(Long movie_uid) throws Exception {
         // TODO: CJW, movie가 자신한테 온 것인지 valid 필요
         String filename = movieMapper.getMoviePath(movie_uid);
+
+        // 파일 리소스 리턴
         return fileService.loadAsResource(filename);
     }
 }
