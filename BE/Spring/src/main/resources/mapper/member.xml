@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.famillink.model.mapper.MemberMapper">
+
+    <select id="findUserByUid" parameterType="long" resultType="Member">
+        SELECT *
+        FROM member
+        WHERE `uid` = #{uid}
+    </select>
+
+
+    <select id="findUserFamily" parameterType="string" resultType="Member">
+        SELECT *
+        FROM account a JOIN member m
+            ON a.uid = m.user_uid
+        WHERE #{email} = a.email
+    </select>
+
+
+    <insert id="signup" parameterType="Member">
+        INSERT INTO member (`name`, `model_path`,`nickname`,`user_uid`)
+        VALUES (#{name}, #{model_path},  #{nickname},#{user_uid})
+        <selectKey resultType="long" keyProperty="uid" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+
+    <update id="setRefreshToken" parameterType="Member">
+        UPDATE member
+        SET `refresh_token` = #{refresh_token}
+        WHERE `uid` = #{uid};
+    </update>
+
+
+    <update id="setSalt">
+        UPDATE member
+        SET `salt` = #{salt}
+        WHERE `uid` = #{uid}
+    </update>
+
+    <select id="getSalt" parameterType="long" resultType="string">
+        SELECT `salt`
+        FROM member
+        WHERE uid = #{uid};
+    </select>
+
+
+    <update id="setPassword">
+        UPDATE member
+        SET `pw` = #{pw}
+        WHERE `email` = #{email};
+    </update>
+
+
+
+
+</mapper>
