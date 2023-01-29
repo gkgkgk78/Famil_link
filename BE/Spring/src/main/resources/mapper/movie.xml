@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.famillink.model.mapper.MovieMapper">
+    <insert id="sendMovie">
+        INSERT INTO movie (`member_from`, `member_to`, `path`)
+        VALUES (#{sender.from_member_uid}, #{sender.to_member_uid}, #{path})
+    </insert>
+    <select id="getMoviePath" parameterType="Long" resultType="string">
+        SELECT path
+        FROM movie
+        WHERE `uid` = #{movie_uid}
+    </select>
+</mapper>
