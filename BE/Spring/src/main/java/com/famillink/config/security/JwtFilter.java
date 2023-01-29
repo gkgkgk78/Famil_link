@@ -52,7 +52,7 @@ public class JwtFilter extends GenericFilterBean {
             if (token == null) {
                 logger.debug("유효한 Jwt 토큰이 없습니다, uri: {}", requestURI);
                 //권한이 없는 경우에는 접근하고자 하는 경로가 signup과 login일때만 가능하게 해야겠다
-                if (route[1].equals("member")) {
+                if (route!=null && route[1].equals("member")) {
                     throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);//token정보가 없을시에는 member에 접근하는건 불가능하게 함
                 }
 
