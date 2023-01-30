@@ -37,11 +37,16 @@ public class MovieServiceImpl implements MovieService {
 
         // TODO: CJW, file path를 가족마다 나누고 filename을 중복되지 않는 임의 값으로 변경해서 관리하면 편함.
         movieMapper.sendMovie(sender, moviePath + "/" + file.getOriginalFilename());
+
+
+
+
     }
 
     @Override
     public InputStreamResource download(Long movie_uid) throws Exception {
         // TODO: CJW, movie가 자신한테 온 것인지 valid 필요
+
         String filename = movieMapper.getMoviePath(movie_uid);
 
         // 파일 리소스 리턴
