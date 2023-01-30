@@ -13,4 +13,11 @@ public interface MovieMapper {
     void sendMovie(@Param(value = "sender") MovieSenderDTO sender, @Param("path") String path);
 
     String getMoviePath(Long movie_uid);
+
+
+    String family_validation(Long from, Long to);
+
+
+
+
 }

@@ -13,4 +13,11 @@
         FROM movie
         WHERE `uid` = #{movie_uid}
     </select>
+
+
+
+
+
+
+
 </mapper>

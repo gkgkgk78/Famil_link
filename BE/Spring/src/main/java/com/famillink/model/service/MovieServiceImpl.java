@@ -32,8 +32,23 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Transactional
     public void sender(MovieSenderDTO sender, MultipartFile file) throws Exception {
+
         // TODO: CJW, sender의 uid들이 같은 가족인지 valid 필요
+
+        //현재는 sender에 있는 보내고자 하는 얘들이 같은
+
+        movieMapper.family_validation(sender.getFrom_member_uid(),sender.getTo_member_uid());
+
+
+
+
+
         fileService.store(file);
+
+
+
+
+
 
         // TODO: CJW, file path를 가족마다 나누고 filename을 중복되지 않는 임의 값으로 변경해서 관리하면 편함.
         movieMapper.sendMovie(sender, moviePath + "/" + file.getOriginalFilename());
