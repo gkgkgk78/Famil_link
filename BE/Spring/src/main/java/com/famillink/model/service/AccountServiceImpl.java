@@ -84,14 +84,17 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountMapper.findUserByEmail(loginAccount.getEmail())
                 .orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_EMAIL));
 
-        //프론트에서 사용시 path + model.json (and) path + metadata.json
-        String url = account.getPath();
+        //사용시 path + model.json (and) path + metadata.json
+        String modelUrl = account.getPath() + "model.json";
+        String metaUrl = account.getPath() + "metadata.json";
+
 
         Map<String, Object> result = new HashMap<>();
 
-        if(url != null){
-            result.put("msg", account.getNickname()+"'s teachable model-path");
-            result.put("model-path", url);
+        if(modelUrl != null && metaUrl != null){
+            result.put("msg", account.getNickname()+"'s teachable path");
+            result.put("model-path", modelUrl);
+            result.put("meta-path", metaUrl);
         } else {
             result.put("msg", "등록된 가족 모델이 없습니다");
         }
