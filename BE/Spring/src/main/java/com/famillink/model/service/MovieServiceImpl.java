@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
@@ -40,21 +41,26 @@ public class MovieServiceImpl implements MovieService {
         //현재는 sender에 있는 보내고자 하는 얘들이 같은
 
 
-        String result=movieMapper.family_validation(sender);
-
-        if (Integer.parseInt(result)==0)//계정 정보가 일치 하지 않을시에 처리 하고자 하는 상황
-        {
-            throw new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO);
-        }
+//        String result=movieMapper.family_validation(sender);
+//
+//        if (Integer.parseInt(result)==0)//계정 정보가 일치 하지 않을시에 처리 하고자 하는 상황
+//        {
+//            throw new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO);
+//        }
 
 
         fileService.store(file);
 
 
+        //파일명 랜덤 저장
+        long millis = System.currentTimeMillis();
+        UUID uuid = UUID.randomUUID();
+        String u1=uuid.toString()+Long.toString(millis);//밀리초 까지 해서 저장 하고자 함
+
 
 
         // TODO: CJW, file path를 가족마다 나누고 filename을 중복되지 않는 임의 값으로 변경해서 관리하면 편함.
-        movieMapper.sendMovie(sender, moviePath + "/" + file.getOriginalFilename());
+        movieMapper.sendMovie(sender, moviePath + "/" + u1);
 
 
 
