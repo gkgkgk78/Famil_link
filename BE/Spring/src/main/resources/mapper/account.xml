@@ -15,7 +15,8 @@
                `sdate`,
                `refresh_token`,
                `salt`,
-               `level`
+               `level`,
+               `model_path`
         FROM account
         WHERE `email` = #{email}
     </select>
