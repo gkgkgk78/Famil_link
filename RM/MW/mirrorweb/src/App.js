@@ -3,7 +3,6 @@ import './App.css';
 import Clock from './components/Clock';
 import Weather from './components/Weather';
 import Caption from './components/Caption';
-import Todo from './components/Todo';
 
 import Main from './pages/Main';
 import LoginMirror from './pages/loginMirror';
@@ -21,10 +20,6 @@ function App() {
   // 초음파 센서 신호가 사라지면 메인 페이지로 돌아가는데, 어차피 디스플레이는 꺼진다.
   // App.js에서 제스쳐나 음성 신호 등이 들어오면 영상 녹화 화면으로 이동한다.
 
-  const style = {
-    paddingTop : '200px',
-    height : '720px'
-  }
   return (
     <div className="App">
       <Box sx={{
@@ -35,7 +30,7 @@ function App() {
         <Clock />
         <Weather />
       </Box>
-      <section style={style}>
+      <section>
       <Routes>
         <Route path="/" element= { <Main />} />
         <Route path="/loginmirror" element= { <LoginMirror />} />
@@ -43,8 +38,8 @@ function App() {
         <Route path="/playvideo" element={ <PlayVideo /> } />
         <Route path="/record" element={<Record/>} />
       </Routes>
+      <Caption />
       </section>
-      <footer> <Caption></Caption> </footer>
 
     </div>
   );

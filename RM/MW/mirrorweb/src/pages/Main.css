@@ -1,8 +1,57 @@
+.calendardiv {
+    width: 30%;
+    height: 30%;
+    text-align: left;
+    text-overflow: ellipsis;
+    justify-content: left;
+    align-content: left;
+} 
 
-ul {
-    list-style-type: none;
+.Todo {
+    width: 30%;
+    height: 30%;
+    display: inline;
+    text-align: right;
+    align-content: right;
+    justify-content: right;
+    text-overflow: ellipsis;
 }
 
-li {
+
+.TodoListItem {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.Todotext {
+    display: flex;
+    /* line-height: 1.5; */
+    align-items: center;
+    height: 4rem;
+    justify-content: left;
+}
+
+.blankbox {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.blanktext {
+margin-left: 0.5rem;
+text-overflow: ellipsis;
+text-align: left;
+}
+.checkbox {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+.checktext {
+    color: #FF6416;
+    margin-left: 0.5rem;
+    text-decoration: line-through;
+    text-overflow: ellipsis;
     text-align: left;
 }

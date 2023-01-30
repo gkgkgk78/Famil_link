@@ -4,11 +4,13 @@ import "./Main.css"
 import Todo from '../components/Todo';
 import Calendar from '../components/Calendar';
 
+
 const Main = () => {
     return ( 
         <div>
           {/* <div>123</div> */}
           <Calendar />
+          <br />
           <Todo />
         </div>
      );
