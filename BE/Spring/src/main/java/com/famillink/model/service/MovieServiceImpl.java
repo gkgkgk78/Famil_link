@@ -48,7 +48,7 @@ public class MovieServiceImpl implements MovieService {
         // TODO: CJW, movie가 자신한테 온 것인지 valid 필요
 
         String filename = movieMapper.getMoviePath(movie_uid);
-
+        filename="/"+filename;
         // 파일 리소스 리턴
         return fileService.loadAsResource(filename);
     }
