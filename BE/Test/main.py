@@ -3,14 +3,13 @@ import json
 import base64
 import cv2
 
-image_name = 'cjw.jpg'
-img = cv2.imread(image_name)
-jpg_img = cv2.imencode('.jpg', img)
-b64_string = base64.b64encode(jpg_img[1]).decode('utf-8')
+files = open('cjw.jpg', 'rb')
 
-files = {
-            "img": b64_string,
-        }
+# 파이썬 딕셔너리 형식으로 file 설정
+upload = {'imgUrlBase': files}
 
-r = requests.post("http://localhost:5555/", json=json.dumps(files))
-print(r.json())
+# request.post방식으로 파일전송.
+res = requests.post('http://localhost:5555/',
+                    files=upload)
+
+print(res.json())
