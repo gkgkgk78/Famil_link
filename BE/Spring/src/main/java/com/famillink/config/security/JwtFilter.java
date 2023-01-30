@@ -43,7 +43,6 @@ public class JwtFilter extends GenericFilterBean {
         {
             decodedJWT = JWT.decode(token);
             level_type = decodedJWT.getClaims().get("level").toString();//level은 member,account 둘중 하나를 내포 하고 있다.
-
             level_type=level_type.substring(1,level_type.length()-1);
         }
         //member인지, account인지에 따라 다른 메서드를 호출을 해야함

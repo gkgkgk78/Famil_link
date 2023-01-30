@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `famil_link`.`account` (
   UNIQUE INDEX `phone` (`phone` ASC) VISIBLE,
   UNIQUE INDEX `address` (`address` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci
 COMMENT = '가족 계정';
@@ -51,7 +51,6 @@ CREATE TABLE IF NOT EXISTS `famil_link`.`member` (
   `user_uid` BIGINT NOT NULL COMMENT '가족 계정 번호',
   `name` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NOT NULL COMMENT '이름',
   `sdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '가입일시',
-  `model_path` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NOT NULL COMMENT '인식 모델 경로',
   `nickname` VARCHAR(45) NULL DEFAULT NULL,
   `role` ENUM('ROLE_USER', 'ROLE_ADMIN') NOT NULL DEFAULT 'ROLE_USER',
   `refresh_token` VARCHAR(200) NULL DEFAULT NULL,

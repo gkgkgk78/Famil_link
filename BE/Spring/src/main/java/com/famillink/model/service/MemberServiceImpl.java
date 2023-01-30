@@ -40,8 +40,7 @@ public class MemberServiceImpl implements MemberService {
 //            throw new BaseException(ErrorMessage.EXIST_ID);
 //        }
 
-        //등록될 회원의 경로명을 등록해 주는 부분입니다.
-        member.setModel_path(photo);//나중에 경로명 지정하게 될시 설정 해주자.
+
 
         try {
             mapper.signup(member);
