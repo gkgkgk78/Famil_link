@@ -26,7 +26,7 @@ public class Member implements UserDetails {
     protected String sdate;
 
     protected String nickname;
-    protected String model_path;
+
 
 
 
@@ -55,7 +55,7 @@ public class Member implements UserDetails {
 
     @Override
     public String getPassword() {
-        return this.model_path;//우선 이렇게 해둠... 어떻게 넘기면 좋을지 궁금해서 이렇게 함
+        return Long.toString(this.uid);//우선 이렇게 해둠... 어떻게 넘기면 좋을지 궁금해서 이렇게 함
     }
 
     @Override
@@ -88,18 +88,16 @@ public class Member implements UserDetails {
     //입력 받아야 하는 정보는, name,model_path,nickname
 
 
-    public Member(String name, String nickname, String model_path) {
+    public Member(String name, String nickname) {
         this.name = name;
         this.nickname = nickname;
-        this.model_path = model_path;
     }
 
-    public Member(Long uid, String user_uid, String name, String nickname, String model_path) {
+    public Member(Long uid, String user_uid, String name, String nickname) {
         this.uid = uid;
         this.user_uid = user_uid;
         this.name = name;
         this.nickname = nickname;
-        this.model_path = model_path;
     }
 
     public Member(Long uid) {
