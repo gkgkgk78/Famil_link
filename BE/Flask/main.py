@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import base64
-
+import os
 from keras.models import load_model
 from flask import Flask, jsonify, request
 from PIL import Image
@@ -20,16 +20,14 @@ model = load_model('keras_model.h5')
 labels = open('labels.txt', 'r', encoding='UTF8').readlines()
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["POST"])
 def index():
-    json_data = request.get_json()
-    dict_data = json.loads(json_data)
+    file = request.files['imgUrlBase']
 
-    img = dict_data['img']
-    img = base64.b64decode(img)
-    img = BytesIO(img)
-    img = Image.open(img)
+    filename = file.filename
 
+    file.save(os.path.join("", filename))
+    img = cv2.imread(filename)
     # use numpy to convert the pil_image into a numpy array
     numpy_image = np.array(img)
 
