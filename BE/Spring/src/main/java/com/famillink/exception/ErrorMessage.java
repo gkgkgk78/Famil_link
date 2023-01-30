@@ -16,6 +16,12 @@ public enum ErrorMessage {
     DONT_EXIST_ACCOUNT(102, "이미 삭제 된 계정입니다.", HttpStatus.BAD_REQUEST),
     NOT_MATCH_ACCOUNT_INFO(103, "입력하신 계정과 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     SIGNUP_LISTEN(110, "가입 대기중인 아이디입니다.", HttpStatus.BAD_REQUEST),
+    
+    NOT_STORE_FILE(103, "파일을 저장 불가능 합니다", HttpStatus.BAD_REQUEST),
+    
+
+
+
 
 
     EXIST_NICKNAME(200, "이미 존재하는 닉네임입니다.", HttpStatus.BAD_REQUEST),

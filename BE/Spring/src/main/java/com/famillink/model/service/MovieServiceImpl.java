@@ -1,5 +1,7 @@
 package com.famillink.model.service;
 
+import com.famillink.exception.BaseException;
+import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
@@ -37,15 +39,16 @@ public class MovieServiceImpl implements MovieService {
 
         //현재는 sender에 있는 보내고자 하는 얘들이 같은
 
-        movieMapper.family_validation(sender.getFrom_member_uid(),sender.getTo_member_uid());
 
+        String result=movieMapper.family_validation(sender);
 
-
+        if (Integer.parseInt(result)==0)//계정 정보가 일치 하지 않을시에 처리 하고자 하는 상황
+        {
+            throw new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO);
+        }
 
 
         fileService.store(file);
-
-
 
 
 

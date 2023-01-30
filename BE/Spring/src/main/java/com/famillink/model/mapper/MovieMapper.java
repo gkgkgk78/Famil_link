@@ -15,7 +15,7 @@ public interface MovieMapper {
     String getMoviePath(Long movie_uid);
 
 
-    String family_validation(Long from, Long to);
+    String family_validation(MovieSenderDTO sender);
 
 
 

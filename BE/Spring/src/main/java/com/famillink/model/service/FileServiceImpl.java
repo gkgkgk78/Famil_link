@@ -1,5 +1,7 @@
 package com.famillink.model.service;
 
+import com.famillink.exception.BaseException;
+import com.famillink.exception.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -48,7 +50,8 @@ public class FileServiceImpl implements FileService {
                 Files.copy(inputStream, root.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+            //파일 저장 불가시 처리하기 위한 부분
+            throw new BaseException(ErrorMessage.NOT_STORE_FILE);
         }
     }
 
