@@ -12,7 +12,8 @@ public interface AccountService {
 
     Map<String, Object> login(Account loginAccount) throws Exception;
 
-    //전체 회원 조회
+    //path 생성
+    Map<String, Object> path(Account loginAccount) throws Exception;
 
     List<Account> allMembers(Account loginAccount) throws Exception;
 

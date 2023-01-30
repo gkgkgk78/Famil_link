@@ -37,6 +37,9 @@ public class Account implements UserDetails {
 
     protected String nickname;
 
+    //안면인식 폴더 경로
+    protected String path;
+
     @ApiModelProperty(hidden = true)
     protected String role;
 

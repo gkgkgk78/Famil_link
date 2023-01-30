@@ -36,32 +36,51 @@ public class AccountController {
 
         Map<String, Object> result = new HashMap<>();
 
+
+        HttpStatus sts = HttpStatus.UNAUTHORIZED;
+
         if(savedAccount != null){
             result.put("result", true);
             result.put("msg", "회원가입을 성공하였습니다.\\n이메일을 확인해주세요.\\n30분 이내 인증을 완료하셔야합니다.");
+            //얼굴인식 파일 가져와서 보내주기
+
+
+            //Http 응답 결과 변경
+            sts = HttpStatus.OK;
         } else {
             result.put("result", false);
             result.put("msg", "회원가입을 실패했습니다");
         }
 
+
+
         //결과 수정 (true, false)
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(sts).body(result);
     }
 
     @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody Account account) throws Exception {
 
-        Map<String, Object> token = accountService.login(account);
+        Map<String, Object> token = accountService.login(account); //access token, refresh token
+        Map<String, Object> path = accountService.path(account);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "로그인을 성공하였습니다.");
-            put("access-token", token.get("access-token"));
-            put("refresh-token", token.get("refresh-token"));
-            put("uid", token.get("uid"));
-            put("name", token.get("name"));
-        }});
+        Map<String, Object> responseResult = new HashMap<>();
+
+        HttpStatus sts = HttpStatus.BAD_REQUEST;
+
+        if(token != null && path != null){
+            sts = HttpStatus.OK;
+            responseResult.put("result", true);
+            responseResult.put("msg", "로그인을 성공하였습니다.");
+            responseResult.put("access-token", token.get("access-token"));
+            responseResult.put("refresh-token", token.get("refresh-token"));
+            responseResult.put("uid", token.get("uid"));
+            responseResult.put("nickname", token.get("nickname"));
+            responseResult.put("modelPath", path.get("model-path"));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
     @ApiOperation(value = "Access Token 재발급", notes = "만료된 access token을 재발급받는다.")

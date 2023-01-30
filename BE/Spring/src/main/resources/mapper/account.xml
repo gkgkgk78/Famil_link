@@ -5,13 +5,23 @@
 
 <mapper namespace="com.famillink.model.mapper.AccountMapper">
     <select id="findUserByEmail" parameterType="string" resultType="Account">
-        SELECT *
+        SELECT
         FROM account
         WHERE `email` = #{email}
     </select>
 
     <select id="findUserByUid" parameterType="long" resultType="Account">
-        SELECT *
+        SELECT `uid`,
+               `email`,
+               `pw`,
+               `address`,
+               `phone`,
+               `nickname`,
+               `role`,
+               `sdate`,
+               `salt`,
+               `level`,
+               `model_path` AS path
         FROM account
         WHERE `uid` = #{uid}
     </select>
