@@ -6,6 +6,8 @@ import paho.mqtt.client as mqtt
 import json
 from json import JSONEncoder
 import mediapipe as mp
+import requests
+import base64
 
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
@@ -140,6 +142,16 @@ def opencv_record():
                 print('no file!')
                 break
         out.release()
+        image_name = 'record.mp4'
+        mp4 = cv2.imread(image_name)
+        jpg_img = cv2.imencode('.mp4', mp4)
+        b64_string = base64.b64encode(jpg_img[1]).decode('utf-8')
+
+        files = {
+            "mp4": b64_string,
+        }
+
+        r = requests.post("http://i8a208.p.ssafy.io:3000/movie?from_member_uid=22&to_member_uid=24", json=json.dumps(files))
 
 
 camera = cv2.VideoCapture(1)
