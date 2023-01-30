@@ -6,6 +6,8 @@ import paho.mqtt.client as mqtt
 import json
 from json import JSONEncoder
 import mediapipe as mp
+import requests
+import base64
 
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
@@ -140,6 +142,18 @@ def opencv_record():
                 print('no file!')
                 break
         out.release()
+        # 보내고자하는 파일을 'rb'(바이너리 리드)방식 열고
+        files = open('record.mp4', 'rb')
+
+        # 파이썬 딕셔너리 형식으로 file 설정
+        upload = {'file': files}
+
+        # request.post방식으로 파일전송.
+        res = requests.post('http://localhost:9999/movie?from_member_uid=22&to_member_uid=24',
+                            files=upload,
+                            headers={
+                                "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTA0ODA1MSwiZXhwIjoxNjg1MDQ4MDUxfQ.8RvdPA308ay5mMcLO3AiokXol1SSfJ63mLuqX3312X4"
+                            })
 
 
 camera = cv2.VideoCapture(1)
@@ -154,6 +168,7 @@ client.on_message = on_message
 # address : localhost, port: 1883 에 연결
 client.connect('localhost', 1883)
 client.loop_start()
+
 
 while True:
     pass
