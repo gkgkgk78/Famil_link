@@ -1,0 +1,24 @@
+node{
+    def WORKSPACE = "/var/jenkins_home/workspace/BE_Flask_Famil-link/BE/Flask/"
+    def dockerImageTag = "flask-deploy${env.BUILD_NUMBER}"
+
+    try{
+        stage('Clone Repo'){
+            git url: 'https://lab.ssafy.com/s08-webmobile2-sub2/S08P12A208.git',
+                credentialsId: 'jenkins',
+                branch: 'master'
+        }
+
+        stage('Build docker'){
+            dockerImage = docker.build("flask-deploy:${env.BUILD_NUMBER}", "./BE/Flask")
+        }
+
+        stage('Deploy docker'){
+            echo "Docker Image Tag Name: ${dockerImageTag}"
+            sh "docker stop flask-deploy || true && docker rm flask-deploy || true"
+            sh "docker run --name flask-deploy -d -p 3000:9999 flask-deploy:${env.BUILD_NUMBER}"
+        }
+    }catch(e){
+        throw e
+    }
+}
