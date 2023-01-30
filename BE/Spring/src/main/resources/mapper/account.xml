@@ -21,7 +21,17 @@
     </select>
 
     <select id="findUserByUid" parameterType="long" resultType="Account">
-        SELECT *
+        SELECT `uid`,
+               `email`,
+               `pw`,
+               `address`,
+               `phone`,
+               `nickname`,
+               `role`,
+               `sdate`,
+               `salt`,
+               `level`,
+               `model_path` AS path
         FROM account
         WHERE `uid` = #{uid}
     </select>

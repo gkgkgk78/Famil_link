@@ -66,11 +66,40 @@ public class AccountServiceImpl implements AccountService {
         String refreshToken = jwtTokenProvider.createRefresh(account.getUid(), Collections.singletonList(account.getRole()));
         accountMapper.setRefreshToken(account);
 
-        // 나중에 프론트에서 더 필요한 정보 추가
+
+
+        // 여기는 토큰 발행
         return new HashMap<String, Object>() {{
             put("access-token", accessToken);
             put("refresh-token", refreshToken);
+            put("uid", account.getUid());
+            put("nickname", account.getNickname());
         }};
+    }
+
+    //TODO; 계정 정보로 model_path 가져오기
+    @Override
+    public Map<String, Object> path(Account loginAccount) throws Exception {
+
+        Account account = accountMapper.findUserByEmail(loginAccount.getEmail())
+                .orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_EMAIL));
+
+        //사용시 path + model.json (and) path + metadata.json
+        String modelUrl = account.getPath() + "model.json";
+        String metaUrl = account.getPath() + "metadata.json";
+
+
+        Map<String, Object> result = new HashMap<>();
+
+        if(modelUrl != null && metaUrl != null){
+            result.put("msg", account.getNickname()+"'s teachable path");
+            result.put("model-path", modelUrl);
+            result.put("meta-path", metaUrl);
+        } else {
+            result.put("msg", "등록된 가족 모델이 없습니다");
+        }
+
+        return result;
     }
 
     @Override
@@ -110,8 +139,10 @@ public class AccountServiceImpl implements AccountService {
             throw new BaseException(ErrorMessage.EXIST_CHECK_MAIL);
         }
 
+        //TODO; 참조 주소 변경
+
         String token = jwtTokenProvider.create(account.getUid(), Collections.singletonList(account.getRole()), 1000 * 60 * 30);
-        emailHandler.sendMail(account.getEmail(), "Famillink 이메일 인증입니다", "<h1>Famillink 이메일 인증 회원가입 입니다.</h1><a href='http://183.97.128.216/check?token=\" + token + \"'>여기를 눌러 인증해주세요.</a>", true);
+        emailHandler.sendMail(account.getEmail(), "Famillink 이메일 인증입니다", "<h1>Famillink 이메일 인증 회원가입 입니다.</h1><a href='http://i8a208.p.ssafy.io:3000//check?token=\" + token + \"'>여기를 눌러 인증해주세요.</a>", true);
     }
 
     @Override
