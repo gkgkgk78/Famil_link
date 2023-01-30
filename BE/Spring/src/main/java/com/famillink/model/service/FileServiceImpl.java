@@ -62,7 +62,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public InputStreamResource loadAsResource(String filename) throws Exception {
         try {
-            return new InputStreamResource(new FileInputStream("C:/Users/CJW/IdeaProjects/S08P12A208/upfiles/test1.mp4"));
+            return new InputStreamResource(new FileInputStream(filename));
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Could not read file: " + filename, e);
         }
