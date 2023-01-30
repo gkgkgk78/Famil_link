@@ -1,5 +1,6 @@
 package com.famillink.model.service;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -23,7 +24,9 @@ public class FaceDetectionImpl implements FaceDetection {
 
         //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         //System.load("C:\\Users\\Hello\\Desktop\\ssafy_2th_git\\S08P12A208\\BE\\Spring\\src\\main\\java\\libs\\opencv_java3412.dll");
+        //System.loadLibrary("opencv_java320");
 
+        nu.pattern.OpenCV.loadShared(); //add this
         //바로밑의 부분에 파일에 해당되는 경로를 넣어줍니다
         //String image_name = "src/bag.jpg";
         String image_name = src;
