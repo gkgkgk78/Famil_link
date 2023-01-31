@@ -20,7 +20,7 @@ public interface MovieMapper {
 
     MovieSenderDTO getMovie(Long movie_uid);
 
-
+    void setMovie(Long movie_uid);
 
 
 }

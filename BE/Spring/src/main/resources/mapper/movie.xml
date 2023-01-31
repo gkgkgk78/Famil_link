@@ -23,7 +23,11 @@
     </select>
 
 
-
+    <select id="setMovie" parameterType="Long" resultType="MovieSenderDTO">
+        update movie
+        set status="1"
+        where uid = #{movie_uid}
+    </select>
 
 
 

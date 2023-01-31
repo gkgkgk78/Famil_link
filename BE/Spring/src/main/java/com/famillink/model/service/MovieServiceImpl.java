@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
-
 @Service
 @RequiredArgsConstructor
 public class MovieServiceImpl implements MovieService {
@@ -49,15 +48,12 @@ public class MovieServiceImpl implements MovieService {
         m = memberMapper.findUserByUid(sender.getFrom_member_uid()).get();
         //가족 uid로 폴더에 저장을 해줌
         String get = fileService.store(file, m.getUser_uid());
-
         movieMapper.sendMovie(sender, get);
 
     }
 
     @Override
     public InputStreamResource download(Long movie_uid) throws Exception {
-        // TODO: CJW, movie가 자신한테 온 것인지 valid 필요
-
 
         try {
             //Movie table에서 보낸자와 받은 자가 같은 가족인지 판단을 해서 처리를 함
@@ -70,11 +66,27 @@ public class MovieServiceImpl implements MovieService {
             //System.out.println(e);
             throw new BaseException(ErrorMessage.NOT_EXIST_ROUTE);
         }
-
-
         String filename = movieMapper.getMoviePath(movie_uid);
         filename = "./" + filename;
         // 파일 리소스 리턴
         return fileService.loadAsResource(filename);
     }
+
+
+    @Override
+    public void setRead(Long movie_uid) throws Exception {
+
+        try{
+            movieMapper.setMovie(movie_uid);
+        }
+        catch (Exception e)
+        {
+            throw new BaseException(ErrorMessage.NOT_READ_FILE);
+        }
+
+
+
+    }
+
+
 }

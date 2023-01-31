@@ -12,6 +12,9 @@ public interface MovieService {
     InputStreamResource download(Long movie_uid) throws Exception;
 
 
+    void setRead(Long movie_uid)throws Exception;
+
+
 
 
 }

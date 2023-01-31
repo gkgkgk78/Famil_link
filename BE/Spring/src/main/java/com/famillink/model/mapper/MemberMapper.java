@@ -22,9 +22,7 @@ public interface MemberMapper {
     String getSalt(Long uid);
 
 
-    Boolean findTogether(Long uid1,Long uid2) throws Exception;
-
-
+    Boolean findTogether(Long uid1, Long uid2) throws Exception;
 
 
 }
