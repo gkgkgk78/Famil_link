@@ -43,7 +43,7 @@ public class JwtFilter extends GenericFilterBean {
         {
             decodedJWT = JWT.decode(token);
             level_type = decodedJWT.getClaims().get("level").toString();//level은 member,account 둘중 하나를 내포 하고 있다.
-            level_type=level_type.substring(1,level_type.length()-1);
+            level_type = level_type.substring(1, level_type.length() - 1);
         }
         //member인지, account인지에 따라 다른 메서드를 호출을 해야함
         try {
@@ -55,9 +55,9 @@ public class JwtFilter extends GenericFilterBean {
                 //이렇게 처리를 할시 초기에 접근하는 주소가 존재를 할시에 처리를 해주는 방법을 고려 해 봐야 한다.
 //                if(route ==null)
 //                    throw  new BaseException(ErrorMessage.NOT_EXIST_ROUTE);
-                if (route!=null) {
-                    if (route.length<=1)
-                        throw  new BaseException(ErrorMessage.NOT_EXIST_ROUTE);
+                if (route != null) {
+                    if (route.length <= 1)
+                        throw new BaseException(ErrorMessage.NOT_EXIST_ROUTE);
                     if (route[1].equals("member"))
                         throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);//token정보가 없을시에는 member에 접근하는건 불가능하게 함
                 }
@@ -74,12 +74,12 @@ public class JwtFilter extends GenericFilterBean {
                         if (level_type.equals("account"))//account가 member의 컨트롤러로 갈수 있는 경우는
                         //회원가입이나, 로그인을 할시에만 가능하다
                         {
-                            boolean next=false;
+                            boolean next = false;
                             if ((route[2].equals("login")))
-                                next=true;
+                                next = true;
                             if ((route[2].equals("signup")))
-                                next=true;
-                            if (next==false)
+                                next = true;
+                            if (next == false)
                                 throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);//account의 계정으로는 member의 login,signup을 제외하고 접근 불가
                         }
                     }
@@ -96,10 +96,7 @@ public class JwtFilter extends GenericFilterBean {
                 logger.info("Security context에 인증 정보를 저장했습니다, uri: {}", requestURI);
 
 
-
             }
-
-
 
 
         } catch (BaseException e) {
