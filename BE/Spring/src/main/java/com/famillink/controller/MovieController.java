@@ -48,6 +48,8 @@ public class MovieController {
                 .cacheControl(CacheControl.noCache())
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=movie.mp4")
                 .body(resource);
+
+        // final Authentication authentication
 //        Resource file = movieService.download(movie_uid);
 //        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
 //                "attachment; filename=\"" + file.getFilename() + "\"").body(file);

@@ -2,6 +2,7 @@ package com.famillink.model.service;
 
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
+import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.MemberMapper;
 import com.famillink.util.JwtTokenProvider;
@@ -101,6 +102,22 @@ public class MemberServiceImpl implements MemberService {
         } else {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
+    }
+
+    @Override
+    //두 멤버의 가족이 맞는지 아닌지 파악하는 부분을 의미를 함
+    public Boolean findTogether(MovieSenderDTO sender) throws Exception {
+
+        Member m, m1;
+        m = mapper.findUserByUid(sender.getTo_member_uid()).get();
+        m1 = mapper.findUserByUid(sender.getFrom_member_uid()).get();
+        if (!m.getUser_uid().equals(m1.getUser_uid()))//계정 정보가 일치 하지 않을시에 처리 하고자 하는 상황
+        {
+            throw new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO);
+
+        }
+
+        return true;
     }
 
 
