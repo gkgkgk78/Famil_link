@@ -26,6 +26,7 @@ const PlayVideo = () => {
             setURL(() => {
                 return `data:video/mp4;base64,${base64Data}`
             })
+            console.log(videoURL)
             /* let blob = new Blob([JSON.stringify(res.data)], {type:"video/mp4"})
             const url = window.URL.createObjectURL(blob)
             const base64Data = Buffer.from(res.data).toString("base64")
@@ -52,7 +53,7 @@ const PlayVideo = () => {
     }
 
     useEffect(() => {
-        console.log("")
+        console.log(videoURL)
     }, [videoURL])
 
     const videoList = useState(2)
@@ -71,9 +72,8 @@ const PlayVideo = () => {
 
     return (
         <div> 
-          <video src="https://www.youtube.com/watch?v=QZcYz2NrDIs" />
           <ReactPlayer
-            url= {"https://www.youtube.com/watch?v=QZcYz2NrDIsvideoURL"}
+            url = {videoURL}
             muted={false}
             playing
             controls

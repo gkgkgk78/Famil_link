@@ -6,9 +6,9 @@ function MQTT() {
   const URL = "ws://localhost:9001";
   const client = mqtt.connect(URL);
   const [userList, setList] = useState([]);
-  const disconnect = () => {
-    client.on("disconnect")
-  }
+  const [isValid,setValid] = useState(false)
+  const mounted = useRef(false);
+
 
   // 브로커에 연결되면
   client.on('connect', () => {
@@ -29,15 +29,36 @@ function MQTT() {
        return preState.slice(0,10)
       })   
     }
-    console.log(userList)
+    if ((userList.filter(user => user !== userList[0])).length ===0) {
+      setValid(() => {
+        return true
+      })
+    }
   })
-  return (
-    <div>
-      <button onClick={disconnect}></button>
-    </div>
-  )
-}
 
+  useEffect(() =>{
+    if (!mounted.current) {
+      mounted.current = true;
+      console.log("마운트 됐구나")
+    } else {
+      console.log("인식됐구나")
+      const name =userList[0]
+      console.log("axios 보낸다.")
+      axios({
+        method: "get",
+        url: "이름을 포함한 url",
+        header: "",
+      })
+      .then((res) => {
+        console.log(res)
+        // 정보 저장
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    }
+  },[isValid])
+}
 
 
 export default MQTT;
