@@ -1,3 +1,5 @@
+import './Weather.css'
+
 
 function Weather() {
     const API_KEY = "da4992756d3a31cd9b0ded28d6534403";
@@ -9,13 +11,17 @@ function Weather() {
     fetch(url)
         .then((response) => response.json())
         .then((data) => {
-
+        
         const city = document.querySelector("#weather span:first-child");
         const weather = document.querySelector("#weather span:last-child");
         city.innerText = data.name;
-        weather.innerText = `${data.weather[0].description} / ${data.main.temp}ºC`;
         console.log(data)
-        })
+        const temp = Math.round(data.main.temp);
+        weather.innerText = `${data.weather[0].description}      ${temp}º C`;
+        const weatherIconSelect = document.querySelector("#weather img:nth-child(3)");
+        const weatherIcon = data.weather[0].icon;
+        weatherIconSelect.setAttribute("src", `http://openweathermap.org/img/wn/${weatherIcon}.png`)
+    })
     }
 
     function onGeoError() {
@@ -26,9 +32,12 @@ function Weather() {
 
     return (
         <div id="weather">
-        <span></span>
+        <span className="city"></span>
         <br></br>
-        <span></span>
+          <img className="weatherimg"
+          alt="이미지가 없습니다."></img>
+          <br></br>
+          <span className="temp"></span>
       </div>
     )
 }

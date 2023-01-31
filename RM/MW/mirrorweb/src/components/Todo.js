@@ -31,17 +31,15 @@ function Todo(){
     if (loading) return <div>로딩중...</div>;
     if (error) return <div>애러가 발생했습니다.</div>;
     if (!todos) return null;
-
-    const fiveTodos = todos.filter( fiveto => fiveto.id < 6);
     
     return (
         <div className='Todo'>
-            <h4 className='Todotext'>To-do</h4>
+            <h4 className='TodoTitle'>To-do</h4>
             <hr />
             <div className='TodoListItem'>
             <ul >
-                {fiveTodos.map(todo => (
-                <div key={todo.id} className='text'>
+                {todos.slice(0,5).map(todo => (
+                <div key={todo.id} className='TodoText'>
                 { todo.completed ? <div className='checkbox'><MdCheckBox /><p className='checktext'>{todo.title}</p></div> : <div className='blankbox'><MdCheckBoxOutlineBlank/><p className='blanktext'>{todo.title}</p></div> }    
                 </div>
                 ))}

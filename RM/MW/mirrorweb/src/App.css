@@ -6,6 +6,7 @@
   height: 100%;
   width: 100%;
   text-shadow: 1px 1px 1px #ccc;
+  font-family: "kangwongyoyukmodulight";
 }
 
 .App-logo {
@@ -41,4 +42,25 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* 폰트 */
+@font-face {
+  font-family: "kangwongyoyukmodulight";
+  src: url("./fonts/강원교육모두\ Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "kangwongyoyukmodubold";
+  src: url("./fonts/강원교육모두\ Bold.ttf");
+}
+
+@font-face {
+  font-family: "LineSeedKRrg";
+  src: url("./fonts/LINESeedKR-Rg.ttf");
+}
+
+@font-face {
+  font-family: "LineSeedENrg";
+  src: url("./fonts/LINESeedSans_Rg.ttf");
 }

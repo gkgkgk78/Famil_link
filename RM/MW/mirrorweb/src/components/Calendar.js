@@ -31,14 +31,13 @@ function Calendar(){
     if (error) return <div>에러가 발생했습니다</div>;
     if (!schedule) return null;
 
-    const fiveschedule = schedule.filter( sche => sche.id < 6);
 
     return (
-        <div className='calendardiv'>
-            <h3>일정</h3>
+        <div className='Calendar'>
+            <h3 className='CalendarTitle'>일정</h3>
             <hr />
-            <ul>
-                {fiveschedule.map(schedules => (
+            <ul className='CalendarUl'>
+                {schedule.slice(0,5).map(schedules => (
                     <li key={schedules.id}>
                         { schedules.userId === 1 && schedules.title}
                     </li>
