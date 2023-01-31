@@ -28,8 +28,6 @@ public class Member implements UserDetails {
     protected String nickname;
 
 
-
-
     @ApiModelProperty(hidden = true)
     protected String role;
 
@@ -41,7 +39,6 @@ public class Member implements UserDetails {
 
     @ApiModelProperty(hidden = true)
     protected Short level;
-
 
 
     // 이하 코드는 security 를 위한 용도
@@ -105,7 +102,6 @@ public class Member implements UserDetails {
     }
 
     public Member() {
-
 
 
     }
