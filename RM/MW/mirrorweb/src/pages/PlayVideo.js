@@ -15,23 +15,26 @@ const PlayVideo = () => {
 
     const localAxios = () => {
         axios({
-            url: "http://localhost:9999/movie/2",
-            method: "get",
-            headers: {
+            url: "http://i8a208.p.ssafy.io:3000/movie/3",
+            /* headers: {
                 "Authorization" : "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTA2MDg4OSwiZXhwIjoxNjg1MDYwODg5fQ.OhUbJt41_G4V93jsjDDNHz3BCd5ZOQBcFRBNfbwVV5I"
-            }
+            } */
         })
         .then((res) => {
-            console.log(JSON.stringify(res))
-            let blob = new Blob([JSON.stringify(res.data)], {type:"video/mp4"})
+            console.log(res)
+            const base64Data = Buffer.from(res.data).toString("base64")
+            setURL(() => {
+                return `data:video/mp4;base64,${base64Data}`
+            })
+            /* let blob = new Blob([JSON.stringify(res.data)], {type:"video/mp4"})
             const url = window.URL.createObjectURL(blob)
             const base64Data = Buffer.from(res.data).toString("base64")
             console.log(base64Data)
-            /* let blob = new Blob([base64Data], {type:"video/mp4"});
-            console.log(blob) */
-            /* const url = window.URL.createObjectURL(base64Data); */
+            let blob = new Blob([base64Data], {type:"video/mp4"});
+            console.log(blob)
+            const url = window.URL.createObjectURL(base64Data);
             console.log(url)
-            setURL(() => url)
+            setURL(() => url) */
             
         })
         .catch((err) => {
@@ -47,19 +50,6 @@ const PlayVideo = () => {
         a.remove()
         window.URL.revokeObjectURL(videoURL);
     }
-
-    /* function downloadURI(uri, name) {
-        var link = document.createElement("a");
-        link.download = name;
-        link.href = uri;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-      console.log("1")
-      downloadURI("", "record.mp4");
-      console.log("2")
-      //downloadURI("data:image/jpeg;base64,[base64인코딩된내용]", "저장할 파일명"); */
 
     useEffect(() => {
         console.log("")
@@ -81,8 +71,9 @@ const PlayVideo = () => {
 
     return (
         <div> 
+          <video src="https://www.youtube.com/watch?v=QZcYz2NrDIs" />
           <ReactPlayer
-            url= {videoURL}
+            url= {"https://www.youtube.com/watch?v=QZcYz2NrDIsvideoURL"}
             muted={false}
             playing
             controls
