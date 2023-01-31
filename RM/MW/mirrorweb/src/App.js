@@ -16,10 +16,10 @@ import Record from './pages/Record';
 
 import { Box } from '@mui/system';
 import { Route, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function App() {
-
-  MQTT();
+  
 
   // 라즈베리파이와 웹소켓을 연결되어, 신호를 주고받는다.
   // 초음파 센서 신호가 오면 안면 인식 화면으로 이동한다.
@@ -32,13 +32,13 @@ function App() {
   }
   return (
     <div className="App">
+      <MQTT/>
       <Box sx={{
         display: "flex",
         justifyContent:"space-between",
         p: 3
       }}>
-        <Clock />
-        <Weather />
+        <Clock />  
       </Box>
       <section style={style}>
       <Routes>

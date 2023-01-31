@@ -1,3 +1,5 @@
+import React from 'react';
+
 
 function Weather() {
     const API_KEY = "da4992756d3a31cd9b0ded28d6534403";
@@ -33,4 +35,4 @@ function Weather() {
 }
         
 
-export default Weather;
+export default React.memo(Weather);
