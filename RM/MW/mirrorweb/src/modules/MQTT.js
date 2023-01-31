@@ -6,7 +6,9 @@ function MQTT() {
   const URL = "ws://localhost:9001";
   const client = mqtt.connect(URL);
   const [userList, setList] = useState([]);
-
+  const disconnect = () => {
+    client.on("disconnect")
+  }
 
   // 브로커에 연결되면
   client.on('connect', () => {
@@ -19,9 +21,23 @@ function MQTT() {
   
   client.on('message', function (topic, message) {
     let name = JSON.parse(message).name
-    console.log(name)
+    setList( function(preState) {
+      return [...preState, name]
+    })
+    if (userList.length >= 10) {
+      setList(function(preState) {
+       return preState.slice(0,10)
+      })   
+    }
+    console.log(userList)
   })
-  
+  return (
+    <div>
+      <button onClick={disconnect}></button>
+    </div>
+  )
 }
+
+
 
 export default MQTT;
