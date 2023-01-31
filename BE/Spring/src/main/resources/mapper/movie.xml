@@ -14,11 +14,15 @@
         WHERE `uid` = #{movie_uid}
     </select>
 
-    <select id="family_validation" parameterType="Long" resultType="string">
-        SELECT count(*)
-        FROM famil_link.member
-        WHERE user_uid=4 AND uid=2
+
+    <select id="getMovie" parameterType="Long" resultType="MovieSenderDTO">
+
+        SELECT member_from,member_to
+        FROM movie
+        WHERE `uid` = #{movie_uid}
     </select>
+
+
 
 
 

@@ -3,6 +3,8 @@ package com.famillink.model.service;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.MovieSenderDTO;
+import com.famillink.model.domain.user.Member;
+import com.famillink.model.mapper.MemberMapper;
 import com.famillink.model.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +33,9 @@ public class MovieServiceImpl implements MovieService {
     private String moviePath;
     private final FileService fileService;
     private final MovieMapper movieMapper;
+    private final MemberMapper memberMapper;
+
+    private final MemberService mservice;
 
     @Override
     @Transactional
@@ -40,29 +45,26 @@ public class MovieServiceImpl implements MovieService {
 
         //현재는 sender에 있는 보내고자 하는 얘들이 같은
 
+        Member m, m1;
 
-//        String result=movieMapper.family_validation(sender);
-//
-//        if (Integer.parseInt(result)==0)//계정 정보가 일치 하지 않을시에 처리 하고자 하는 상황
-//        {
-//            throw new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO);
-//        }
+        try {
 
+            if (!mservice.findTogether(sender))//계정 정보가 일치 하지 않을시에 처리 하고자 하는 상황
+            {
+                throw new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO);
+            }
 
-        fileService.store(file);
+        } catch (Exception e) {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+        }
 
-
-        //파일명 랜덤 저장
-        long millis = System.currentTimeMillis();
-        UUID uuid = UUID.randomUUID();
-        String u1=uuid.toString()+Long.toString(millis);//밀리초 까지 해서 저장 하고자 함
-
-
+        m=memberMapper.findUserByUid(sender.getFrom_member_uid()).get();
+        //가족 uid로 폴더에 저장을 해줌
+        String get = fileService.store(file, m.getUser_uid());
 
         // TODO: CJW, file path를 가족마다 나누고 filename을 중복되지 않는 임의 값으로 변경해서 관리하면 편함.
-        movieMapper.sendMovie(sender, moviePath + "/" + u1);
 
-
+        movieMapper.sendMovie(sender, get);
 
 
     }
@@ -71,8 +73,22 @@ public class MovieServiceImpl implements MovieService {
     public InputStreamResource download(Long movie_uid) throws Exception {
         // TODO: CJW, movie가 자신한테 온 것인지 valid 필요
 
+
+        try {
+
+            MovieSenderDTO sender = movieMapper.getMovie(movie_uid);
+            if (!mservice.findTogether(sender))//계정 정보가 일치 하지 않을시에 처리 하고자 하는 상황
+            {
+                throw new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new BaseException(ErrorMessage.NOT_EXIST_ROUTE);
+        }
+
+
         String filename = movieMapper.getMoviePath(movie_uid);
-        filename="/"+filename;
+        filename = "./" + filename;
         // 파일 리소스 리턴
         return fileService.loadAsResource(filename);
     }

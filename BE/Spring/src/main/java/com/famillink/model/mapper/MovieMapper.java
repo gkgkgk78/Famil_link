@@ -18,6 +18,9 @@ public interface MovieMapper {
     String family_validation(MovieSenderDTO sender);
 
 
+    MovieSenderDTO getMovie(Long movie_uid);
+
+
 
 
 }

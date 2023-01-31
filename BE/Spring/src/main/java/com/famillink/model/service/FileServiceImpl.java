@@ -10,10 +10,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,7 +34,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void store(MultipartFile file) {
+    public String store(MultipartFile file,String user) {
         try {
             if (file.isEmpty()) {
                 throw new Exception("ERROR : File is empty.");
@@ -47,9 +44,31 @@ public class FileServiceImpl implements FileService {
                 init();
             }
 
-            
+            //파일명 랜덤 저장
+            long millis = System.currentTimeMillis();
+            UUID uuid = UUID.randomUUID();
+            String u1=uuid.toString()+Long.toString(millis);//밀리초 까지 해서 저장 하고자 함
+
             try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, root.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+
+
+                File f = root.resolve(Paths.get("family",user)).toFile();
+                // 폴더 생성: mkdir()
+                if (!f.exists()) {	// 폴더가 존재하는지 체크, 없다면 생성
+                    if (f.mkdirs())
+                        System.out.println("폴더 생성 성공");
+                    else {
+                        //System.out.println("폴더 생성 실패");
+                        throw  new BaseException(ErrorMessage.NOT_MAKE_FILE);
+                    }
+                }
+
+                Path target = (Path)Paths.get("family",user, u1.toString()+file.getOriginalFilename());
+                Files.copy(inputStream, root.resolve(target), StandardCopyOption.REPLACE_EXISTING);
+
+                return root.resolve(target).toString();
+
+
             }
         } catch (Exception e) {
             //파일 저장 불가시 처리하기 위한 부분
