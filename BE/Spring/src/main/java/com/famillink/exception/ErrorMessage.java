@@ -18,6 +18,7 @@ public enum ErrorMessage {
     SIGNUP_LISTEN(110, "가입 대기중인 아이디입니다.", HttpStatus.BAD_REQUEST),
     
     NOT_STORE_FILE(103, "파일을 저장 불가능 합니다", HttpStatus.BAD_REQUEST),
+    NOT_READ_FILE(111, "파일을 읽을수 없습니다", HttpStatus.BAD_REQUEST),
     
 
 
