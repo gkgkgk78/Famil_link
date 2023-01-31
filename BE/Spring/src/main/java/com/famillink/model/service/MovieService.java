@@ -15,4 +15,8 @@ public interface MovieService {
     void sender(MovieSenderDTO sender, MultipartFile file) throws Exception;
 
     InputStreamResource download(Long movie_uid) throws Exception;
+
+
+
+
 }

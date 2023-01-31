@@ -13,4 +13,19 @@
         FROM movie
         WHERE `uid` = #{movie_uid}
     </select>
+
+
+    <select id="getMovie" parameterType="Long" resultType="MovieSenderDTO">
+
+        SELECT member_from,member_to
+        FROM movie
+        WHERE `uid` = #{movie_uid}
+    </select>
+
+
+
+
+
+
+
 </mapper>
