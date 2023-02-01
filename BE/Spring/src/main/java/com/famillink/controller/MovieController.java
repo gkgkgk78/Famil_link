@@ -11,10 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -38,15 +42,20 @@ public class MovieController {
 
     @GetMapping("/{movie_uid}")
     @ApiOperation(value = "동영상 보기", notes = "동영상을 다운받는 컨트롤러입니다.")
-    public ResponseEntity<?> getMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
+    public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
+        final HttpHeaders responseHeaders = new HttpHeaders();
 
-        InputStreamResource resource = movieService.download(movie_uid);
+        // TODO: Service단에서 http 관련 작업을 하면 안된다.
+        StreamingResponseBody resource = movieService.download(movie_uid, responseHeaders);
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .cacheControl(CacheControl.noCache())
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=movie.mp4")
-                .body(resource);
+        responseHeaders.add("Content-Type", "video/mp4");
+        return ResponseEntity.ok().headers(responseHeaders).body(resource);
+
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+//                .cacheControl(CacheControl.noCache())
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=movie.mp4")
+//                .body(resource);
 
         // final Authentication authentication
 //        Resource file = movieService.download(movie_uid);
