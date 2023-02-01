@@ -27,7 +27,7 @@ to_member_uid = 7
 class VideoRecorder():
     "Video class based on openCV"
 
-    def __init__(self, name="temp_video.avi", fps=20):
+    def __init__(self, name="temp_video.avi", fps=30):
         self.file_name = name
         self.frame_counts = 0
         self.out = cv2.VideoWriter(self.file_name, fourcc, fps, size)  # VideoWriter 객체 생성
@@ -165,16 +165,16 @@ def stop_AVrecording(filename="test"):
         if abs(recorded_fps - 6) >= 0.01:  # If the fps rate was higher/lower than expected, re-encode it to the expected
             print("Re-encoding")
             cmd = "C:/Users/SSAFY/ffmpeg/bin/ffmpeg -r " + str(
-                recorded_fps) + " -i temp_video.avi -pix_fmt yuv420p -r 6 temp_video2.avi"
+                recorded_fps) + " -i temp_video.avi -pix_fmt yuv420p -r 30 temp_video2.avi"
             subprocess.call(cmd, shell=True)
             # res = os.system(cmd)
             print("Muxing")
-            cmd = "C:/Users/SSAFY/ffmpeg/bin/ffmpeg -y -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video2.avi -pix_fmt yuv420p record.avi"
+            cmd = "C:/Users/SSAFY/ffmpeg/bin/ffmpeg -y -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video2.avi -pix_fmt yuv420p record.mp4"
             subprocess.call(cmd, shell=True)
             # res = os.system(cmd)
         else:
             print("Normal recording\nMuxing")
-            cmd = "C:/Users/SSAFY/ffmpeg/bin/ffmpeg -y -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video.avi -pix_fmt yuv420p record.avi"
+            cmd = "C:/Users/SSAFY/ffmpeg/bin/ffmpeg -y -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video.avi -pix_fmt yuv420p record.mp4"
             subprocess.call(cmd, shell=True)
             print("..")
             # 보내고자하는 파일을 'rb'(바이너리 리드)방식 열고
