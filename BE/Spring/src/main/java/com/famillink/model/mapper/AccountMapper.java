@@ -28,5 +28,7 @@ public interface AccountMapper {
 
     void setPassword(@Param(value = "email") String email, @Param(value = "pw") String pw);
 
+    void setModelPath(String email,String path,Long uid) ;
+
 
 }

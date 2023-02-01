@@ -8,7 +8,7 @@ import java.nio.file.Path;
 public interface FileService {
     void init();
 
-        String store(MultipartFile file,String user);
+    String store(MultipartFile file, String user);
 
     Path load(String filename);
 

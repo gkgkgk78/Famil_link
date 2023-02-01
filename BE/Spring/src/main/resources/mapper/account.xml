@@ -82,4 +82,14 @@
         WHERE `email` = #{email};
     </update>
 
+    <update id="setModelPath" parameterType="account">
+        UPDATE account
+        SET `model_path` = #{path}
+        WHERE `email` = #{email};
+    </update>
+
+
+
+
+
 </mapper>

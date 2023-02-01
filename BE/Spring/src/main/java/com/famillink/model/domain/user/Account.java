@@ -99,6 +99,13 @@ public class Account implements UserDetails {
         this.email = email;
     }
 
+    public Account(String email, String path,Long uid) {
+        this.email = email;
+        this.path = path;
+        this.uid = uid;
+
+    }
+
     public Account(String email, String pw, String nickname, String address, String phone){
         this.pw = pw;
         this.email = email;

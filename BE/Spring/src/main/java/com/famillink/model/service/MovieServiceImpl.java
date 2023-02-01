@@ -76,13 +76,13 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void setRead(Long movie_uid) throws Exception {
 
-        try{
-            movieMapper.setMovie(movie_uid);
-        }
-        catch (Exception e)
-        {
-            throw new BaseException(ErrorMessage.NOT_READ_FILE);
-        }
+//        try{
+//            movieMapper.setMovie(movie_uid);
+//        }
+//        catch (Exception e)
+//        {
+//            throw new BaseException(ErrorMessage.NOT_READ_FILE);
+//        }
 
 
 

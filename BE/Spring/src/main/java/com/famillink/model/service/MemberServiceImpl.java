@@ -42,7 +42,6 @@ public class MemberServiceImpl implements MemberService {
 //        }
 
 
-
         try {
             mapper.signup(member);
             Calendar calendar = Calendar.getInstance();
