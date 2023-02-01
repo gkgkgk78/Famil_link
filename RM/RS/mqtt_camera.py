@@ -20,8 +20,8 @@ mp_drawing = mp.solutions.drawing_utils
 isRecord = False
 token = None
 
-from_member_uid = None
-to_member_uid = None
+from_member_uid = 4
+to_member_uid = 7
 
 
 class VideoRecorder():
@@ -182,19 +182,21 @@ def stop_AVrecording(filename="test"):
         files = open('record.avi', 'rb')
 
         # 파이썬 딕셔너리 형식으로 file 설정
-        upload = {'file': files}
+        upload = {'imgUrlBase': files}
 
         # request.post방식으로 파일전송.
         res = requests.post(
             'http://i8a208.p.ssafy.io:3000/movie?from_member_uid=' + str(from_member_uid) + '&to_member_uid=' + str(
                 to_member_uid),
-            files=upload,
-            headers={
-                "Authorization": "Bearer " + str(token)
-            })
+            files=upload)
+        # headers={
+        #     "Authorization": "Bearer " + str(token)
+        # }
+        # )
     except Exception as e:
-        file_manager()
         print(e)
+    finally:
+        file_manager()
 
 
 class NumpyArrayEncoder(JSONEncoder):
