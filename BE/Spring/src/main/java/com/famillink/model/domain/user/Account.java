@@ -86,33 +86,38 @@ public class Account implements UserDetails {
     }
 
 
-
-
     @Override
     public boolean isEnabled() {
         return true;
     }
 
 
-    public Account(String email, String pw){
+    public Account(String email, String pw) {
         this.pw = pw;
         this.email = email;
     }
 
-    public Account(String email, String path,Long uid) {
+
+    public Account(String email, String path, Long uid) {
         this.email = email;
         this.path = path;
         this.uid = uid;
 
     }
 
-    public Account(String email, String pw, String nickname, String address, String phone){
+
+    public Account(String email, String pw, String nickname, String address, String phone) {
         this.pw = pw;
         this.email = email;
         this.nickname = nickname;
         this.address = address;
         this.phone = phone;
     }
+
+    public Long getUid() {
+        return uid;
+    }
+
 
 
 }

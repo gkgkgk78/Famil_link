@@ -2,17 +2,16 @@ package com.famillink.controller;
 
 
 import com.famillink.annotation.ValidationGroups;
+import com.famillink.exception.BaseException;
+import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.MovieSenderDTO;
-import com.famillink.model.domain.param.FlaskModelDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.service.AccountService;
 import com.famillink.model.service.FlaskService;
-import com.famillink.model.service.MovieService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +22,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 @Api("Account Controller")
 @RequiredArgsConstructor
 @RequestMapping("/account")
@@ -30,7 +35,7 @@ import java.util.Map;
 @RestController
 public class AccountController {
     private final AccountService accountService;
-    //private final FlaskService flaskService;
+    private final FlaskService flaskService;
 
     @ApiOperation(value = "회원가입", notes = "req_data : [pw, email, name]")
     @PostMapping("/signup")
@@ -147,30 +152,46 @@ public class AccountController {
     }
 
 
-//    @PostMapping("/Flask/Model")
-//    @ApiOperation(value = "Flask 모델 저장 ", notes = "Flask 모델을 전송하는 컨트롤러입니다.")
-//    public ResponseEntity<?> addModel(FlaskModelDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
-//        flaskService.sender(sender, file);
-//        return null;
-//    }
+    @PostMapping("/Flask/Model")
+    @ApiOperation(value = "Flask 모델 저장 ", notes = "Flask 모델을 전송하는 컨트롤러입니다.")
+    public ResponseEntity<?> addModel(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+        flaskService.send_model(account, file);
+        return null;
+    }
 
-//    @PostMapping("/Flask/Label")
-//    @ApiOperation(value = "Flask 의 라벨 저장 ", notes = "Flask의 Label 을 전송하는 컨트롤러입니다.")
-//    public ResponseEntity<?> addLabel(FlaskModelDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
-//        flaskService.sender(sender, file);
-//        return null;
-//    }
-////
-//    @GetMapping("/Flask/Model")
-//    @ApiOperation(value = "Flask의 Model", notes = "Flask의 Model을 다운받는 컨트롤러입니다.")
-//    public ResponseEntity<?> returnModel(@PathVariable("movie_uid") Long movie_uid) throws Exception {
-//
-//        InputStreamResource resource = flaskService.download(movie_uid);
-//
-//        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=movie.mp4").body(resource);
-//
-//
-//    }
+    @GetMapping("/Flask/Model")
+    @ApiOperation(value = "Flask의 Model 불러오기", notes = "Flask의 Model을 다운받는 컨트롤러입니다.")
+    public ResponseEntity<?> returnModel(Account account) throws Exception {
+
+        if (account.getEmail()==null)
+            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
+
+        InputStreamResource resource = flaskService.read_model(account.getEmail());
+
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=model.h5").body(resource);
+
+    }
+
+
+    @PostMapping("/Flask/Label")
+    @ApiOperation(value = "Flask Label 저장 ", notes = "Flask Label을 전송하는 컨트롤러입니다.")
+    public ResponseEntity<?> addLabel(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+        flaskService.send_label(account, file);
+        return null;
+    }
+
+    @GetMapping("/Flask/Label")
+    @ApiOperation(value = "Flask의 Label 불러오기", notes = "Flask의 Label을 다운받는 컨트롤러입니다.")
+    public ResponseEntity<?> returnLabel(Account account) throws Exception {
+
+        if (account.getEmail()==null)
+            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
+
+        InputStreamResource resource = flaskService.read_label(account.getEmail());
+
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=labels.txt").body(resource);
+
+    }
 //
 //
 //    @GetMapping("/Flask/Label")
