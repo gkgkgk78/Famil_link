@@ -179,7 +179,7 @@ def stop_AVrecording(filename="test"):
             print("..")
             # 보내고자하는 파일을 'rb'(바이너리 리드)방식 열고
 
-        files = open('record.avi', 'rb')
+        files = open('record.mp4', 'rb')
 
         # 파이썬 딕셔너리 형식으로 file 설정
         upload = {'imgUrlBase': files}
