@@ -17,6 +17,7 @@ node{
             echo "Docker Image Tag Name: ${dockerImageTag}"
             sh "docker stop flask-deploy || true && docker rm flask-deploy || true"
             sh "docker run --name flask-deploy -d -p 3000:9999 flask-deploy:${env.BUILD_NUMBER}"
+	sh "docker image prune -a -f || true"
         }
     }catch(e){
         throw e
