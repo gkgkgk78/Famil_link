@@ -6,7 +6,7 @@ node{
         stage('Clone Repo'){
             git url: 'https://lab.ssafy.com/s08-webmobile2-sub2/S08P12A208.git',
                 credentialsId: 'jenkins',
-                branch: 'master'
+                branch: 'release_springboot'
         }
 
         stage('Copy application.properties'){
