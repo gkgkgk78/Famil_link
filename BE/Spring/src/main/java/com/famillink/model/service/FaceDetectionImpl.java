@@ -1,15 +1,11 @@
 package com.famillink.model.service;
 
 
-import com.famillink.exception.BaseException;
-import com.famillink.exception.ErrorMessage;
-
 import java.io.*;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,11 +18,11 @@ import org.springframework.stereotype.Service;
 public class FaceDetectionImpl implements FaceDetection {
     public Map<String, Object> FaceCongnitive(String family, String src) throws Exception {
 
-        File temp = new File(src);
-        InputStream imageByte = new FileInputStream(temp);
-        byte[] bytes = IOUtils.toByteArray(imageByte);
-
-        imageByte.close();
+//        File temp = new File(src);
+//        InputStream imageByte = new FileInputStream(temp);
+//        byte[] bytes = IOUtils.toByteArray(imageByte);
+//
+//        imageByte.close();
 
 //        //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 //        //System.load("C:\\Users\\Hello\\Desktop\\ssafy_2th_git\\S08P12A208\\BE\\Spring\\src\\main\\java\\libs\\opencv_java3412.dll");
@@ -45,16 +41,27 @@ public class FaceDetectionImpl implements FaceDetection {
 //        Imgcodecs.imencode(".jpg", tempMat, bytemat);
 //        byte[] data = bytemat.toArray();
 
-        String encoded = Base64.getEncoder().encodeToString(bytes);
+//        String encoded = Base64.getEncoder().encodeToString(bytes);
+//
+//        if(encoded == null){
+//            throw new BaseException(ErrorMessage.NOT_EXIST_CONTENT);
+//        }
+//
+//        encoded = new String(encoded.getBytes("utf-8"), "utf-8");
 
-        if(encoded == null){
-            throw new BaseException(ErrorMessage.NOT_EXIST_CONTENT);
-        }
 
-        encoded = new String(encoded.getBytes("utf-8"), "utf-8");
+        //File temp = new File(src);
+        //InputStream imageByte = URI.create(src).toURL().openStream();
+
+        File temp = new File(src);
+        InputStream imageByte = new FileInputStream(temp);
+        byte[] bytes = IOUtils.toByteArray(imageByte);
+
+        imageByte.close();
 
         Map<String, Object> map = new HashMap<>();
-        map.put("img", encoded);
+        map.put("imgUrlBase", bytes);
+
 
         //dict형태로 상대방에게 전달하여 flask 서버에서 판단 가능하게 해줍니다
         JSONObject resultObj = new JSONObject(map);
