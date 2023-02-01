@@ -37,12 +37,13 @@ function MQTT() {
   })
 
   useEffect(() =>{
+    // 마운트 됐을 때는 실행 안 함
     if (!mounted.current) {
       mounted.current = true;
       console.log("마운트 됐구나")
     } else {
       console.log("인식됐구나")
-      const name =userList[0]
+      const name = userList[0]
       console.log("axios 보낸다.")
       axios({
         method: "get",
@@ -54,6 +55,7 @@ function MQTT() {
         // 정보 저장
       })
       .catch((err) => {
+        // 에러 처리
         console.log(err)
       })
     }
