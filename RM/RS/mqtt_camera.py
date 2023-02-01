@@ -20,6 +20,9 @@ mp_drawing = mp.solutions.drawing_utils
 isRecord = False
 token = None
 
+from_member_uid = None
+to_member_uid = None
+
 
 class VideoRecorder():
     "Video class based on openCV"
@@ -182,11 +185,13 @@ def stop_AVrecording(filename="test"):
         upload = {'file': files}
 
         # request.post방식으로 파일전송.
-        res = requests.post('http://localhost:9999/movie?from_member_uid=22&to_member_uid=24',
-                            files=upload,
-                            headers={
-                                "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTA0ODA1MSwiZXhwIjoxNjg1MDQ4MDUxfQ.8RvdPA308ay5mMcLO3AiokXol1SSfJ63mLuqX3312X4"
-                            })
+        res = requests.post(
+            'http://i8a208.p.ssafy.io:3000/movie?from_member_uid=' + str(from_member_uid) + '&to_member_uid=' + str(
+                to_member_uid),
+            files=upload,
+            headers={
+                "Authorization": "Bearer " + str(token)
+            })
     except Exception as e:
         file_manager()
         print(e)
@@ -212,7 +217,7 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    global model, labels, isRecord
+    global model, labels, isRecord, token, from_member_uid, to_member_uid
     if msg.topic == "/local/record/":
         try:
             temp = bool(int(msg.payload.decode("utf-8")))
@@ -235,7 +240,10 @@ def on_message(client, userdata, msg):
         except Exception as e:
             print(e)
     elif msg.topic == "/local/token/":
-        pass
+        data = json.loads(msg.payload.decode("utf-8"))
+        token = data['token']
+        from_member_uid = data['from']
+        to_member_uid = data['to']
 
 
 def opencv_publish():
