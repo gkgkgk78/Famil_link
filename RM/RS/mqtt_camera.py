@@ -193,6 +193,7 @@ def stop_AVrecording(filename="test"):
         #     "Authorization": "Bearer " + str(token)
         # }
         # )
+        # TODO: 추후 token 추가하여 전송 지금은 테스트단계
     except Exception as e:
         print(e)
     finally:
