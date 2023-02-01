@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -43,6 +44,13 @@ public class AccountServiceImpl implements AccountService {
 
         salt = (BCrypt.hashpw(salt, BCrypt.gensalt()));
         accountMapper.setSalt(account.getUid(), salt);
+        
+
+        //추가적으로 가족 계정의 model_path를 넣어주고자함
+        Account acc= accountMapper.findUserByEmail(account.getEmail()).get();
+        String s1= String.valueOf(Paths.get("upfiles","Flask",acc.getUid().toString() ));
+        String route="./"+s1;
+        accountMapper.setModelPath(acc.getEmail(),s1,acc.getUid());
 
         return accountMapper.findUserByEmail(account.getEmail()).get();
     }
@@ -76,30 +84,7 @@ public class AccountServiceImpl implements AccountService {
         }};
     }
 
-    //TODO; 계정 정보로 model_path 가져오기
-    @Override
-    public Map<String, Object> path(Account loginAccount) throws Exception {
 
-        Account account = accountMapper.findUserByEmail(loginAccount.getEmail())
-                .orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_EMAIL));
-
-        //사용시 path + model.json (and) path + metadata.json
-        String modelUrl = account.getPath() + "model.json";
-        String metaUrl = account.getPath() + "metadata.json";
-
-
-        Map<String, Object> result = new HashMap<>();
-
-        if(modelUrl != null && metaUrl != null){
-            result.put("msg", account.getNickname()+"'s teachable path");
-            result.put("model-path", modelUrl);
-            result.put("meta-path", metaUrl);
-        } else {
-            result.put("msg", "등록된 가족 모델이 없습니다");
-        }
-
-        return result;
-    }
 
     @Override
     public List<Account> allMembers(Account loginAccount) throws Exception {
