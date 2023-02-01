@@ -63,10 +63,12 @@ public class TestController {
 
     @ApiOperation(value = "동영상 스트리밍")
     @GetMapping(path = "/streaming")
-    public ResponseEntity<StreamingResponseBody> movieStreaming(@RequestHeader HttpHeaders headers) throws Exception {
+    public ResponseEntity<StreamingResponseBody> movieStreaming(
+            @RequestParam("file") String fileName,
+            @RequestHeader HttpHeaders headers) throws Exception {
 //        return new InputStreamResource(new FileInputStream("upfiles\\record.mp4"));
         // ResponseEntity<StreamingResponseBody>
-        File file = new File("upfiles\\record.mp4");
+        File file = new File("upfiles\\" + fileName);
         if (!file.isFile()) {
             return ResponseEntity.notFound().build();
         }
@@ -76,7 +78,7 @@ public class TestController {
             System.out.println("dd");
         };
         final HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add("Content-Type", "video/mp4");
+        responseHeaders.add("Content-Type", "video/avi");
         responseHeaders.add("Content-Length", Long.toString(file.length()));
         return ResponseEntity.ok().headers(responseHeaders).body(streamingResponseBody);
     }
