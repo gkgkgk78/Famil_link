@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FaceDetectionImpl implements FaceDetection {
-    public Map<String, Object> FaceCongnitive(String family, String src) throws Exception {
+    public Boolean isCongnitive(String family, String src) throws Exception {
 
         //바로밑의 부분에 파일에 해당되는 경로를 넣어줍니다
         String image_name = src;
@@ -37,68 +37,62 @@ public class FaceDetectionImpl implements FaceDetection {
 
         String encoded = Base64.getEncoder().encodeToString(bytes);
 
-        Map<String, Object> response = new HashMap<>();
-        try {
-            encoded = new String(encoded.getBytes("utf-8"), "utf-8");
-
-            Map<String, Object> map = new HashMap<>();
-            map.put("img", encoded);
-
-            //dict형태로 상대방에게 전달하여 flask 서버에서 판단 가능하게 해줍니다
-            JSONObject resultObj = new JSONObject(map);
+        Map<String, Boolean> response = new HashMap<>();
 
 
-            //post보내는 부분
-            String host_url = "http://localhost:5555/";
-            HttpURLConnection conn = null;
-            URL url = new URL(host_url);
+        encoded = new String(encoded.getBytes("utf-8"), "utf-8");
 
-            conn = (HttpURLConnection) url.openConnection();
+        Map<String, Object> map = new HashMap<>();
+        map.put("img", encoded);
 
-            conn.setRequestMethod("POST");//POST GET
-            conn.setRequestProperty("Accept-Charset", "UTF-8");
-            conn.setRequestProperty("Content-Type", "application/json");
-
-            //POST방식으로 스트링을 통한 JSON 전송
-            conn.setDoOutput(true);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-
-            System.out.println(resultObj.toString());
-            bw.write(resultObj.toString());
+        //dict형태로 상대방에게 전달하여 flask 서버에서 판단 가능하게 해줍니다
+        JSONObject resultObj = new JSONObject(map);
 
 
-            bw.flush();
-            bw.close();
+        //post보내는 부분
+        String host_url = "http://localhost:5555/";
+        HttpURLConnection conn = null;
+        URL url = new URL(host_url);
 
-            //서버에서 보낸 응답 데이터 수신 받기
+        conn = (HttpURLConnection) url.openConnection();
 
-            InputStream inputStream = conn.getInputStream();
-            Reader reader = new InputStreamReader(inputStream);
+        conn.setRequestMethod("POST");//POST GET
+        conn.setRequestProperty("Accept-Charset", "UTF-8");
+        conn.setRequestProperty("Content-Type", "application/json");
 
-            StringBuilder result = new StringBuilder();
+        //POST방식으로 스트링을 통한 JSON 전송
+        conn.setDoOutput(true);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
 
-            for (int data = reader.read(); data != -1; data = reader.read()) {
-                result.append((char)data);
-            }
-
-            int check = Integer.parseInt(result.toString()); //1이면 일치하는 얼굴 있고 0이면 일치하는 얼굴 없음
-
-            //결과
-
-            if(check == 1){
-                response.put("result", true);
-
-            } else {
-                response.put("result", false);
-            }
+        System.out.println(resultObj.toString());
+        bw.write(resultObj.toString());
 
 
-        } catch (Exception e) {
-            System.out.println(e);
+        bw.flush();
+        bw.close();
+
+        //서버에서 보낸 응답 데이터 수신 받기
+
+        InputStream inputStream = conn.getInputStream();
+        Reader reader = new InputStreamReader(inputStream);
+
+        StringBuilder result = new StringBuilder();
+
+        for (int data = reader.read(); data != -1; data = reader.read()) {
+            result.append((char) data);
+        }
+
+        int check = Integer.parseInt(result.toString()); //1이면 일치하는 얼굴 있고 0이면 일치하는 얼굴 없음
+
+        //결과
+
+        if (check == 1) {
+            return true;
+
+        } else {
+            return false;
         }
 
 
-
-        return response;
     }
 }

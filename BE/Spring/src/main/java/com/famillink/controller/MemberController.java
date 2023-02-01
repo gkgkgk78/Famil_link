@@ -2,7 +2,6 @@ package com.famillink.controller;
 
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.FaceDetection;
-import com.famillink.model.service.FaceDetectionImpl;
 import com.famillink.model.service.MemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -97,12 +96,18 @@ public class MemberController {
     @ApiOperation(value = "사진보내기", notes = "제발.")
     @PostMapping("/pick")
     public ResponseEntity<?> picture() throws Exception {
-        Map<String, Object> response = fservice.FaceCongnitive("모자", "src/test/image/cjw.jpg");
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", response.get("result"));
-            put("token", response.get("token"));
-            put("name", response.get("name"));
-        }}, HttpStatus.OK);
+        boolean response = fservice.isCongnitive("모자", "src/test/image/cjw.jpg");
+
+        Map<String, Object> result = new HashMap<>();
+
+        if(response){
+            result.put("resul", "얼굴 인식이 성공했습니다");
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } else {
+            result.put("resul", "얼굴이 등록되지 않은 구성원입니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
+
     }
 
 
