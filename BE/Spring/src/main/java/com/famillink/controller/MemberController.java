@@ -97,10 +97,11 @@ public class MemberController {
     @ApiOperation(value = "사진보내기", notes = "제발.")
     @PostMapping("/pick")
     public ResponseEntity<?> picture() throws Exception {
-        fservice.send("", "src/test/image/cjw.jpg");
+        Map<String, Object> response = fservice.FaceCongnitive("모자", "src/test/image/cjw.jpg");
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-
+            put("result", response.get("result"));
+            put("token", response.get("token"));
+            put("name", response.get("name"));
         }}, HttpStatus.OK);
     }
 

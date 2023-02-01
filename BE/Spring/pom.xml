@@ -148,6 +148,13 @@
         </dependency>
 
 
+        <!-- 파일 inputStream -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+
         <!-- opencv -->
         <!-- https://mvnrepository.com/artifact/org.openpnp/opencv -->
         <!-- https://mvnrepository.com/artifact/org.openpnp/opencv -->
