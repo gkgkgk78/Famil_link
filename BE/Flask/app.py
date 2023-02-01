@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import os
+import base64
 from keras.models import load_model
 from flask import Flask, request
 import json
@@ -8,23 +8,30 @@ import json
 app = Flask(__name__)
 
 # Load the model
-model = load_model('keras_model.h5')
+model = load_model('C:\\Users\\SSAFY\\Desktop\\flask & java\\flask & java\\Flask\\keras_model.h5')
 
 # CAMERA can be 0 or 1 based on default camera of your computer.
 # camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 # Grab the labels from the labels.txt file. This will be used later.
-labels = open('labels.txt', 'r', encoding='UTF8').readlines()
-
+labels = open('C:\\Users\\SSAFY\\Desktop\\flask & java\\flask & java\\Flask\\labels.txt', 'r', encoding='UTF8').readlines()
 
 @app.route("/", methods=["POST"])
 def index():
-    file = request.files['imgUrlBase']
+    print(request)
+    print(request.data)
+    json_data = request.get_json()
+    print(type(json_data),json_data["img"])
 
-    filename = file.filename
 
-    file.save(os.path.join("", filename))
-    img = cv2.imread(filename)
+    # dict_data = json.loads(json_data)
+    # img = dict_data['img']
+
+    img=json_data["img"]
+    img = base64.b64decode(img)
+    img = BytesIO(img)
+    img = Image.open(img)
+
     # use numpy to convert the pil_image into a numpy array
     numpy_image = np.array(img)
 
@@ -44,10 +51,15 @@ def index():
     # it is the first label and 80% sure its the second label.
     probabilities = model.predict(image)
     # Print what the highest value probabilitie label
-    print(probabilities)
-    print(labels[np.argmax(probabilities)])
 
-    return json.dumps(labels[np.argmax(probabilities)])
+    np.set_printoptions(precision=3, suppress=True)
+    print(probabilities)
+
+    #제일 높은 확률이 80%이상이면 출력
+    if (max(map(max, probabilities)) > 0.8):
+        return json.dumps(1, ensure_ascii=False)
+    else:
+        return json.dumps(0, ensure_ascii=False)
 
 
 idx = 0

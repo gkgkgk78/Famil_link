@@ -6,7 +6,7 @@ public interface FaceDetection {
 
 
 
-    boolean send(String family, String src) throws Exception;
+    boolean isCongnitive(String family, String src) throws Exception;
 
 
 
