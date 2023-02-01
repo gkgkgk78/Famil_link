@@ -6,9 +6,12 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.famillink.exception.BaseException;
+import com.famillink.exception.ErrorMessage;
 import org.apache.commons.io.IOUtils;
 
 import org.json.simple.JSONObject;
@@ -53,14 +56,26 @@ public class FaceDetectionImpl implements FaceDetection {
         //File temp = new File(src);
         //InputStream imageByte = URI.create(src).toURL().openStream();
 
-        File temp = new File(src);
-        InputStream imageByte = new FileInputStream(temp);
+
+        String image_name = src;
+
+        File temp = new File(image_name);
+        InputStream imageByte = null;
+        try {
+            imageByte = new FileInputStream(temp);
+        } catch (FileNotFoundException e) {
+            throw new BaseException(ErrorMessage.NOT_FOUND_FILE);
+        }
         byte[] bytes = IOUtils.toByteArray(imageByte);
 
         imageByte.close();
 
+        String encoded = Base64.getEncoder().encodeToString(bytes);
+
+        encoded = new String(encoded.getBytes("utf-8"), "utf-8");
+        //String result = encoded_after.toString().replaceAll(" ","+");
         Map<String, Object> map = new HashMap<>();
-        map.put("imgUrlBase", bytes);
+        map.put("img", encoded);
 
 
         //dict형태로 상대방에게 전달하여 flask 서버에서 판단 가능하게 해줍니다
