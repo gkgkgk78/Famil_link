@@ -76,39 +76,6 @@ public class AccountServiceImpl implements AccountService {
         }};
     }
 
-    //TODO; 계정 정보로 model_path 가져오기
-    @Override
-    public Map<String, Object> path(Account loginAccount) throws Exception {
-
-        Account account = accountMapper.findUserByEmail(loginAccount.getEmail())
-                .orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_EMAIL));
-
-        //사용시 path + model.json (and) path + metadata.json
-        String modelUrl = account.getPath() + "model.json";
-        String metaUrl = account.getPath() + "metadata.json";
-
-
-        Map<String, Object> result = new HashMap<>();
-
-        if(modelUrl != null && metaUrl != null){
-            result.put("msg", account.getNickname()+"'s teachable path");
-            result.put("model-path", modelUrl);
-            result.put("meta-path", metaUrl);
-        } else {
-            result.put("msg", "등록된 가족 모델이 없습니다");
-        }
-
-        return result;
-    }
-
-    @Override
-    public List<Account> allMembers(Account loginAccount) throws Exception {
-
-        List<Account> members = accountMapper.findUserFamily(loginAccount.getEmail());
-
-        return members;
-    }
-
 
     @Override
     public String refreshToken(Long uid, String token) throws Exception {

@@ -63,13 +63,12 @@ public class AccountController {
     public ResponseEntity<?> loginUser(@RequestBody Account account) throws Exception {
 
         Map<String, Object> token = accountService.login(account); //access token, refresh token
-        Map<String, Object> path = accountService.path(account);
 
         Map<String, Object> responseResult = new HashMap<>();
 
         HttpStatus sts = HttpStatus.BAD_REQUEST;
 
-        if(token != null && path != null){
+        if(token != null){
             sts = HttpStatus.OK;
             responseResult.put("result", true);
             responseResult.put("msg", "로그인을 성공하였습니다.");
@@ -77,10 +76,9 @@ public class AccountController {
             responseResult.put("refresh-token", token.get("refresh-token"));
             responseResult.put("uid", token.get("uid"));
             responseResult.put("nickname", token.get("nickname"));
-            responseResult.put("modelPath", path.get("model-path"));
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+        return ResponseEntity.status(sts).body(responseResult);
     }
 
     @ApiOperation(value = "Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
