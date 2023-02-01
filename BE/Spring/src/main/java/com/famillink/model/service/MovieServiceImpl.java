@@ -38,7 +38,6 @@ public class MovieServiceImpl implements MovieService {
     @Transactional
     public void sender(MovieSenderDTO sender, MultipartFile file) throws Exception {
 
-        // TODO: CJW, sender의 uid들이 같은 가족인지 valid 필요
 
         //현재는 sender에 있는 보내고자 하는 얘들이 같은
         Member m;
@@ -96,8 +95,6 @@ public class MovieServiceImpl implements MovieService {
         } catch (Exception e) {
             throw new BaseException(ErrorMessage.NOT_READ_FILE);
         }
-
-
     }
 
 

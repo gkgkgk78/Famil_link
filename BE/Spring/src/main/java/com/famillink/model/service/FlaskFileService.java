@@ -5,10 +5,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 
-public interface FileService {
+public interface FlaskFileService {
     void init();
 
-    String store(MultipartFile file, String user);
+    String storeModel(MultipartFile file, String user);
+    String storeLabel(MultipartFile file, String user);
 
     Path load(String filename);
 
