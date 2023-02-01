@@ -19,7 +19,7 @@ model = load_model('C:\\Users\\SSAFY\\Desktop\\flask & java\\flask & java\\Flask
 # Grab the labels from the labels.txt file. This will be used later.
 labels = open('C:\\Users\\SSAFY\\Desktop\\flask & java\\flask & java\\Flask\\labels.txt', 'r', encoding='UTF8').readlines()
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["POST"])
 def index():
     print(request)
     print(request.data)
