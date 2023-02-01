@@ -13,7 +13,6 @@
 }
 
 .weather {
-  display: flex;
   justify-items: center;
   text-align: center;
 }
