@@ -12,7 +12,7 @@ const Clock = () => {
     }, [])
 
     // 시간과 날짜 2자리 수 표기, 시간은 12시간으로 표시
-    let nowHours = nowTime.getHours() > 12 ? String(nowTime.getHours()-12).padStart(2,0) : String(nowTime.getHours).padStart(2,0)
+    let nowHours = nowTime.getHours() > 12 ? String(nowTime.getHours()-12).padStart(2,0) : String(nowTime.getHours()).padStart(2,0)
     let nowMinutes = String(nowTime.getMinutes()).padStart(2,0)
     let nowMonth = String(nowTime.getMonth()+1).padStart(2,0)
     let nowDate = String(nowTime.getDate()).padStart(2,0)

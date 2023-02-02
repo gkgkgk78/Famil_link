@@ -99,8 +99,8 @@ function Weather() {
         setCity(data.name);
         // 날씨 아이콘 숫자를 보고 적절한 react-icons findWeather에 가져온다.
         setWeatherStatus(data.weather[0].icon)
-        const findIndex = weatherIcon.findIndex(element => element.code === weatherStatus)
-        setFindWeather(weatherIcon[findIndex].img)
+        const findIndexNum = weatherIcon.findIndex(element => element.icon === weatherStatus)
+        setFindWeather(weatherIcon[findIndexNum].img)
     }
     )
 }
