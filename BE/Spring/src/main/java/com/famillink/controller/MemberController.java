@@ -40,22 +40,22 @@ public class MemberController {
 
         //우선은 온 파일의 정보를 임시로 저장을 해두면 될듯 하다.
 
-        String temp=flaskService.send_temp(account, file);
+        String temp = flaskService.send_temp(account, file);
+        boolean flag = fservice.isCongnitive("", temp);
+        flaskService.delete_temp(temp);
 
-        boolean flag=fservice.isCongnitive("",temp);
-
-        if (flag==false)
-        {
+        if (flag == false) {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
 
         //회원가입을 할시에 자신이 찍은 사진을 바탕으로 회원가입이 되는 여부를 판단을 할수 있음
         Member savedUser = memberservice.signup(account, name, nickname);
-
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "멤버 가입 성공");
         }}, HttpStatus.OK);
+
+
 
     }
 
@@ -65,15 +65,14 @@ public class MemberController {
 
     public ResponseEntity<?> login(@RequestBody Account account, @PathVariable String photo, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
 
-        String temp=flaskService.send_temp(account, file);
+        String temp = flaskService.send_temp(account, file);
 
-        boolean flag=fservice.isCongnitive("",temp);
+        boolean flag = fservice.isCongnitive("", temp);
+        flaskService.delete_temp(temp);
 
-        if (flag==false)
-        {
+        if (flag == false) {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
-
 
 
         Map<String, Object> token = memberservice.login(account, photo);
@@ -124,21 +123,21 @@ public class MemberController {
     //임시 테스트를 위해서 우선 이렇게 만들어 두었습니다.
 
 
-    @ApiOperation(value = "사진보내기", notes = "제발.")
-    @PostMapping("/pick")
-    public ResponseEntity<?> picture() throws Exception {
-        boolean response = fservice.isCongnitive("모자", "src/test/image/cjw.jpg");
-
-        Map<String, Object> result = new HashMap<>();
-
-        if (response) {
-            result.put("resul", "얼굴 인식이 성공했습니다");
-            return ResponseEntity.status(HttpStatus.OK).body(result);
-        } else {
-            result.put("resul", "얼굴이 등록되지 않은 구성원입니다.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-        }
-    }
+//    @ApiOperation(value = "사진보내기", notes = "제발.")
+//    @PostMapping("/pick")
+//    public ResponseEntity<?> picture() throws Exception {
+//        boolean response = fservice.isCongnitive("모자", "src/test/image/cjw.jpg");
+//
+//        Map<String, Object> result = new HashMap<>();
+//
+//        if (response) {
+//            result.put("resul", "얼굴 인식이 성공했습니다");
+//            return ResponseEntity.status(HttpStatus.OK).body(result);
+//        } else {
+//            result.put("resul", "얼굴이 등록되지 않은 구성원입니다.");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+//        }
+//    }
 
 
 }

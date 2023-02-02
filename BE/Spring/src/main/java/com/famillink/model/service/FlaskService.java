@@ -13,6 +13,7 @@ public interface FlaskService {
 
 
     String send_temp(Account sender, MultipartFile file) throws Exception;
+    void delete_temp(String path);
 
 
 

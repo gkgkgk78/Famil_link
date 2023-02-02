@@ -128,6 +128,21 @@ public class FlaskFileServiceImpl implements FlaskFileService {
         }
     }
 
+    @Override
+    public void deleteTemp(String path) {
+        File file = new File(path);
+
+        if( file.exists() ){
+            if(!file.delete()){
+                System.out.println("파일삭제 성공");
+                throw new BaseException(ErrorMessage.NOT_EXIST_ROUTE);
+            }
+        }else{
+            throw new BaseException(ErrorMessage.NOT_EXIST_ROUTE);
+
+        }
+    }
+
 
     @Override
     public Path load(String filename) {

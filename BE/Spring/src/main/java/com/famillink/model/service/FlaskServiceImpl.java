@@ -57,6 +57,11 @@ public class FlaskServiceImpl implements FlaskService {
     }
 
     @Override
+    public void delete_temp(String path) {
+        fileService.deleteTemp(path);
+    }
+
+    @Override
     public InputStreamResource read_model(String email) throws Exception {
 
         //이제 모델을 불러오면 됨

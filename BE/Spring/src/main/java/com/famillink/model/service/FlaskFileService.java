@@ -13,6 +13,7 @@ public interface FlaskFileService {
 
     String storeTemp(MultipartFile file, String user);
 
+    void deleteTemp(String path);
 
     Path load(String filename);
 
