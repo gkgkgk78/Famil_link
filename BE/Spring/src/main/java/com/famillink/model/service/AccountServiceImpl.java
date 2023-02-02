@@ -3,6 +3,7 @@ package com.famillink.model.service;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.user.Account;
+import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.AccountMapper;
 import com.famillink.util.EmailHandler;
 import com.famillink.util.JwtTokenProvider;
@@ -44,7 +45,7 @@ public class AccountServiceImpl implements AccountService {
 
         salt = (BCrypt.hashpw(salt, BCrypt.gensalt()));
         accountMapper.setSalt(account.getUid(), salt);
-        
+
 
         //추가적으로 가족 계정의 model_path를 넣어주고자함
         Account acc= accountMapper.findUserByEmail(account.getEmail()).get();
@@ -84,15 +85,14 @@ public class AccountServiceImpl implements AccountService {
         }};
     }
 
-
-
     @Override
-    public List<Account> allMembers(Account loginAccount) throws Exception {
+    public List<Member> allMembers(Account loginAccount) throws Exception {
 
-        List<Account> members = accountMapper.findUserFamily(loginAccount.getEmail());
+        List<Member> members = accountMapper.findUserFamily(loginAccount.getEmail());
 
         return members;
     }
+
 
 
     @Override

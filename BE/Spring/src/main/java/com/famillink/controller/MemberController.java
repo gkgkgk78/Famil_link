@@ -2,7 +2,6 @@ package com.famillink.controller;
 
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.FaceDetection;
-import com.famillink.model.service.FaceDetectionImpl;
 import com.famillink.model.service.MemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
