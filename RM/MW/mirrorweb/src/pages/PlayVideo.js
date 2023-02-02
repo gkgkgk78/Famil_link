@@ -29,22 +29,15 @@ const PlayVideo = () => {
     }
 
     return (
-        <div>
-            <section style = {{
-                marginTop : '100px',
-
-            }}> 
-                <ReactPlayer
-                    url= {'http://i8a208.p.ssafy.io:3000/movie/18'}
-                    muted={false}
-                    playing
-                    controls
-                    width="500px"
-                    height="300px"
-                    progressInterval={1000}
-                    onEnded={() => {nextVideo(videoList, nowplaying)}}
-                />
-            </section>
+        <div> 
+          <ReactPlayer
+            url= {videoList[nowplaying]}
+            muted={false}
+            playing
+            controls
+            progressInterval={1000}
+            onEnded={() => {nextVideo(videoList, nowplaying)}}
+          />
         </div>
      );
 }
