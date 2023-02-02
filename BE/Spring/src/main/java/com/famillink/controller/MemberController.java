@@ -66,15 +66,16 @@ public class MemberController {
             @RequestBody List<List<List<Integer>>> json,
             final Authentication authentication) throws Exception {
 
-        String member_uid = fservice.getMemberUidByFace(json);
-//        flaskService.delete_temp(temp);
+        String member_name = fservice.getMemberUidByFace(json);
 
-        if (member_uid.equals("NONE")) {
+
+        if (member_name.equals("NONE")) {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
 
         // TODO: uid 뽑아야함
-        Map<String, Object> token = memberservice.login(4L);
+        Long member_uid = memberservice.findByUserName(member_name);
+        Map<String, Object> token = memberservice.login(member_uid);
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
@@ -117,26 +118,6 @@ public class MemberController {
             put("data", auth);
         }}, HttpStatus.OK);
     }
-
-
-    //임시 테스트를 위해서 우선 이렇게 만들어 두었습니다.
-
-
-//    @ApiOperation(value = "사진보내기", notes = "제발.")
-//    @PostMapping("/pick")
-//    public ResponseEntity<?> picture() throws Exception {
-//        boolean response = fservice.isCongnitive("모자", "src/test/image/cjw.jpg");
-//
-//        Map<String, Object> result = new HashMap<>();
-//
-//        if (response) {
-//            result.put("resul", "얼굴 인식이 성공했습니다");
-//            return ResponseEntity.status(HttpStatus.OK).body(result);
-//        } else {
-//            result.put("resul", "얼굴이 등록되지 않은 구성원입니다.");
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-//        }
-//    }
 
 
 }
