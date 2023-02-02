@@ -6,7 +6,10 @@ function MQTT() {
   const URL = "ws://localhost:9001";
   const client = mqtt.connect(URL);
   const [userList, setList] = useState([]);
-  const [isValid,setValid] = useState(false)
+  const [isValid,setValid] = useState(null)
+  const [imageData, setImage] = useState({
+    "image":""
+  })
   const mounted = useRef(false);
 
 
@@ -21,45 +24,54 @@ function MQTT() {
   
   client.on('message', function (topic, message) {
     let name = JSON.parse(message).name
-    setList( function(preState) {
-      return [...preState, name]
-    })
-    if (userList.length >= 10) {
-      setList(function(preState) {
-       return preState.slice(0,10)
-      })   
-    }
-    if ((userList.filter(user => user !== userList[0])).length ===0) {
-      setValid(() => {
-        return true
+    if (name !== "NONE"){
+      setList( function(preState) {
+        return [...preState, name]
       })
+
+      if (userList.length >= 10) {
+        setList(function(preState) {
+         return preState.slice(0,10)
+        })   
+      }
+      if ((userList.filter(user => user !== userList[0])).length ===0) {
+        setValid(() => {
+          return true
+        })
+        let image = JSON.parse(message).image
+        if (image.length > 0) {
+          setImage(() => {
+            return image
+          })
+      }
+      }
     }
   })
 
   useEffect(() =>{
-    // 마운트 됐을 때는 실행 안 함
-    if (!mounted.current) {
-      mounted.current = true;
-      console.log("마운트 됐구나")
-    } else {
-      console.log("인식됐구나")
-      const name = userList[0]
-      console.log("axios 보낸다.")
-      axios({
-        method: "get",
-        url: "이름을 포함한 url",
-        header: "",
-      })
-      .then((res) => {
-        console.log(res)
-        // 정보 저장
-      })
-      .catch((err) => {
-        // 에러 처리
-        console.log(err)
-      })
-    }
-  },[isValid])
+      // 마운트 됐을 때는 실행 안 함
+      if (!mounted.current) {
+        mounted.current = true;
+      } else {
+        console.log(JSON.stringify(imageData))
+        axios({
+          method: "post",
+          url: "http://i8a208.p.ssafy.io:3000/member/login",
+          headers:{
+            "Conctent-type": "application/json; charset=utf-8",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTMyNDc4OCwiZXhwIjoxNjg1MzI0Nzg4fQ.rB9k4f7WurY4qbPltJpqPOGc5jdt8k8g1AYNJSYjpjU"
+          },
+          data: imageData
+        })
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      }
+      },[isValid])
+    
 }
 
 
