@@ -6,14 +6,26 @@
 <mapper namespace="com.famillink.model.mapper.MemberMapper">
 
     <select id="findUserByUid" parameterType="long" resultType="Member">
-        SELECT *
+        SELECT `uid`,
+               `name`,
+               `nickname`,
+               `user_uid`
         FROM member
         WHERE `uid` = #{uid}
     </select>
 
+    <select id="findUserByName" parameterType="string" resultType="long">
+        SELECT `uid`
+        FROM member
+        WHERE `name` = #{name}
+    </select>
+
 
     <select id="findUserFamily" parameterType="string" resultType="Member">
-        SELECT *
+        SELECT `uid`,
+               `name`,
+               `nickname`,
+               `user_uid`
         FROM account a JOIN member m
             ON a.uid = m.user_uid
         WHERE #{email} = a.email
@@ -54,6 +66,8 @@
         SET `pw` = #{pw}
         WHERE `email` = #{email};
     </update>
+
+
 
 
 

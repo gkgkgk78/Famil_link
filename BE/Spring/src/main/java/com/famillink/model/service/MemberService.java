@@ -16,4 +16,6 @@ public interface MemberService {
     String refreshToken(Long uid, String token) throws Exception;
 
     Boolean findTogether(MovieSenderDTO sender) throws Exception;
+
+    Long findByUserName(String name) throws Exception;
 }
