@@ -33,6 +33,8 @@ import java.util.Map;
 public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
 
+
+
     private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
 
@@ -41,10 +43,10 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.token-validity-in-minutes}00")
+    @Value("${jwt.token-validity-in-minutes}0000000")
     private long tokenValidMinutes;
 
-    @Value("${jwt.refresh-validity-in-minutes}0")
+    @Value("${jwt.refresh-validity-in-minutes}")
     private long refreshValidMinutes;
 
     private final AccountMapper accountMapper;
