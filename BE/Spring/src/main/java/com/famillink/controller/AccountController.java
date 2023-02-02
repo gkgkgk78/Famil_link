@@ -3,6 +3,7 @@ package com.famillink.controller;
 
 import com.famillink.annotation.ValidationGroups;
 import com.famillink.model.domain.user.Account;
+import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.AccountService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.Api;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Api("Account Controller")
@@ -68,7 +70,9 @@ public class AccountController {
 
         HttpStatus sts = HttpStatus.BAD_REQUEST;
 
-        if(token != null){
+        List<Member> members = accountService.allMembers(account);
+
+        if (token != null) {
             sts = HttpStatus.OK;
             responseResult.put("result", true);
             responseResult.put("msg", "로그인을 성공하였습니다.");
@@ -76,10 +80,12 @@ public class AccountController {
             responseResult.put("refresh-token", token.get("refresh-token"));
             responseResult.put("uid", token.get("uid"));
             responseResult.put("nickname", token.get("nickname"));
+            responseResult.put("members", members);
         }
 
         return ResponseEntity.status(sts).body(responseResult);
     }
+
 
     @ApiOperation(value = "Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
     @PostMapping("/refresh")

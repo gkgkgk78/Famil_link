@@ -3,6 +3,7 @@ package com.famillink.model.service;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.user.Account;
+import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.AccountMapper;
 import com.famillink.util.EmailHandler;
 import com.famillink.util.JwtTokenProvider;
@@ -75,6 +76,15 @@ public class AccountServiceImpl implements AccountService {
             put("nickname", account.getNickname());
         }};
     }
+
+    @Override
+    public List<Member> allMembers(Account loginAccount) throws Exception {
+
+        List<Member> members = accountMapper.findUserFamily(loginAccount.getEmail());
+
+        return members;
+    }
+
 
 
     @Override
