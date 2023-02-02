@@ -1,5 +1,6 @@
 package com.famillink.controller;
 
+import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.FaceDetection;
 import com.famillink.model.service.FaceDetectionImpl;
@@ -27,11 +28,12 @@ public class MemberController {
     private final FaceDetection fservice;
 
     @ApiOperation(value = "회원가입", notes = "req_data : [model_path,name,nickname,user_uid]")
-    @PostMapping("/signup/{photo}")
-    public ResponseEntity<?> signup(@RequestBody Member member, @PathVariable String photo) throws Exception {
-
-        Member savedUser = memberservice.signup(member, photo);
-
+    @PostMapping("/signup/{name}/{nickname}")
+    
+    public ResponseEntity<?> signup(@RequestBody Account account, @PathVariable String name,@PathVariable String nickname) throws Exception {
+        
+        //회원가입을 할시에 자신이 찍은 사진을 바탕으로 회원가입이 되는 여부를 판단을 할수 있음
+        Member savedUser = memberservice.signup(account, name,nickname);
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
@@ -44,9 +46,9 @@ public class MemberController {
     @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login/{photo}")
 
-    public ResponseEntity<?> login(@RequestBody Member member, @PathVariable String photo) throws Exception {
+    public ResponseEntity<?> login(@RequestBody Account account, @PathVariable String photo) throws Exception {
 
-        Map<String, Object> token = memberservice.login(member, photo);
+        Map<String, Object> token = memberservice.login(account, photo);
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
