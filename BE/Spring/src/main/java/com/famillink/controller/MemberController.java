@@ -96,17 +96,9 @@ public class MemberController {
     @ApiOperation(value = "사진보내기", notes = "제발.")
     @PostMapping("/pick")
     public ResponseEntity<?> picture() throws Exception {
-        boolean response = fservice.isCongnitive("모자", "src/test/image/cjw.jpg");
+        Map<String, Object> response = fservice.isCongnitive("모자", "src/test/image/cjw.jpg");
 
-        Map<String, Object> result = new HashMap<>();
-
-        if(response){
-            result.put("resul", "얼굴 인식이 성공했습니다");
-            return ResponseEntity.status(HttpStatus.OK).body(result);
-        } else {
-            result.put("resul", "얼굴이 등록되지 않은 구성원입니다.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
