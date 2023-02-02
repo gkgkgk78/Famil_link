@@ -1,0 +1,7 @@
+.appContainer {
+  padding: 2rem;
+}
+
+.errorMessage {
+  color: red;
+}
