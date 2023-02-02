@@ -5,7 +5,6 @@ import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.FaceDetection;
-import com.famillink.model.service.FaceDetectionImpl;
 import com.famillink.model.service.FlaskService;
 import com.famillink.model.service.MemberService;
 import io.swagger.annotations.Api;
@@ -41,10 +40,10 @@ public class MemberController {
         //우선은 온 파일의 정보를 임시로 저장을 해두면 될듯 하다.
 
         String temp = flaskService.send_temp(account, file);
-        boolean flag = fservice.isCongnitive("", temp);
+        long flag = fservice.isCongnitive("", temp);
         flaskService.delete_temp(temp);
 
-        if (flag == false) {
+        if (flag == 0) {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
 
@@ -67,10 +66,10 @@ public class MemberController {
 
         String temp = flaskService.send_temp(account, file);
 
-        boolean flag = fservice.isCongnitive("", temp);
+        long flag = fservice.isCongnitive("", temp);
         flaskService.delete_temp(temp);
 
-        if (flag == false) {
+        if (flag == 0) {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
 
