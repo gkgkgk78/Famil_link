@@ -1,12 +1,12 @@
 package com.famillink.model.service;
 
 
+import java.util.List;
+
 public interface FaceDetection {
 
 
-
-
-    Long isCongnitive(String family, String src) throws Exception;
+    String getMemberUidByFace(List<List<List<Integer>>> data) throws Exception;
 
 
 }

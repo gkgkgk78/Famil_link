@@ -58,7 +58,7 @@ public class MemberServiceImpl implements MemberService {
 
 
     @Override
-    public Map<String, Object> login(Account account, String photo) throws Exception {
+    public Map<String, Object> login(Long uid) throws Exception {
 
 
 //        if (!face.send("","")) {//로그인 하고자 할시에 없는 얼굴 등록 정보라면은 로그인이 불가능함
@@ -67,9 +67,8 @@ public class MemberServiceImpl implements MemberService {
 //        }
 
         //찾은 회원의 uid로 찾기
-        Long u1 = 4L;
 
-        Member member1 = mapper.findUserByUid(4L)
+        Member member1 = mapper.findUserByUid(uid)
                 .orElseThrow(() -> new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO));
 
 
