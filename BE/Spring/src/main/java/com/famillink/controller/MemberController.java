@@ -73,7 +73,7 @@ public class MemberController {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
 
-        // TODO: uid 뽑아야함
+
         Long member_uid = memberservice.findByUserName(member_name);
         Map<String, Object> token = memberservice.login(member_uid);
 
@@ -87,7 +87,6 @@ public class MemberController {
 
         }}, HttpStatus.OK);
     }
-
 
     @ApiOperation(value = "Member Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
     @PostMapping("/refresh")
@@ -118,6 +117,7 @@ public class MemberController {
             put("data", auth);
         }}, HttpStatus.OK);
     }
+
 
 
 }

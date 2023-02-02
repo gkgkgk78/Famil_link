@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -47,11 +46,9 @@ public class JwtFilter extends GenericFilterBean {
         }
         //member인지, account인지에 따라 다른 메서드를 호출을 해야함
         try {
-
             if (token == null) {
                 logger.debug("유효한 Jwt 토큰이 없습니다, uri: {}", requestURI);
                 //권한이 없는 경우에는 접근하고자 하는 경로가 signup과 login일때만 가능하게 해야겠다
-
                 //이렇게 처리를 할시 초기에 접근하는 주소가 존재를 할시에 처리를 해주는 방법을 고려 해 봐야 한다.
 //                if(route ==null)
 //                    throw  new BaseException(ErrorMessage.NOT_EXIST_ROUTE);
@@ -89,12 +86,18 @@ public class JwtFilter extends GenericFilterBean {
                     if (flag == false)
                         return;
                 }
+                Authentication authentication = null;
 
-
-                Authentication authentication = jwtTokenProvider.getAuthentication(token);//토큰이 유효할시 Authentication객체를 생성해서 SecurityContextHolder에 추가함
+                //account에서 member로 로그인을 할시에 만 token의 처리를 해줘야 함
+                if (level_type.equals("account")) {
+                    //이때는 authorization에 account정보가 들어가게됨
+                    authentication = jwtTokenProvider.getAuthentication(token);//토큰이 유효할시 Authentication객체를 생성해서 SecurityContextHolder에 추가함
+                } else {
+                    //이때는 authorization에 member의 정보가 들어가야함
+                    authentication = jwtTokenProvider.getAuthentication1(token);
+                }
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 logger.info("Security context에 인증 정보를 저장했습니다, uri: {}", requestURI);
-
 
             }
 
@@ -102,9 +105,7 @@ public class JwtFilter extends GenericFilterBean {
         } catch (BaseException e) {
             logger.info(e.getErrorMessage().toString());
         }
-
         chain.doFilter(request, response);
-
 
     }
 }
