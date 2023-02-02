@@ -32,12 +32,8 @@ public class FlaskServiceImpl implements FlaskService {
     @Override
     public void send_model(Account sender, MultipartFile file) throws Exception {
 
-
         Account a1 = accountMapper.findUserByEmail(sender.getEmail()).get();
-
         String get = fileService.storeModel(file, a1.getUid().toString());//이렇게 해서 저장을 함
-
-        //사실 저장만 하면 끝임
 
 
     }
@@ -46,9 +42,23 @@ public class FlaskServiceImpl implements FlaskService {
     @Override
     public void send_label(Account sender, MultipartFile file) throws Exception {
         Account a1 = accountMapper.findUserByEmail(sender.getEmail()).get();
-
         String get = fileService.storeLabel(file, a1.getUid().toString());//이렇게 해서 저장을 함
 
+    }
+
+    //얼굴 인증을 하고자 할시에 임시로 저장을 하기 위해 진행하는 메서드이다.
+    @Override
+    public String send_temp(Account sender, MultipartFile file) throws Exception {
+
+        Account a1 = accountMapper.findUserByEmail(sender.getEmail()).get();
+        String get = fileService.storeTemp(file, a1.getUid().toString());//이렇게 해서 저장을 함
+        return "./"+get;
+
+    }
+
+    @Override
+    public void delete_temp(String path) {
+        fileService.deleteTemp(path);
     }
 
     @Override
@@ -90,8 +100,8 @@ public class FlaskServiceImpl implements FlaskService {
         // 파일 리소스 리턴
         return fileService.loadAsResource(templast);
 
-    }
 
+    }
 
 
 }

@@ -10,6 +10,4 @@ public interface FaceDetection {
     Map<String, Object> isCongnitive(String family, String src) throws Exception;
 
 
-
-
 }

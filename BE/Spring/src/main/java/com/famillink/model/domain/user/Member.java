@@ -17,7 +17,6 @@ public class Member implements UserDetails {
 //    @ApiModelProperty(hidden = true)
     protected Long uid;
 
-
     protected String user_uid;
 
     protected String name;

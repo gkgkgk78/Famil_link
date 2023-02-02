@@ -1,7 +1,6 @@
 package com.famillink.model.service;
 
 import com.famillink.model.domain.param.MovieSenderDTO;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
