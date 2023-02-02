@@ -66,16 +66,24 @@ public class MemberController {
             @RequestBody List<List<List<Integer>>> json,
             final Authentication authentication) throws Exception {
 
-        String member_uid = fservice.getMemberUidByFace(json);
-//        flaskService.delete_temp(temp);
+//        String member_uid = fservice.getMemberUidByFace(json); //name으로 리턴이 될것으로 알고 있으면 됨
+//        if (member_uid.equals("NONE")) {
+//            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+//        }
 
-        if (member_uid.equals("NONE")) {
-            throw new BaseException(ErrorMessage.NOT_USER_INFO);
-        }
+        
+        Account auth = (Account) authentication.getPrincipal();
+        
+        //얻어온 name 으로 맞는 member를 찾아야 함
+        
+        
+        
+        Map<String, Object> token = memberservice.login(auth.getUid());
 
-        // TODO: uid 뽑아야함
-        Map<String, Object> token = memberservice.login(4L);
-
+        
+        
+        
+        
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "로그인을 성공하였습니다.");
@@ -86,6 +94,8 @@ public class MemberController {
 
         }}, HttpStatus.OK);
     }
+
+
 
 
     @ApiOperation(value = "Member Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
@@ -107,7 +117,7 @@ public class MemberController {
         }
     }
 
-
+    
     @ApiOperation(value = "Member회원 확인", notes = "회원정보를 반환합니다.")
     @GetMapping("/auth")
     public ResponseEntity<?> authUser(final Authentication authentication) {
@@ -119,7 +129,6 @@ public class MemberController {
     }
 
 
-    //임시 테스트를 위해서 우선 이렇게 만들어 두었습니다.
 
 
 //    @ApiOperation(value = "사진보내기", notes = "제발.")

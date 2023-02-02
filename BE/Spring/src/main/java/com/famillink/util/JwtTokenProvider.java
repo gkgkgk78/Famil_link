@@ -32,6 +32,7 @@ import java.util.Map;
 //해당 class에서는 jwt token 을 생성하는데 필요한 정보를 userdetails에서 가져와 jwt 토큰을 생성 가능합니다.
 public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
+
     private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
 
@@ -43,7 +44,7 @@ public class JwtTokenProvider {
     @Value("${jwt.token-validity-in-minutes}00")
     private long tokenValidMinutes;
 
-    @Value("${jwt.refresh-validity-in-minutes}")
+    @Value("${jwt.refresh-validity-in-minutes}0")
     private long refreshValidMinutes;
 
     private final AccountMapper accountMapper;
@@ -110,9 +111,15 @@ public class JwtTokenProvider {
     //usernamePasswordAuthenticationToken을 사용하여 Authentication을 구현 하였습니다.
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
-
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
+
+    public Authentication getAuthentication1(String token) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId1(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+
 
     // 유저 이름 추출
     //토큰 기반으로 회원 정보를 추출하는 메서드 입니다.
