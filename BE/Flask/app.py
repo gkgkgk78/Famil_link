@@ -1,11 +1,7 @@
-import cv2
 import numpy as np
-import base64
 from keras.models import load_model
 from flask import Flask, request
 import json
-from PIL import Image
-from io import BytesIO
 
 app = Flask(__name__)
 
