@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FaceDetectionImpl implements FaceDetection {
-    public Map<String, Object> isCongnitive(String family, String src) throws Exception {
+    public Long isCongnitive(String family, String src) throws Exception {
 
 
         //바로밑의 부분에 파일에 해당되는 경로를 넣어줍니다
@@ -82,18 +82,8 @@ public class FaceDetectionImpl implements FaceDetection {
             result.append((char) data);
         }
 
-        Long check = Long.parseLong(result.toString()); //member uid
+        long check = Long.parseLong(result.toString()); // 멤버 uid 반환. 0 이면 멤버로 등록돼있지 않음
 
-
-        Map<String, Object> resul = new HashMap<>();
-        if(check != 0){ //가족 구성원이면
-            resul.put("memberUid", check);
-            resul.put("result", true);
-        } else {
-            resul.put("result", false);
-            resul.put("msg", "안면 인식에 실패했습니다");
-        }
-
-        return resul;
+        return check;
     }
 }
