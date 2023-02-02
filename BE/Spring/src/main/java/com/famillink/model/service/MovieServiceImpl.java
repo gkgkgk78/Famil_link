@@ -46,7 +46,6 @@ public class MovieServiceImpl implements MovieService {
             {
                 throw new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO);
             }
-
         } catch (Exception e) {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }

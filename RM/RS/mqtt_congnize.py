@@ -7,6 +7,8 @@ import os
 from json import JSONEncoder
 import threading
 
+import requests
+
 isFile = False
 folder_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -26,8 +28,13 @@ def on_connect(client, userdata, flags, rc):
         print("Bad connection Returned code=", rc)
 
 
+# ones = True
+
+
 def on_message(client, userdata, msg):
-    global model, labels
+    global model, labels# , ones
+    # if not ones:
+    #     return
     if msg.topic == "/local/opencv/":
         data = json.loads(msg.payload.decode("utf-8"))
         # print(data)
@@ -42,13 +49,21 @@ def on_message(client, userdata, msg):
         percent = probabilities[0][pick]
         name = labels[pick].strip().split(' ')[1]
         # print(name)
-        if percent > 0.70:
+        if percent > 0.90:
             data = {
                 "name": name,
                 "percent": str(percent),
                 "image": image
             }
             client.publish("/local/face/result/", json.dumps(data, cls=NumpyArrayEncoder), 2)
+            # print(name)
+            # requests.post("http://localhost:9999/member/login",
+            #               headers={
+            #                   "Content-type": "application/json",
+            #                   "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTMxMjA5MywiZXhwIjoxNjg1MzEyMDkzfQ._EZkmbK3vj2BkLAQ2mTReq2lajuhpVifWDrtIZhuaj0"
+            #               },
+            #               data=json.dumps(data["image"], cls=NumpyArrayEncoder))
+            # ones = False
             # print("result publish")
 
 

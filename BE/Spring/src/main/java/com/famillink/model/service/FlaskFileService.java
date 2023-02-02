@@ -11,6 +11,10 @@ public interface FlaskFileService {
     String storeModel(MultipartFile file, String user);
     String storeLabel(MultipartFile file, String user);
 
+    String storeTemp(MultipartFile file, String user);
+
+    void deleteTemp(String path);
+
     Path load(String filename);
 
     InputStreamResource loadAsResource(String filename) throws Exception;

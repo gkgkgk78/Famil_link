@@ -6,6 +6,7 @@ import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Account;
+import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.AccountService;
 import com.famillink.model.service.FlaskService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.core.io.InputStreamResource;
@@ -78,6 +80,8 @@ public class AccountController {
 
         HttpStatus sts = HttpStatus.BAD_REQUEST;
 
+        List<Member> members = accountService.allMembers(account);
+
         if (token != null) {
             sts = HttpStatus.OK;
             responseResult.put("result", true);
@@ -86,10 +90,12 @@ public class AccountController {
             responseResult.put("refresh-token", token.get("refresh-token"));
             responseResult.put("uid", token.get("uid"));
             responseResult.put("nickname", token.get("nickname"));
+            responseResult.put("members", members);
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+        return ResponseEntity.status(sts).body(responseResult);
     }
+
 
     @ApiOperation(value = "Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
     @PostMapping("/refresh")
