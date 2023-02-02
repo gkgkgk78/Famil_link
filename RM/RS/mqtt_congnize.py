@@ -28,7 +28,7 @@ def on_connect(client, userdata, flags, rc):
         print("Bad connection Returned code=", rc)
 
 
-ones = True
+# ones = True
 
 
 def on_message(client, userdata, msg):
@@ -56,14 +56,14 @@ def on_message(client, userdata, msg):
                 "image": image
             }
             client.publish("/local/face/result/", json.dumps(data, cls=NumpyArrayEncoder), 2)
-            print(name)
-            requests.post("http://localhost:9999/member/login",
-                          headers={
-                              "Content-type": "application/json",
-                              "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTMxMjA5MywiZXhwIjoxNjg1MzEyMDkzfQ._EZkmbK3vj2BkLAQ2mTReq2lajuhpVifWDrtIZhuaj0"
-                          },
-                          data=json.dumps(data["image"], cls=NumpyArrayEncoder))
-            ones = False
+            # print(name)
+            # requests.post("http://localhost:9999/member/login",
+            #               headers={
+            #                   "Content-type": "application/json",
+            #                   "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTMxMjA5MywiZXhwIjoxNjg1MzEyMDkzfQ._EZkmbK3vj2BkLAQ2mTReq2lajuhpVifWDrtIZhuaj0"
+            #               },
+            #               data=json.dumps(data["image"], cls=NumpyArrayEncoder))
+            # ones = False
             # print("result publish")
 
 
