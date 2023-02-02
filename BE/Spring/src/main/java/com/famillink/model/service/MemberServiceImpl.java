@@ -122,5 +122,11 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
+    @Override
+    public Long findByUserName(String name) throws Exception {
+
+        return mapper.findUserByName(name);
+    }
+
 
 }

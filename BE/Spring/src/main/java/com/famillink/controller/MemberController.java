@@ -66,24 +66,17 @@ public class MemberController {
             @RequestBody List<List<List<Integer>>> json,
             final Authentication authentication) throws Exception {
 
-//        String member_uid = fservice.getMemberUidByFace(json); //name으로 리턴이 될것으로 알고 있으면 됨
-//        if (member_uid.equals("NONE")) {
-//            throw new BaseException(ErrorMessage.NOT_USER_INFO);
-//        }
+        String member_name = fservice.getMemberUidByFace(json);
 
-        
-        Account auth = (Account) authentication.getPrincipal();
-        
-        //얻어온 name 으로 맞는 member를 찾아야 함
-        
-        
-        
-        Map<String, Object> token = memberservice.login(auth.getUid());
 
-        
-        
-        
-        
+        if (member_name.equals("NONE")) {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+        }
+
+
+        Long member_uid = memberservice.findByUserName(member_name);
+        Map<String, Object> token = memberservice.login(member_uid);
+
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "로그인을 성공하였습니다.");
@@ -94,9 +87,6 @@ public class MemberController {
 
         }}, HttpStatus.OK);
     }
-
-
-
 
     @ApiOperation(value = "Member Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
     @PostMapping("/refresh")
@@ -117,7 +107,7 @@ public class MemberController {
         }
     }
 
-    
+
     @ApiOperation(value = "Member회원 확인", notes = "회원정보를 반환합니다.")
     @GetMapping("/auth")
     public ResponseEntity<?> authUser(final Authentication authentication) {
@@ -128,24 +118,6 @@ public class MemberController {
         }}, HttpStatus.OK);
     }
 
-
-
-
-//    @ApiOperation(value = "사진보내기", notes = "제발.")
-//    @PostMapping("/pick")
-//    public ResponseEntity<?> picture() throws Exception {
-//        boolean response = fservice.isCongnitive("모자", "src/test/image/cjw.jpg");
-//
-//        Map<String, Object> result = new HashMap<>();
-//
-//        if (response) {
-//            result.put("resul", "얼굴 인식이 성공했습니다");
-//            return ResponseEntity.status(HttpStatus.OK).body(result);
-//        } else {
-//            result.put("resul", "얼굴이 등록되지 않은 구성원입니다.");
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-//        }
-//    }
 
 
 }

@@ -32,9 +32,9 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    global model, labels, ones
-    if not ones:
-        return
+    global model, labels# , ones
+    # if not ones:
+    #     return
     if msg.topic == "/local/opencv/":
         data = json.loads(msg.payload.decode("utf-8"))
         # print(data)
