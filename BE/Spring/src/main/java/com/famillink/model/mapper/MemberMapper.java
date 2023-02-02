@@ -13,6 +13,8 @@ public interface MemberMapper {
 
     Optional<Member> findUserByUid(Long uid);
 
+    Long findUserByName(String Name);
+
     void signup(Member member) throws Exception;
 
     void setRefreshToken(Member userDTO) throws Exception;
