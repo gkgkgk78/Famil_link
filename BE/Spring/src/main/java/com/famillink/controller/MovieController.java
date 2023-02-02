@@ -50,19 +50,6 @@ public class MovieController {
 
         responseHeaders.add("Content-Type", "video/mp4");
         return ResponseEntity.ok().headers(responseHeaders).body(resource);
-
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-//                .cacheControl(CacheControl.noCache())
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=movie.mp4")
-//                .body(resource);
-
-        // final Authentication authentication
-//        Resource file = movieService.download(movie_uid);
-//        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-//                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-
-
     }
 
 
@@ -78,7 +65,6 @@ public class MovieController {
 
 
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
-        
 
 
     }

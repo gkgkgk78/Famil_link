@@ -12,6 +12,10 @@ public interface FlaskService {
     void send_label(Account sender, MultipartFile file) throws Exception;
 
 
+    String send_temp(Account sender, MultipartFile file) throws Exception;
+
+
+
     InputStreamResource read_model(String email) throws Exception;
 
     InputStreamResource read_label(String email) throws Exception;

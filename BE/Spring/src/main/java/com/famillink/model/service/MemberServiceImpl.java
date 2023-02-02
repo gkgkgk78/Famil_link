@@ -24,10 +24,6 @@ public class MemberServiceImpl implements MemberService {
 
     private final FaceDetectionImpl face;
 
-
-    //private final PasswordEncoder passwordEncoder;
-
-
     @Transactional
     @Override
     //photo는 사용자가 찍은 사진 관련된 혹은 영상 관련된 경로를 의미를 한다
@@ -70,10 +66,8 @@ public class MemberServiceImpl implements MemberService {
 //            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
 //        }
 
-
         //찾은 회원의 uid로 찾기
-        Long u1=4L;
-
+        Long u1 = 4L;
 
         Member member1 = mapper.findUserByUid(4L)
                 .orElseThrow(() -> new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO));
@@ -111,6 +105,7 @@ public class MemberServiceImpl implements MemberService {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
     }
+
 
     @Override
     //두 멤버의 가족이 맞는지 아닌지 파악하는 부분을 의미를 함

@@ -15,6 +15,4 @@ public interface FileService {
     InputStreamResource loadAsResource(String filename) throws Exception;
 
 
-
-
 }
