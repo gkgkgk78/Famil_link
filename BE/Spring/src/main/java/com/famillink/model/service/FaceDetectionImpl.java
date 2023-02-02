@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
@@ -16,34 +17,32 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FaceDetectionImpl implements FaceDetection {
-    public Long isCongnitive(String family, String src) throws Exception {
-
-
+    public String getMemberUidByFace(List<List<List<Integer>>> params) throws Exception {
         //바로밑의 부분에 파일에 해당되는 경로를 넣어줍니다
-        String image_name = src;
-
-        //쭉 변환 하는 과정입니다
-        File temp = new File(image_name);
-        InputStream imageByte = null;
-        try {
-            imageByte = new FileInputStream(temp);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        byte[] bytes = IOUtils.toByteArray(imageByte);
-
-        imageByte.close();
-
-
-        String encoded = Base64.getEncoder().encodeToString(bytes);
-
-        Map<String, Boolean> response = new HashMap<>();
-
-
-        encoded = new String(encoded.getBytes("utf-8"), "utf-8");
+//        String image_name = src;
+//
+//        //쭉 변환 하는 과정입니다
+//        File temp = new File(image_name);
+//        InputStream imageByte = null;
+//        try {
+//            imageByte = new FileInputStream(temp);
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
+//        byte[] bytes = IOUtils.toByteArray(imageByte);
+//
+//        imageByte.close();
+//
+//
+//        String encoded = Base64.getEncoder().encodeToString(bytes);
+//
+//        Map<String, Boolean> response = new HashMap<>();
+//
+//
+//        encoded = new String(encoded.getBytes("utf-8"), "utf-8");
 
         Map<String, Object> map = new HashMap<>();
-        map.put("img", encoded);
+        map.put("img", params);
 
         //dict형태로 상대방에게 전달하여 flask 서버에서 판단 가능하게 해줍니다
         JSONObject resultObj = new JSONObject(map);
@@ -64,7 +63,7 @@ public class FaceDetectionImpl implements FaceDetection {
         conn.setDoOutput(true);
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
 
-        System.out.println(resultObj.toString());
+//        System.out.println(resultObj.toString());
         bw.write(resultObj.toString());
 
 
@@ -82,8 +81,8 @@ public class FaceDetectionImpl implements FaceDetection {
             result.append((char) data);
         }
 
-        long check = Long.parseLong(result.toString()); // 멤버 uid 반환. 0 이면 멤버로 등록돼있지 않음
+//        long check = Long.parseLong(result.toString()); // 멤버 uid 반환. 0 이면 멤버로 등록돼있지 않음
 
-        return check;
+        return result.toString();
     }
 }

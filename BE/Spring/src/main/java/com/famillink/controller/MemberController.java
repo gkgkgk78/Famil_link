@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Api("Member Controller")
@@ -40,12 +41,12 @@ public class MemberController {
         //우선은 온 파일의 정보를 임시로 저장을 해두면 될듯 하다.
 
         String temp = flaskService.send_temp(account, file);
-        long flag = fservice.isCongnitive("", temp);
-        flaskService.delete_temp(temp);
+//        long flag = fservice.isCongnitive("", temp);
+//        flaskService.delete_temp(temp);
 
-        if (flag == 0) {
-            throw new BaseException(ErrorMessage.NOT_USER_INFO);
-        }
+//        if (flag == 0) {
+//            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+//        }
 
         //회원가입을 할시에 자신이 찍은 사진을 바탕으로 회원가입이 되는 여부를 판단을 할수 있음
         Member savedUser = memberservice.signup(account, name, nickname);
@@ -55,26 +56,25 @@ public class MemberController {
         }}, HttpStatus.OK);
 
 
-
     }
 
 
     @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [id, pw]")
-    @PostMapping("/login/{photo}")
+    @PostMapping("/login")
 
-    public ResponseEntity<?> login(@RequestBody Account account, @PathVariable String photo, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+    public ResponseEntity<?> login(
+            @RequestBody List<List<List<Integer>>> json,
+            final Authentication authentication) throws Exception {
 
-        String temp = flaskService.send_temp(account, file);
+        String member_uid = fservice.getMemberUidByFace(json);
+//        flaskService.delete_temp(temp);
 
-        long flag = fservice.isCongnitive("", temp);
-        flaskService.delete_temp(temp);
-
-        if (flag == 0) {
+        if (member_uid.equals("NONE")) {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
 
-
-        Map<String, Object> token = memberservice.login(account, photo);
+        // TODO: uid 뽑아야함
+        Map<String, Object> token = memberservice.login(4L);
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
