@@ -19,6 +19,10 @@ public class Member implements UserDetails {
 
     protected String user_uid;
 
+    public void setUser_uid(String user_uid) {
+        this.user_uid = user_uid;
+    }
+
     protected String name;
 
     @ApiModelProperty(hidden = true)
