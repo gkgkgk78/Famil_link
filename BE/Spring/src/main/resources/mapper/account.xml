@@ -36,11 +36,11 @@
         FROM account
         WHERE `uid` = #{uid}
     </select>
-    
-    <select id="findUserFamily" parameterType="string" resultType="account">
-        SELECT *
+
+    <select id="findUserFamily" parameterType="string" resultType="member">
+        SELECT m.uid, m.name
         FROM account a JOIN member m
-            ON a.uid = m.user_uid
+                            ON a.uid = m.user_uid
         WHERE #{email} = a.email
     </select>
 

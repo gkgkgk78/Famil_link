@@ -1,9 +1,13 @@
 package com.famillink.model.service;
 
+import java.util.Map;
 
 public interface FaceDetection {
 
-    boolean isCongnitive(String family, String src) throws Exception;
+
+
+
+    Map<String, Object> isCongnitive(String family, String src) throws Exception;
 
 
 }
