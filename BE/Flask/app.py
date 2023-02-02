@@ -4,6 +4,8 @@ import base64
 from keras.models import load_model
 from flask import Flask, request
 import json
+from PIL import Image
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -57,7 +59,7 @@ def index():
 
     #제일 높은 확률이 80%이상이면 출력
     if (max(map(max, probabilities)) > 0.8):
-        return json.dumps(1, ensure_ascii=False)
+        return json.dumps(labels[np.argmax(probabilities)][2:len(labels[np.argmax(probabilities)])-1], ensure_ascii=False)
     else:
         return json.dumps(0, ensure_ascii=False)
 
