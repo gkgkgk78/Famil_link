@@ -56,10 +56,10 @@ function MQTT() {
         console.log(JSON.stringify(imageData))
         axios({
           method: "post",
-          url: "http://i8a208.p.ssafy.io:3000/member/login",
+          url: "http://localhost:9999/member/login",
           headers:{
             "Conctent-type": "application/json; charset=utf-8",
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTMyNDc4OCwiZXhwIjoxNjg1MzI0Nzg4fQ.rB9k4f7WurY4qbPltJpqPOGc5jdt8k8g1AYNJSYjpjU"
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTMyNzg1NiwiZXhwIjoxNjg1MzI3ODU2fQ.JnUEZ7q7R2bsgfrXL-Rcls35jqHdNZQNw2-LgtkK_0E"
           },
           data: imageData
         })
