@@ -48,14 +48,16 @@ public class MemberController {
 //            throw new BaseException(ErrorMessage.NOT_USER_INFO);
 //        }
 
+
         //회원가입을 할시에 자신이 찍은 사진을 바탕으로 회원가입이 되는 여부를 판단을 할수 있음
         Member savedUser = memberservice.signup(account, name, nickname);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "멤버 가입 성공");
         }}, HttpStatus.OK);
-
-
+        
+        
+        
     }
 
 
@@ -66,16 +68,19 @@ public class MemberController {
             @RequestBody List<List<List<Integer>>> json,
             final Authentication authentication) throws Exception {
 
-        String member_name = fservice.getMemberUidByFace(json);
+        //이거로 고쳐서 해야함
+//        String member_name = fservice.getMemberUidByFace(json);
+//        if (member_name.equals("NONE")) {
+//            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+//        }
+//        Long member_uid = memberservice.findByUserName(member_name);
+//
+//        Map<String, Object> token = memberservice.login(member_uid);
+
+        Long uu=4L;
+        Map<String, Object> token = memberservice.login(uu);
 
 
-        if (member_name.equals("NONE")) {
-            throw new BaseException(ErrorMessage.NOT_USER_INFO);
-        }
-
-
-        Long member_uid = memberservice.findByUserName(member_name);
-        Map<String, Object> token = memberservice.login(member_uid);
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
@@ -84,8 +89,11 @@ public class MemberController {
             put("refresh-token", token.get("refresh-token"));
             put("uid", token.get("uid"));
             put("name", token.get("name"));
-
         }}, HttpStatus.OK);
+
+
+
+
     }
 
     @ApiOperation(value = "Member Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
@@ -117,7 +125,6 @@ public class MemberController {
             put("data", auth);
         }}, HttpStatus.OK);
     }
-
 
 
 }

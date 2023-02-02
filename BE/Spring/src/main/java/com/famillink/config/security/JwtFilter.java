@@ -76,6 +76,9 @@ public class JwtFilter extends GenericFilterBean {
                                 next = true;
                             if ((route[2].equals("signup")))
                                 next = true;
+                            if ((route[2].equals("auth")))
+                                next = true;
+
                             if (next == false)
                                 throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);//account의 계정으로는 member의 login,signup을 제외하고 접근 불가
                         }
@@ -92,6 +95,8 @@ public class JwtFilter extends GenericFilterBean {
                 if (level_type.equals("account")) {
                     //이때는 authorization에 account정보가 들어가게됨
                     authentication = jwtTokenProvider.getAuthentication(token);//토큰이 유효할시 Authentication객체를 생성해서 SecurityContextHolder에 추가함
+
+
                 } else {
                     //이때는 authorization에 member의 정보가 들어가야함
                     authentication = jwtTokenProvider.getAuthentication1(token);
