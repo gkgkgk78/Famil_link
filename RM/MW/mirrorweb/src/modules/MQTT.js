@@ -1,10 +1,22 @@
 import React, {useEffect, useRef, useState} from 'react';
 import mqtt from "precompiled-mqtt";
 import axios from "axios"
+import { setInfo, setValid } from './valid';
+import {useSelector, useDispatch } from "react-redux";
+
 
 function MQTT() {
+  const { validation, memberInfo } = useSelector(state => ({
+    validation : state.valid.validation,
+    memberInfo : state.valid.memberInfo
+  }))
+  const dispatch = useDispatch();
+  const changeStoreValid = () => dispatch(setValid())
+  const changeStoreMeberInfo = () => dispatch(setInfo())
+
   const URL = "ws://localhost:9001";
   const client = mqtt.connect(URL);
+
   const [userList, setList] = useState([]);
   const [isValid,setValid] = useState(null)
   const [imageData, setImage] = useState({
