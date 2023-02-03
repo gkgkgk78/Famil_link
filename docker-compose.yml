@@ -25,6 +25,8 @@ services:
       - famil_link
     ports:
       - 3000:9999
+    depends_on:
+      - mysql
 
   flask:
     shm_size: '30gb'
@@ -38,6 +40,8 @@ services:
       - famil_link
     ports:
       - 5000:5000
+    depends_on:
+      - springboot
 
 networks:
   famil_link:
