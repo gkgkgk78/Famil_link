@@ -76,6 +76,8 @@ public class MemberServiceImpl implements MemberService {
         //존재하는 회원이고 비밀번호도 일치를 했다면, jwttokenprovider를 통해서 ,id와 role값을 전달하여 토큰을 생성후 프론트 단에 전달해줌
         String accessToken = jwtTokenProvider.createToken1(member1.getUid(), Collections.singletonList(member1.getRole()));
         String refreshToken = jwtTokenProvider.createRefresh1(member1.getUid(), Collections.singletonList(member1.getRole()));
+
+        member1.setRefresh_token(refreshToken);
         mapper.setRefreshToken(member1);
 
         return new HashMap<String, Object>() {{
