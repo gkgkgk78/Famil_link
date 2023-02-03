@@ -39,19 +39,6 @@ services:
     ports:
       - 5000:5000
 
-  jenkins:
-    image: jenkins/jenkins:lts
-    container_name: jenkins
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /jenkins:/var/jenkins_home
-    ports:
-      - 8080:8080
-    privileged: true
-    user: root
-    networks:
-      - famil_link
-
 networks:
   famil_link:
     driver: bridge
