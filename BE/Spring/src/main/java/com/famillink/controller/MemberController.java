@@ -41,10 +41,10 @@ public class MemberController {
 
         //우선은 온 파일의 정보를 임시로 저장을 해두면 될듯 하다.
 
-        //String temp = flaskService.send_temp(account, file);
+//        String temp = flaskService.send_temp(account, file);
 //        long flag = fservice.isCongnitive("", temp);
 //        flaskService.delete_temp(temp);
-
+//
 //        if (flag == 0) {
 //            throw new BaseException(ErrorMessage.NOT_USER_INFO);
 //        }
@@ -69,17 +69,25 @@ public class MemberController {
 
     public ResponseEntity<?> login(@RequestBody List<List<List<Integer>>> json, final Authentication authentication) throws Exception {
 
-        //이거로 고쳐서 해야함
-//        String member_name = fservice.getMemberUidByFace(json);
-//        if (member_name.equals("NONE")) {
-//            throw new BaseException(ErrorMessage.NOT_USER_INFO);
-//        }
-//        Long member_uid = memberservice.findByUserName(member_name);
-//
-//        Map<String, Object> token = memberservice.login(member_uid);
 
-        Long uu=4L;
-        Map<String, Object> token = memberservice.login(uu);
+
+        //이거로 고쳐서 해야함
+        String member_name = fservice.getMemberUidByFace(json);
+        if (member_name.equals("NONE")) {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+        }
+        Long member_uid = memberservice.findByUserName(member_name);
+
+        Map<String, Object> token = memberservice.login(member_uid);
+
+
+
+//        Long uu=0L;
+//        //로그인한 계정이 가족인지, 멤버인지 파악하는 과정이 필요함
+//
+//        Account auth = (Account) authentication.getPrincipal();
+//        uu=auth.getUid();
+//        Map<String, Object> token = memberservice.login(uu);
 
 
 
