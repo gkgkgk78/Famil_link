@@ -24,7 +24,7 @@ public class FaceDetectionImpl implements FaceDetection {
 
 
         //post보내는 부분
-        String host_url = "http://localhost:5555/";
+        String host_url = "http://172.19.0.2/5555";
         HttpURLConnection conn = null;
         URL url = new URL(host_url);
 
