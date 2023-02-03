@@ -79,8 +79,8 @@ public class MemberController {
 
 
 
-        //이거로 고쳐서 해야함
-        String member_name = fservice.getMemberUidByFace(json);
+        //안면인식으로 추출한 멤버
+        String member_name = fservice.getMemberUidByFace(imageDTO.getJson());
         if (member_name.equals("NONE")) {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
@@ -90,12 +90,12 @@ public class MemberController {
 
 
         //두 멤버의 이름이 일치하면
-        if(member.getName().equals(return_name)){
+        if(member.getName().equals(member_name)){
 
-            Long member_uid = memberservice.findByUserName(return_name);
+            Long member_uid = memberservice.findByUserName(member_name);
 
-        //임시로 uid8로 넣은후 인증 되는지 확인(download시)
-        Map<String, Object> token = memberservice.login(member_uid);
+            //임시로 uid8로 넣은후 인증 되는지 확인(download시)
+            Map<String, Object> token = memberservice.login(member_uid);
 
             return new ResponseEntity<Object>(new HashMap<String, Object>() {{
                 put("result", true);
