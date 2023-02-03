@@ -21,6 +21,8 @@ public enum ErrorMessage {
     NOT_READ_FILE(111, "파일을 읽을수 없습니다", HttpStatus.BAD_REQUEST),
 
     NOT_FOUND_FILE(112, "파일을 찾을 수 없습니다", HttpStatus.BAD_REQUEST),
+
+    NOT_GET_FILE(113, "로그인한 사용자에게  온 파일이 아닙니다", HttpStatus.BAD_REQUEST),
     
 
 

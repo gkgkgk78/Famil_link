@@ -2,19 +2,23 @@ package com.famillink.controller;
 
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
+import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.FaceDetection;
 import com.famillink.model.service.FlaskService;
 import com.famillink.model.service.MemberService;
+import com.famillink.model.service.MovieService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -33,11 +37,13 @@ public class MemberController {
 
     private final FlaskService flaskService;
 
+    private final MovieService movieService;
+
 
     @ApiOperation(value = "회원가입", notes = "req_data : [model_path,name,nickname,user_uid]")
     @PostMapping("/signup/{name}/{nickname}")
 
-    public ResponseEntity<?> signup(@PathVariable String name, @PathVariable String nickname,final Authentication authentication) throws Exception {
+    public ResponseEntity<?> signup(@PathVariable String name, @PathVariable String nickname, final Authentication authentication) throws Exception {
 
         //우선은 온 파일의 정보를 임시로 저장을 해두면 될듯 하다.
 
@@ -50,17 +56,14 @@ public class MemberController {
 //        }
 
         Account auth = (Account) authentication.getPrincipal();
-        Long tt=auth.getUid();
+        Long tt = auth.getUid();
 
         //회원가입을 할시에 자신이 찍은 사진을 바탕으로 회원가입이 되는 여부를 판단을 할수 있음
-        Member savedUser = memberservice.signup(name, nickname,tt);
+        Member savedUser = memberservice.signup(name, nickname, tt);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "멤버 가입 성공");
         }}, HttpStatus.OK);
-        
-        
-        
     }
 
 
@@ -69,8 +72,6 @@ public class MemberController {
 
     public ResponseEntity<?> login(@RequestBody List<List<List<Integer>>> json, final Authentication authentication) throws Exception {
 
-
-
         //이거로 고쳐서 해야함
         String member_name = fservice.getMemberUidByFace(json);
         if (member_name.equals("NONE")) {
@@ -78,9 +79,8 @@ public class MemberController {
         }
         Long member_uid = memberservice.findByUserName(member_name);
 
+        //임시로 uid8로 넣은후 인증 되는지 확인(download시)
         Map<String, Object> token = memberservice.login(member_uid);
-
-
 
 //        Long uu=0L;
 //        //로그인한 계정이 가족인지, 멤버인지 파악하는 과정이 필요함
@@ -88,7 +88,6 @@ public class MemberController {
 //        Account auth = (Account) authentication.getPrincipal();
 //        uu=auth.getUid();
 //        Map<String, Object> token = memberservice.login(uu);
-
 
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
@@ -99,8 +98,6 @@ public class MemberController {
             put("uid", token.get("uid"));
             put("name", token.get("name"));
         }}, HttpStatus.OK);
-
-
 
 
     }
@@ -133,6 +130,37 @@ public class MemberController {
             put("result", true);
             put("data", auth);
         }}, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/movie")
+    @ApiOperation(value = "동영상 보내기", notes = "동영상을 전송하는 컨트롤러입니다.")
+    public ResponseEntity<?> addMovie(MovieSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+        movieService.sender(sender, file);
+        return null;
+    }
+
+    @GetMapping("/movie/{movie_uid}")
+    @ApiOperation(value = "동영상 보기", notes = "동영상을 다운받는 컨트롤러입니다.")
+    public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid, final Authentication authentication) throws Exception {
+        final HttpHeaders responseHeaders = new HttpHeaders();
+
+        // TODO: Service단에서 http 관련 작업을 하면 안된다.
+        StreamingResponseBody resource = movieService.download(movie_uid, responseHeaders, authentication);
+        responseHeaders.add("Content-Type", "video/mp4");
+        return ResponseEntity.ok().headers(responseHeaders).body(resource);
+    }
+
+
+    @PutMapping("/movie/{movie_uid}")
+    @ApiOperation(value = "동영상 읽음 처리", notes = "동영상 읽음 처리를 위한 컨트롤러입니다.")
+    public ResponseEntity<?> setMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
+
+        movieService.setRead(movie_uid);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "동영상 읽음처리 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
 

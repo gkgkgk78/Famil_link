@@ -157,14 +157,14 @@ public class AccountController {
     }
 
 
-    @PostMapping("/Flask/Model")
+    @PostMapping("/flask/model")
     @ApiOperation(value = "Flask 모델 저장 ", notes = "Flask 모델을 전송하는 컨트롤러입니다.")
     public ResponseEntity<?> addModel(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
         flaskService.send_model(account, file);
         return null;
     }
 
-    @GetMapping("/Flask/Model")
+    @GetMapping("/flask/model")
     @ApiOperation(value = "Flask의 Model 불러오기", notes = "Flask의 Model을 다운받는 컨트롤러입니다.")
     public ResponseEntity<?> returnModel(Account account) throws Exception {
 
@@ -178,14 +178,14 @@ public class AccountController {
     }
 
 
-    @PostMapping("/Flask/Label")
+    @PostMapping("/flask/label")
     @ApiOperation(value = "Flask Label 저장 ", notes = "Flask Label을 전송하는 컨트롤러입니다.")
     public ResponseEntity<?> addLabel(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
         flaskService.send_label(account, file);
         return null;
     }
 
-    @GetMapping("/Flask/Label")
+    @GetMapping("/flask/label")
     @ApiOperation(value = "Flask의 Label 불러오기", notes = "Flask의 Label을 다운받는 컨트롤러입니다.")
     public ResponseEntity<?> returnLabel(Account account) throws Exception {
 
@@ -207,6 +207,9 @@ public class AccountController {
 //
 //        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=movie.mp4").body(resource);
 //    }
+
+
+
 
 
 }
