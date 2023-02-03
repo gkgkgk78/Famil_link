@@ -6,6 +6,7 @@ import Clock from './components/Clock';
 import Weather from './components/Weather';
 import Caption from './components/Caption';
 import Todo from './components/Todo';
+import STT from './components/STT';
 
 import Main from './pages/Main';
 import LoginMirror from './pages/loginMirror';
@@ -33,6 +34,7 @@ function App() {
   return (
     <div className="App">
       <MQTT/>
+      <STT />
       <Box sx={{
         display: "flex",
         justifyContent:"space-between",

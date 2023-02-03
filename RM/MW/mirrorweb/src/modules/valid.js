@@ -26,7 +26,7 @@ export default function valid(state = initialState, action) {
         case CHANGE_VALID:
             return {
                 ...state,
-                valid: true
+                validation: true
             }
         case SET_INFO:
             return {
@@ -43,5 +43,7 @@ export default function valid(state = initialState, action) {
                 ...state,
                 isRecording: false
             }
+        default :
+          return state
     }
 }

@@ -80,9 +80,9 @@ function MQTT() {
         // axios 요청
         axios({
           method: "post",
-          url: "http://localhost:9999/member/login",
+          url: "http://i8a208.p.ssafy.io:3000/member/login",
           headers:{
-            "Conctent-type": "application/json; charset=utf-8",
+            "Content-type": "application/json;",
             "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTMyNzg1NiwiZXhwIjoxNjg1MzI3ODU2fQ.JnUEZ7q7R2bsgfrXL-Rcls35jqHdNZQNw2-LgtkK_0E"
           },
           data: image

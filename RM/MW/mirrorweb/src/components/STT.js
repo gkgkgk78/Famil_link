@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import secrets from "../secrets.json"
+import secrets from "./secrets.json"
 
 import useSpeechToText from "react-hook-speech-to-text"
 import { useNavigate, useLocation } from "react-router-dom";
@@ -37,13 +37,14 @@ const STT = () => {
         if (!mounted.current) {
             mounted.current = true;
         } else{
-            if (results.length>1){
+            if (results.length>=1){
+              let text = results[results.length-1].transcript
                 if (location.pathname !== "/record") {
                     if (text.includes("녹화") || text.includes("노콰"))   { 
                           Navigate("/record")
                       }
                   } else if (location.pathname === "/record") {
-                    console.log("")
+                    console.log("지금 record란다.")
                   }
 
             }
