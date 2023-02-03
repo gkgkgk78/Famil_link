@@ -31,13 +31,11 @@ public class MovieServiceImpl implements MovieService {
     private final FileService fileService;
     private final MovieMapper movieMapper;
     private final MemberMapper memberMapper;
-
     private final MemberService mservice;
 
     @Override
     @Transactional
     public void sender(MovieSenderDTO sender, MultipartFile file) throws Exception {
-
 
         //현재는 sender에 있는 보내고자 하는 얘들이 같은
         Member m;

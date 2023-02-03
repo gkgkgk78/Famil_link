@@ -2,6 +2,7 @@ package com.famillink.controller;
 
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
+import com.famillink.model.domain.param.ImageDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.FaceDetection;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Api("Member Controller")
 @RequiredArgsConstructor
@@ -67,42 +69,44 @@ public class MemberController {
     @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login")
 
-    public ResponseEntity<?> login(@RequestBody List<List<List<Integer>>> json, final Authentication authentication) throws Exception {
+    public ResponseEntity<?> login(@RequestBody ImageDTO imageDTO, final Authentication authentication) throws Exception {
 
 
 
-        //이거로 고쳐서 해야함
-        String member_name = fservice.getMemberUidByFace(json);
-        if (member_name.equals("NONE")) {
+        //flask에서 인증해온 사람의 이름
+        String return_name = fservice.getMemberUidByFace(imageDTO.getJson());
+        if (return_name.equals("NONE")) {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
-        Long member_uid = memberservice.findByUserName(member_name);
 
-        Map<String, Object> token = memberservice.login(member_uid);
-
-
-
-//        Long uu=0L;
-//        //로그인한 계정이 가족인지, 멤버인지 파악하는 과정이 필요함
-//
-//        Account auth = (Account) authentication.getPrincipal();
-//        uu=auth.getUid();
-//        Map<String, Object> token = memberservice.login(uu);
+        //uid로 추출한 멤버
+        Member member = memberservice.findMemberByUserUid(imageDTO.getUid()).get();
 
 
+        //두 멤버의 이름이 일치하면
+        if(member.getName().equals(return_name)){
 
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "로그인을 성공하였습니다.");
-            put("access-token", token.get("access-token"));
-            put("refresh-token", token.get("refresh-token"));
-            put("uid", token.get("uid"));
-            put("name", token.get("name"));
-        }}, HttpStatus.OK);
+            Long member_uid = memberservice.findByUserName(return_name);
+
+            Map<String, Object> token = memberservice.login(member_uid);
+
+            return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+                put("result", true);
+                put("msg", "로그인을 성공하였습니다.");
+                put("access-token", token.get("access-token"));
+                put("refresh-token", token.get("refresh-token"));
+                put("uid", token.get("uid"));
+                put("name", token.get("name"));
+            }}, HttpStatus.OK);
+
+        }
 
 
-
-
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HashMap<String, Object>(){{
+            put("result", false);
+            put("msg", "로그인 시도자와 멤버 정보가 일치하지 않습니다");
+        }});
+        
     }
 
     @ApiOperation(value = "Member Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
