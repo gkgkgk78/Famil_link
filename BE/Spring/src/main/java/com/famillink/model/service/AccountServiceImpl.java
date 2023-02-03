@@ -72,6 +72,8 @@ public class AccountServiceImpl implements AccountService {
 
         String accessToken = jwtTokenProvider.createToken(account.getUid(), Collections.singletonList(account.getRole()));
         String refreshToken = jwtTokenProvider.createRefresh(account.getUid(), Collections.singletonList(account.getRole()));
+
+        account.setRefresh_token(refreshToken);
         accountMapper.setRefreshToken(account);
 
 
