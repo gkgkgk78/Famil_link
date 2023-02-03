@@ -15,7 +15,7 @@ services:
 
   springboot:
     shm_size: '30gb'
-    build: ./BE/Srping
+    build: ./BE/Spring
     image: springboot-deploy
     container_name: springboot-deploy
     #    restart: always
