@@ -24,7 +24,7 @@ public class FaceDetectionImpl implements FaceDetection {
 
 
         //post보내는 부분
-        String host_url = "http://0.0.0.0:5000";
+        String host_url = "http://flask-deploy:5000";
         HttpURLConnection conn = null;
         URL url = new URL(host_url);
 
