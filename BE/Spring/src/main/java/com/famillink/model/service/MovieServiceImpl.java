@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.List;
 
 
 @Service
@@ -92,6 +93,11 @@ public class MovieServiceImpl implements MovieService {
         } catch (Exception e) {
             throw new BaseException(ErrorMessage.NOT_READ_FILE);
         }
+    }
+
+    @Override
+    public List<MovieSenderDTO> showMovieList(Long to_member_uid) throws Exception {
+        return movieMapper.findMovieByMemberTo(to_member_uid);
     }
 
 

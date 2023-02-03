@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -58,6 +59,18 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
 
 
+    }
+
+    @GetMapping("/videoList/{to_member_uid}")
+    @ApiOperation(value = "동영상 리스트 전송", notes = "이 컨트롤러는 최신 영상 5개를 담은 동영상 리스트를 전송합니다.")
+    public ResponseEntity<?> sendList(@PathVariable("to_member_uid") Long to_member_uid) throws Exception {
+
+        List<MovieSenderDTO> movieList = movieService.showMovieList(to_member_uid);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("movieList", movieList);
+        responseResult.put("msg", "최근 수신된 영상 5개입니다");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
 

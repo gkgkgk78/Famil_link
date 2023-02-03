@@ -22,5 +22,7 @@ public interface MovieMapper {
 
     void setMovie(Long movie_uid);
 
+    List<MovieSenderDTO> findMovieByMemberTo(Long to_member_uid);
+
 
 }
