@@ -35,7 +35,7 @@
         FROM movie
         WHERE member_to = #{to_member_uid} AND status = 0
         ORDER BY udate DESC
-        LIMIT 5;
+            LIMIT 5;
     </select>
 
 </mapper>
