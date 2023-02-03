@@ -22,7 +22,7 @@ node{
         stage('Deploy docker'){
             echo "Docker Image Tag Name: ${dockerImageTag}"
             sh "docker stop springboot-deploy || true && docker rm springboot-deploy || true"
-            sh "docker run --link mysql --link flask-deploy --network springboot-network --name springboot-deploy -d -p 3000:9999 springboot-deploy:${env.BUILD_NUMBER}"
+            sh "docker run --name springboot-deploy -d -p 3000:9999 springboot-deploy:${env.BUILD_NUMBER}"
             sh "docker image prune -a -f || true"
         }
     }catch(e){
