@@ -3,12 +3,10 @@ package com.famillink.model.service;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.MovieSenderDTO;
-import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.MemberMapper;
 import com.famillink.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,8 +124,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Long findByUserName(String name) throws Exception {
-
         return mapper.findUserByName(name);
+    }
+
+    @Override
+    public Optional<Member> findMemberByUserUid(Long uid) throws Exception {
+        return mapper.findUserByUid(uid);
     }
 
 

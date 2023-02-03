@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.List;
 
 
 @Service
@@ -33,13 +34,11 @@ public class MovieServiceImpl implements MovieService {
     private final FileService fileService;
     private final MovieMapper movieMapper;
     private final MemberMapper memberMapper;
-
     private final MemberService mservice;
 
     @Override
     @Transactional
     public void sender(MovieSenderDTO sender, MultipartFile file) throws Exception {
-
 
         //현재는 sender에 있는 보내고자 하는 얘들이 같은
         Member m;
@@ -108,6 +107,11 @@ public class MovieServiceImpl implements MovieService {
         } catch (Exception e) {
             throw new BaseException(ErrorMessage.NOT_READ_FILE);
         }
+    }
+
+    @Override
+    public List<MovieSenderDTO> showMovieList(Long to_member_uid) throws Exception {
+        return movieMapper.findMovieByMemberTo(to_member_uid);
     }
 
 
