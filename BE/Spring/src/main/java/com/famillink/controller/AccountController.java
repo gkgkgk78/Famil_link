@@ -48,8 +48,6 @@ public class AccountController {
         accountService.sendSignupEmail(savedAccount);
 
         Map<String, Object> result = new HashMap<>();
-
-
         HttpStatus sts = HttpStatus.UNAUTHORIZED;
 
         if (savedAccount != null) {
@@ -141,6 +139,7 @@ public class AccountController {
     @GetMapping("/auth")
     public ResponseEntity<?> authUser(final Authentication authentication) {
         Account auth = (Account) authentication.getPrincipal();
+
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("data", auth);
@@ -169,7 +168,7 @@ public class AccountController {
     @ApiOperation(value = "Flask의 Model 불러오기", notes = "Flask의 Model을 다운받는 컨트롤러입니다.")
     public ResponseEntity<?> returnModel(Account account) throws Exception {
 
-        if (account.getEmail()==null)
+        if (account.getEmail() == null)
             throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
 
         InputStreamResource resource = flaskService.read_model(account.getEmail());
@@ -190,7 +189,7 @@ public class AccountController {
     @ApiOperation(value = "Flask의 Label 불러오기", notes = "Flask의 Label을 다운받는 컨트롤러입니다.")
     public ResponseEntity<?> returnLabel(Account account) throws Exception {
 
-        if (account.getEmail()==null)
+        if (account.getEmail() == null)
             throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
 
         InputStreamResource resource = flaskService.read_label(account.getEmail());

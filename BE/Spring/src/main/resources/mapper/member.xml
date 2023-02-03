@@ -7,9 +7,11 @@
 
     <select id="findUserByUid" parameterType="long" resultType="Member">
         SELECT `uid`,
+               `user_uid`,
                `name`,
                `nickname`,
-               `user_uid`
+               `role`,
+               `refresh_token`
         FROM member
         WHERE `uid` = #{uid}
     </select>

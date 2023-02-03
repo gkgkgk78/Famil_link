@@ -33,14 +33,15 @@ public class MemberController {
 
     private final FlaskService flaskService;
 
+
     @ApiOperation(value = "회원가입", notes = "req_data : [model_path,name,nickname,user_uid]")
     @PostMapping("/signup/{name}/{nickname}")
 
-    public ResponseEntity<?> signup(@RequestBody Account account, @PathVariable String name, @PathVariable String nickname, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+    public ResponseEntity<?> signup(@PathVariable String name, @PathVariable String nickname,final Authentication authentication) throws Exception {
 
         //우선은 온 파일의 정보를 임시로 저장을 해두면 될듯 하다.
 
-        String temp = flaskService.send_temp(account, file);
+        //String temp = flaskService.send_temp(account, file);
 //        long flag = fservice.isCongnitive("", temp);
 //        flaskService.delete_temp(temp);
 
@@ -48,34 +49,39 @@ public class MemberController {
 //            throw new BaseException(ErrorMessage.NOT_USER_INFO);
 //        }
 
+        Account auth = (Account) authentication.getPrincipal();
+        Long tt=auth.getUid();
+
         //회원가입을 할시에 자신이 찍은 사진을 바탕으로 회원가입이 되는 여부를 판단을 할수 있음
-        Member savedUser = memberservice.signup(account, name, nickname);
+        Member savedUser = memberservice.signup(name, nickname,tt);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "멤버 가입 성공");
         }}, HttpStatus.OK);
-
-
+        
+        
+        
     }
 
 
     @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login")
 
-    public ResponseEntity<?> login(
-            @RequestBody List<List<List<Integer>>> json,
-            final Authentication authentication) throws Exception {
+    public ResponseEntity<?> login(@RequestBody List<List<List<Integer>>> json, final Authentication authentication) throws Exception {
 
-        String member_name = fservice.getMemberUidByFace(json);
+        //이거로 고쳐서 해야함
+//        String member_name = fservice.getMemberUidByFace(json);
+//        if (member_name.equals("NONE")) {
+//            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+//        }
+//        Long member_uid = memberservice.findByUserName(member_name);
+//
+//        Map<String, Object> token = memberservice.login(member_uid);
+
+        Long uu=4L;
+        Map<String, Object> token = memberservice.login(uu);
 
 
-        if (member_name.equals("NONE")) {
-            throw new BaseException(ErrorMessage.NOT_USER_INFO);
-        }
-
-        // TODO: uid 뽑아야함
-        Long member_uid = memberservice.findByUserName(member_name);
-        Map<String, Object> token = memberservice.login(member_uid);
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
@@ -84,10 +90,12 @@ public class MemberController {
             put("refresh-token", token.get("refresh-token"));
             put("uid", token.get("uid"));
             put("name", token.get("name"));
-
         }}, HttpStatus.OK);
-    }
 
+
+
+
+    }
 
     @ApiOperation(value = "Member Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
     @PostMapping("/refresh")
