@@ -146,7 +146,7 @@ public class MemberController {
         }}, HttpStatus.OK);
     }
 
-    //
+
     @PostMapping("/movie")
     @ApiOperation(value = "동영상 보내기", notes = "동영상을 전송하는 컨트롤러입니다.")
     public ResponseEntity<?> addMovie(MovieSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {

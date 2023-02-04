@@ -26,14 +26,14 @@ public class MovieController {
 
     private final MovieService movieService;
 
-    @PostMapping("/movie")
+    @PostMapping("")
     @ApiOperation(value = "동영상 보내기", notes = "동영상을 전송하는 컨트롤러입니다.")
     public ResponseEntity<?> addMovie(MovieSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
         movieService.sender(sender, file);
         return null;
     }
 
-    @GetMapping("/movie/{movie_uid}")
+    @GetMapping("/{movie_uid}")
     @ApiOperation(value = "동영상 보기", notes = "동영상을 다운받는 컨트롤러입니다.")
     public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid,Authentication authentication) throws Exception {
         final HttpHeaders responseHeaders = new HttpHeaders();
@@ -46,7 +46,7 @@ public class MovieController {
     }
 
 
-    @PutMapping("/movie/{movie_uid}")
+    @PutMapping("/{movie_uid}")
     @ApiOperation(value = "동영상 읽음 처리", notes = "동영상 읽음 처리를 위한 컨트롤러입니다.")
     public ResponseEntity<?> setMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
 
