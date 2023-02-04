@@ -2,13 +2,13 @@ package com.famillink.model.service;
 
 import com.famillink.model.domain.user.Schedule;
 
+
 import java.sql.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface ScheduleService {
     //일정 등록
-    void addSchedule(Schedule schedule);
+    void addSchedule(Long accountUid, Long memberUid, Schedule schedule);
 
     //일정 조회
 
@@ -18,12 +18,11 @@ public interface ScheduleService {
 
     List<Schedule> findScheduleListByMemberUid(Long memberUid);
 
-    List<Schedule> findScheduleListByDate(Date date);
+    List<Schedule> findScheduleListByDate(Long accountUid, Date date);
 
     //일정 수정
-    void modifySchedule(Schedule schedule);
+    void modifySchedule(Long uid, Long memberUid, Schedule schedule);
 
     //일정 삭제
-    void removeSchedule(Long uid);
-
+    void removeSchedule(Long uid, Long memberUid);
 }

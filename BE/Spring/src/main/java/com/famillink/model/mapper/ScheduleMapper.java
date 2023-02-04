@@ -3,7 +3,6 @@ package com.famillink.model.mapper;
 import com.famillink.model.domain.user.Schedule;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +19,12 @@ public interface ScheduleMapper {
 
     List<Schedule> selectScheduleListByMemberUid(Long memberUid);
 
-    List<Schedule> selectScheduleListByDate(Date date);
+    List<Schedule> selectScheduleListByDate(Schedule schedule);
 
     //일정 수정
     void updateSchedule(Schedule schedule);
 
     //일정 삭제
-    void deleteSchedule(Long uid);
+    void deleteSchedule(Schedule schedule);
 
 }

@@ -10,19 +10,20 @@
     <select id="selectSchedule" parameterType="Long" resultType="Schedule">
         SELECT `uid`,
                `member_uid` AS memberUid,
-               `context`
+               `context`,
+               `date`
         FROM schedule
         WHERE `uid` = ${uid}
     </select>
 
-    <!-- 전체 스케줄 조회 -->
+    <!-- 가족의 전체 스케줄 조회 -->
     <select id="selectScheduleList" parameterType="Schedule" resultType="Schedule">
         SELECT `uid`,
                `member_uid` AS memberUid,
                `context`,
                `date`
         FROM schedule
-        WHERE `account_uid` = #{accountUid} AND `date` = #{date}
+        WHERE `account_uid` = #{accountUid}
     </select>
 
     <!-- 특정 멤버가 작성한 스케줄 조회 -->
@@ -58,13 +59,13 @@
     <update id="updateSchedule" parameterType="Schedule">
         UPDATE schedule
         SET `context` = #{context}, `date` = #{date}
-        WHERE `uid` = #{uid}
+        WHERE `uid` = #{uid} AND `member_uid` = #{memberUid}
     </update>
 
     <!-- delete -->
-    <delete id="deleteSchedule" parameterType="Long">
+    <delete id="deleteSchedule" parameterType="Schedule">
         DELETE FROM schedule
-        WHERE `uid` = #{uid}
+        WHERE `uid` = #{uid} AND member_uid = #{memberUid}
     </delete>
 
 
