@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `famil_link`.`account` (
   `salt` VARCHAR(100) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci' NULL DEFAULT NULL COMMENT '개인',
   `level` TINYINT NOT NULL DEFAULT '0' COMMENT '권한',
   `model_path` VARCHAR(100) NULL DEFAULT NULL,
+  `photo_path` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY USING BTREE (`uid`),
   UNIQUE INDEX `email` USING BTREE (`email`) VISIBLE,
   UNIQUE INDEX `phone` (`phone` ASC) VISIBLE,

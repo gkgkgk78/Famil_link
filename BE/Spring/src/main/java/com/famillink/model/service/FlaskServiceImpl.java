@@ -52,7 +52,7 @@ public class FlaskServiceImpl implements FlaskService {
 
         Account a1 = accountMapper.findUserByEmail(sender.getEmail()).get();
         String get = fileService.storeTemp(file, a1.getUid().toString());//이렇게 해서 저장을 함
-        return "./"+get;
+        return "./" + get;
 
     }
 
@@ -80,8 +80,6 @@ public class FlaskServiceImpl implements FlaskService {
         templast = "./" + templast;
         // 파일 리소스 리턴
         return fileService.loadAsResource(templast);
-
-
     }
 
     @Override

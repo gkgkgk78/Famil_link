@@ -4,12 +4,13 @@ package com.famillink.controller;
 import com.famillink.annotation.ValidationGroups;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
-import com.famillink.model.domain.param.MovieSenderDTO;
+import com.famillink.model.domain.param.PhotoSenderDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.domain.user.Todo;
 import com.famillink.model.service.AccountService;
 import com.famillink.model.service.FlaskService;
+import com.famillink.model.service.PhotoService;
 import com.famillink.model.service.TodoService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.Api;
@@ -42,6 +43,8 @@ public class AccountController {
     private final FlaskService flaskService;
 
     private final TodoService todoService;
+
+    private final PhotoService photoService;
 
     @ApiOperation(value = "회원가입", notes = "req_data : [pw, email, name]")
     @PostMapping("/signup")
@@ -251,5 +254,32 @@ public class AccountController {
         responseResult.put("msg", "todo완료처리 성공");
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
+
+
+    //프사 등록을 위한 부분
+
+    @PostMapping("/photo/{name}")
+    @ApiOperation(value = "개인 멤버 사진 보내기", notes = "개인 멤버 사진 전송하는 컨트롤러입니다.")
+    public ResponseEntity<?> addPhoto(PhotoSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+        photoService.sender(sender, file);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "개인 멤버 사진 완료");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
+
+    //프사 넘겨줌
+    @GetMapping("/photo/{name}}")
+    @ApiOperation(value = "개인 멤버 사진 보내기 불러오기", notes = "개인 멤버 사진을 다운받는 컨트롤러입니다.")
+    public ResponseEntity<?> getPhoto(@PathVariable String name, final Authentication authentication) throws Exception {
+
+
+        InputStreamResource resource = photoService.download(name, authentication);
+        String filename=name+".jpg";
+
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename).body(resource);
+
+    }
+
 
 }

@@ -31,5 +31,7 @@ public interface AccountMapper {
 
     void setModelPath(String email,String path,Long uid) ;
 
+    void setPhotoPath(String email,String path) ;
+
 
 }
