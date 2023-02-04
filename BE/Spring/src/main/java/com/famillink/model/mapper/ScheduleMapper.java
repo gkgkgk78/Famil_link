@@ -20,6 +20,8 @@ public interface ScheduleMapper {
 
     List<Schedule> selectScheduleListByMemberUid(Long memberUid);
 
+    List<Schedule> selectScheduleListByDate(Date date);
+
     //일정 수정
     void updateSchedule(Schedule schedule);
 

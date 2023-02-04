@@ -19,7 +19,7 @@ public class Schedule {
 
     private String context; //일정 내용
 
-    private Date date; //일단은 시간 없이 날짜만 설정
+    private Date date; //(일단은 시간 없는) 날짜
 
 
 }
