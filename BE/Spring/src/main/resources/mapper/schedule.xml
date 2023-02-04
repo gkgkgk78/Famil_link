@@ -45,8 +45,17 @@
     </insert>
 
     <!-- update -->
+    <update id="updateSchedule" parameterType="Schedule">
+        UPDATE schedule
+        SET `context` = #{context}, `date` = #{date}
+        WHERE `uid` = #{uid}
+    </update>
 
     <!-- delete -->
+    <delete id="deleteSchedule" parameterType="Long">
+        DELETE FROM schedule
+        WHERE `uid` = #{uid}
+    </delete>
 
 
 </mapper>
