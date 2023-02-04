@@ -21,4 +21,7 @@ public interface TodoMapper {
     Todo getonetodo(Long uid) throws Exception;
 
 
+    void updatetodo(Long uid) throws  Exception;
+
+
 }

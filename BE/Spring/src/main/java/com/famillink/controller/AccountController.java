@@ -241,4 +241,15 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
+
+    @PutMapping("/todo/{uid}")
+    @ApiOperation(value = "가족 todo완료처리", notes = "가족 todo완료처리 컨트롤러입니다.")
+    public ResponseEntity<?> CompleteTodo(@PathVariable Long uid) throws Exception {
+        todoService.updatetodo(uid);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "todo완료처리 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
+
 }

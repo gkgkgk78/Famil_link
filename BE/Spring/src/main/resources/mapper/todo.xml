@@ -20,4 +20,8 @@
         select `uid`,`content`,`sdate` from todo where uid=#{uid}
     </select>
 
+    <update id="updatetodo" parameterType="Long">
+        update todo set status='1' where uid=#{uid}
+    </update>
+
 </mapper>
