@@ -121,6 +121,34 @@ CREATE TABLE IF NOT EXISTS `famil_link`.`todo` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `famil_link`.`schedule`
+-- -----------------------------------------------------
+CREATE TABLE `famil_link`.`schedule` (
+    `uid` BIGINT NOT NULL,
+    `account_uid` BIGINT NOT NULL,
+    `member_uid` BIGINT NOT NULL,
+    `content` LONGTEXT NOT NULL,
+    `date` DATE NULL,
+    PRIMARY KEY (`uid`),
+    INDEX `account_uid_idx` (`account_uid` ASC) VISIBLE,
+    INDEX `member_uid_FK_idx` (`member_uid` ASC) VISIBLE,
+    CONSTRAINT `account_uid_FK`
+    FOREIGN KEY (`account_uid`)
+    REFERENCES `famil_link`.`account` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT `member_uid_FK`
+    FOREIGN KEY (`member_uid`)
+    REFERENCES `famil_link`.`member` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_general_ci
+COMMENT = '스케줄';
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
