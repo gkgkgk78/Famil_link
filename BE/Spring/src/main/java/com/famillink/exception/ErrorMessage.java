@@ -36,7 +36,7 @@ public enum ErrorMessage {
 
     NOT_USER_INFO_MATCH(210, "유저 정보가 옳바르지 않습니다.", HttpStatus.BAD_REQUEST),
 
-
+    NOT_CORRECT_INFORMATION(240, "제대로된 정보를 입력해 주세요.", HttpStatus.BAD_REQUEST),
     EXIST_CHECK_MAIL(250, "이미 인증된 이메일입니다.", HttpStatus.BAD_REQUEST),
 
     NOT_TIMESTAMP(205, "탈퇴 후 재 가입은 24시간이 넘어서 가능합니다.", HttpStatus.BAD_REQUEST),

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.famillink.model.mapper.TodoMapper">
+    <insert id="createtodo" parameterType="todo">
+        INSERT INTO todo (account_uid,content) values(#{account_uid},#{content})
+    </insert>
+
+    <select id="gettodo" parameterType="Long" resultType="todo">
+        select `uid`,`content`,`sdate` from todo where account_uid=#{uid} and status='0' limit 5
+    </select>
+
+    <delete id="deletetodo" parameterType="Long">
+        delete from todo where uid=#{uid}
+    </delete>
+
+    <select id="getonetodo" parameterType="Long" resultType="todo">
+        select `uid`,`content`,`sdate` from todo where uid=#{uid}
+    </select>
+
+</mapper>

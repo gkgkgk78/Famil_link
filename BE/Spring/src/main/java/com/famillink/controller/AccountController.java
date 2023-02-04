@@ -7,8 +7,10 @@ import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.domain.user.Todo;
 import com.famillink.model.service.AccountService;
 import com.famillink.model.service.FlaskService;
+import com.famillink.model.service.TodoService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +40,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class AccountController {
     private final AccountService accountService;
     private final FlaskService flaskService;
+
+    private final TodoService todoService;
 
     @ApiOperation(value = "회원가입", notes = "req_data : [pw, email, name]")
     @PostMapping("/signup")
@@ -182,7 +186,10 @@ public class AccountController {
     @ApiOperation(value = "Flask Label 저장 ", notes = "Flask Label을 전송하는 컨트롤러입니다.")
     public ResponseEntity<?> addLabel(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
         flaskService.send_label(account, file);
-        return null;
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "label저장 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
     @GetMapping("/flask/label")
@@ -197,19 +204,41 @@ public class AccountController {
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=labels.txt").body(resource);
 
     }
-//
-//
-//    @GetMapping("/Flask/Label")
-//    @ApiOperation(value = "Flask 의 Label", notes = "Flask 의 Label을 다운받는 컨트롤러입니다.")
-//    public ResponseEntity<?> getMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
-//
-//        InputStreamResource resource = flaskService.download(movie_uid);
-//
-//        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=movie.mp4").body(resource);
-//    }
+
+    @PostMapping("/todo/{content}")
+    @ApiOperation(value = "가족 todo생성", notes = "가족 todo생성하는 컨트롤러입니다.")
+    public ResponseEntity<?> AddTodo(Authentication authentication, @PathVariable String content) throws Exception {
+        Account auth = (Account) authentication.getPrincipal();
+        Long tt = auth.getUid();
+        todoService.createtodo(tt, content);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "todo생성 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
 
 
+    @GetMapping("/todo")
+    @ApiOperation(value = "가족 todo불러오기", notes = "가족 todo불러오는 컨트롤러입니다.")
+    public ResponseEntity<?> GetTodo(Authentication authentication) throws Exception {
+        Account auth = (Account) authentication.getPrincipal();
+        Long tt = auth.getUid();
+        List<Todo> list = todoService.gettodo(tt);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "todo불러오기 성공");
+        responseResult.put("todolist", list);
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
 
-
+    @DeleteMapping("/todo/{uid}")
+    @ApiOperation(value = "가족 todo삭제하기", notes = "가족 todo삭제하는 컨트롤러입니다.")
+    public ResponseEntity<?> DeleteTodo(@PathVariable Long uid) throws Exception {
+        todoService.deletetodo(uid);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "todo삭제 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
 
 }
