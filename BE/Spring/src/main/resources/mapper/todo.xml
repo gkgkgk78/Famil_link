@@ -9,7 +9,7 @@
     </insert>
 
     <select id="gettodo" parameterType="Long" resultType="todo">
-        select `uid`,`content`,`sdate` from todo where account_uid=#{uid} and status='0' limit 5
+        select `uid`,`content`,`sdate` from todo where account_uid=#{uid} and status='0' order by sdate desc limit 5
     </select>
 
     <delete id="deletetodo" parameterType="Long">
