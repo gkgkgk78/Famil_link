@@ -109,7 +109,7 @@ COMMENT = '영상';
 CREATE TABLE IF NOT EXISTS `famil_link`.`todo` (
   `account_uid` BIGINT NOT NULL,
   `content` VARCHAR(100) NULL,
-  `uid` BIGINT NOT NULL,
+  `uid` BIGINT NOT NULL AUTO_INCREMENT,
   `sdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` ENUM('0', '1') NOT NULL DEFAULT '0',
   PRIMARY KEY (`uid`),

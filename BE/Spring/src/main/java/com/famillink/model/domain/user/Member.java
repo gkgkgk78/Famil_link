@@ -1,6 +1,5 @@
 package com.famillink.model.domain.user;
 
-import com.famillink.annotation.ValidationGroups;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
