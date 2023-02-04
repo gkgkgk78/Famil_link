@@ -54,6 +54,18 @@ public class TodoServiceImpl implements TodoService {
         } else {
             todoMapper.deletetodo(uid);
         }
-
     }
+
+    @Override
+    public void updatetodo(Long uid) throws Exception {
+        //삭제하고자 하는 todo의 uid를 입력해주면 삭제를 하고자 함
+        Todo to = todoMapper.getonetodo(uid);
+        if (to == null) {
+            throw new BaseException(ErrorMessage.NOT_CORRECT_INFORMATION);
+        } else {
+            todoMapper.updatetodo(uid);
+        }
+    }
+
+
 }

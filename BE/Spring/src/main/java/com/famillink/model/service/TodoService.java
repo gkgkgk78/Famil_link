@@ -14,4 +14,6 @@ public interface TodoService {
     List<Todo> gettodo(Long accoountuid);
 
     void deletetodo(Long uid) throws Exception;
+
+    void updatetodo(Long uid) throws Exception;
 }
