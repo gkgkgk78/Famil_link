@@ -14,9 +14,11 @@ public interface TodoMapper {
 
     void createtodo(Todo todo) throws Exception;
 
-    List<Todo> gettodo(Long accoountuid);
+    List<Todo> gettodo(Long accoountuid) throws Exception;
 
     void deletetodo(Long uid) throws Exception;
+
+    Todo getonetodo(Long uid) throws Exception;
 
 
 }

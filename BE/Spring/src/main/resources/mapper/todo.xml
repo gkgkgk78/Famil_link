@@ -16,6 +16,8 @@
         delete from todo where uid=#{uid}
     </delete>
 
-
+    <select id="getonetodo" parameterType="Long" resultType="todo">
+        select `uid`,`content`,`sdate` from todo where uid=#{uid}
+    </select>
 
 </mapper>

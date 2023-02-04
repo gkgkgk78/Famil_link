@@ -24,7 +24,7 @@ public class TodoServiceImpl implements TodoService {
     public void createtodo(Long uid, String content) throws Exception {
 
         try {
-            Todo todo=new Todo(uid,content);
+            Todo todo = new Todo(uid, content);
             todoMapper.createtodo(todo);
         } catch (Exception e) {
             throw new BaseException(ErrorMessage.NOT_CORRECT_INFORMATION);
@@ -47,12 +47,13 @@ public class TodoServiceImpl implements TodoService {
     public void deletetodo(Long uid) throws Exception {
         //삭제하고자 하는 todo의 uid를 입력해주면 삭제를 하고자 함
 
-        try {
-            todoMapper.deletetodo(uid);
-        } catch (Exception e) {
-            throw new BaseException(ErrorMessage.NOT_CORRECT_INFORMATION);
-        }
 
+        Todo to = todoMapper.getonetodo(uid);
+        if (to == null) {
+            throw new BaseException(ErrorMessage.NOT_CORRECT_INFORMATION);
+        } else {
+            todoMapper.deletetodo(uid);
+        }
 
     }
 }

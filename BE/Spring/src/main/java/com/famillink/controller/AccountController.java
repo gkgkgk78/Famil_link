@@ -205,15 +205,6 @@ public class AccountController {
 
     }
 
-
-    /*
-    *     void createtodo(Todo todo) throws Exception;
-
-    List<Todo> gettodo(Long accoountuid);
-
-    void deletetodo(Long uid) throws Exception;
-    * 
-    * */
     @PostMapping("/todo/{content}")
     @ApiOperation(value = "가족 todo생성", notes = "가족 todo생성하는 컨트롤러입니다.")
     public ResponseEntity<?> AddTodo(Authentication authentication, @PathVariable String content) throws Exception {
