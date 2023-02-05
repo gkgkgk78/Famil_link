@@ -1,5 +1,6 @@
 package com.famillink.model.mapper;
 
+import com.famillink.model.domain.param.MovieDTO;
 import com.famillink.model.domain.param.MovieSenderDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -17,7 +18,7 @@ public interface MovieMapper {
 
     void setMovie(Long movie_uid);
 
-    List<MovieSenderDTO> findMovieByMemberTo(Long to_member_uid);
+    List<MovieDTO> findMovieByMemberTo(Long member_to);
 
     int getOneMovie(Long movie_uid) throws Exception;
 
