@@ -125,7 +125,7 @@ ENGINE = InnoDB;
 -- Table `famil_link`.`schedule`
 -- -----------------------------------------------------
 CREATE TABLE `famil_link`.`schedule` (
-    `uid` BIGINT NOT NULL,
+    `uid` BIGINT NOT NULL AUTO_INCREMENT,
     `account_uid` BIGINT NOT NULL,
     `member_uid` BIGINT NOT NULL,
     `content` LONGTEXT NOT NULL,
