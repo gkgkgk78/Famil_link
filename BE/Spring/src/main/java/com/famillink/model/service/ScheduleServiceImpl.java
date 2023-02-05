@@ -21,9 +21,9 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     @Transactional
     @Override
-    public void addSchedule(Long accountUid, Long memberUid, Schedule schedule) {
+    public void addSchedule(Long account_uid, Long memberUid, Schedule schedule) {
 
-        schedule.setAccount_uid(accountUid);
+        schedule.setAccount_uid(account_uid);
         schedule.setMember_uid(memberUid);
 
         scheduleMapper.insertSchedule(schedule);
@@ -54,10 +54,10 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public List<Schedule> findScheduleListByDate(Long accountUid, Date date) {
+    public List<Schedule> findScheduleListByDate(Long account_uid, Date date) {
 
         Schedule schedule = new Schedule();
-        schedule.setAccount_uid(accountUid);
+        schedule.setAccount_uid(account_uid);
         schedule.setDate(date);
 
         return scheduleMapper.selectScheduleListByDate(schedule);

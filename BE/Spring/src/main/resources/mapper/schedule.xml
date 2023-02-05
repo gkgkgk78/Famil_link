@@ -23,7 +23,7 @@
                `content`,
                `date`
         FROM schedule
-        WHERE `account_uid` = #{accountUid}
+        WHERE `account_uid` = #{account_uid}
     </select>
 
     <!-- 특정 멤버가 작성한 스케줄 조회 -->
@@ -43,7 +43,7 @@
                `content`,
                `date`
         FROM schedule
-        WHERE `account_uid` = #{accountUid} AND `date` = #{date}
+        WHERE `account_uid` = #{account_uid} AND `date` = #{date}
     </select>
 
     <!-- create -->
@@ -59,13 +59,13 @@
     <update id="updateSchedule" parameterType="Schedule">
         UPDATE schedule
         SET `content` = #{content}, `date` = #{date}
-        WHERE `uid` = #{uid} AND `member_uid` = #{memberUid}
+        WHERE `uid` = #{uid} AND `member_uid` = #{member_uid}
     </update>
 
     <!-- delete -->
     <delete id="deleteSchedule" parameterType="Schedule">
         DELETE FROM schedule
-        WHERE `uid` = #{uid} AND member_uid = #{memberUid}
+        WHERE `uid` = #{uid} AND member_uid = #{member_uid}
     </delete>
 
 
