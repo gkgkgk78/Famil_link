@@ -63,9 +63,16 @@ public class MovieController {
     public ResponseEntity<?> sendList(@PathVariable("to_member_uid") Long to_member_uid) throws Exception {
 
         List<MovieSenderDTO> movieList = movieService.showMovieList(to_member_uid);
+
         Map<String, Object> responseResult = new HashMap<>();
+
+        if(movieList.isEmpty()){
+            responseResult.put("msg", "도착한 영상이 없습니다");
+            return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+        }
+
         responseResult.put("movieList", movieList);
-        responseResult.put("msg", "최근 수신된 영상 5개입니다");
+        responseResult.put("msg", "최근 수신된 영상 리스트입니다");
 
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
