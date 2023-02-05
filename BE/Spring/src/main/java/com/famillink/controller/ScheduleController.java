@@ -84,6 +84,9 @@ public class ScheduleController {
         //TODO: schedule에 member uid가 안 담겨 오려나? 담겨올수도 있겠다 흠 위처럼 굳이 권한에서 member uid를 뽑아내지 않아도 되는지 갑자기 헷갈림..
         Long memberUid = member.getUid();
 
+        //test
+//        Long memberUid = 7L;
+
         scheduleService.modifySchedule(uid, memberUid, schedule);
 
         return ResponseEntity.status(HttpStatus.OK).body("일정이 수정되었습니다");
@@ -98,6 +101,9 @@ public class ScheduleController {
         Member member = (Member) authentication.getPrincipal();
 
         Long memberUid = member.getUid();
+
+        //test
+//        Long memberUid = 7L;
 
         scheduleService.removeSchedule(uid, memberUid);
 
