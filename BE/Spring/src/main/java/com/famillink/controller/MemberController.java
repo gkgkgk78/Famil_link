@@ -67,9 +67,8 @@ public class MemberController {
             put("result", true);
             put("msg", "멤버 가입 성공");
         }}, HttpStatus.OK);
-        
-        
-        
+
+
     }
 
 
@@ -77,8 +76,12 @@ public class MemberController {
     @PostMapping("/login")
 
     public ResponseEntity<?> login(@RequestBody ImageDTO imageDTO, final Authentication authentication) throws Exception {
+        
+        //우선 학습이 된 가족의 모델과 label이 존재를 할것이다. 그것들 부터 flask에 보내줘야 학습이 가능할 거임
 
 
+
+        
 
         //안면인식으로 추출한 멤버
         String member_name = fservice.getMemberUidByFace(imageDTO.getJson());
@@ -91,7 +94,7 @@ public class MemberController {
 
 
         //두 멤버의 이름이 일치하면
-        if(member.getName().equals(member_name)){
+        if (member.getName().equals(member_name)) {
 
             Long member_uid = memberservice.findByUserName(member_name);
 
@@ -110,7 +113,7 @@ public class MemberController {
         }
 
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HashMap<String, Object>(){{
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HashMap<String, Object>() {{
             put("result", false);
             put("msg", "로그인 시도자와 멤버 정보가 일치하지 않습니다");
         }});
@@ -157,7 +160,7 @@ public class MemberController {
 
     @GetMapping("/movie/{movie_uid}")
     @ApiOperation(value = "동영상 보기", notes = "req_data : [token, movie uid]")
-    public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid,Authentication authentication) throws Exception {
+    public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid, Authentication authentication) throws Exception {
         final HttpHeaders responseHeaders = new HttpHeaders();
 
         // TODO: Service단에서 http 관련 작업을 하면 안된다.
@@ -188,7 +191,7 @@ public class MemberController {
 
         Map<String, Object> responseResult = new HashMap<>();
 
-        if(movieList.isEmpty()){
+        if (movieList.isEmpty()) {
             responseResult.put("msg", "도착한 영상이 없습니다");
             return ResponseEntity.status(HttpStatus.OK).body(responseResult);
         }
@@ -198,9 +201,6 @@ public class MemberController {
 
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
-
-
-
 
 
 }

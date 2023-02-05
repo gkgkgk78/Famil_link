@@ -3,6 +3,7 @@ package com.famillink.controller;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.service.FlaskService;
 import com.famillink.model.service.TestService;
+import com.famillink.model.service.ToFlask;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,8 @@ public class TestController {
 
     private final TestService testService;
     private final FlaskService flaskService;
+    
+    private final ToFlask toFlask;
 
     @ApiOperation(value = "테스트", notes = "테스트 컨트롤러입니다.")
     @GetMapping("/test")
@@ -97,6 +100,30 @@ public class TestController {
 
         return null;
     }
+
+
+    @GetMapping("/toflask/{movie_uid}")
+    @ApiOperation(value = "flask로 임시 데이터 보내기", notes = "아아아아아아")
+    public ResponseEntity<StreamingResponseBody> getMovie(Authentication authentication) throws Exception {
+        
+        
+        //한번은 label을 전송해야 하고
+        toFlask.send(authentication,"label");
+
+      
+        //한번은 model을 전송해야함
+
+
+
+        return null;
+    }
+
+
+
+
+
+
+
 //    @ApiOperation(value = "얼굴인식 파일삭제")
 //    @PutMapping(path = "/facetemp")
 //    public ResponseEntity<?> facetemp1(String path) throws Exception
