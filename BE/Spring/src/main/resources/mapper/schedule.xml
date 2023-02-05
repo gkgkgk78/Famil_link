@@ -10,7 +10,7 @@
     <select id="selectSchedule" parameterType="Long" resultType="Schedule">
         SELECT `uid`,
                `member_uid`,
-               `context`,
+               `content`,
                `date`
         FROM schedule
         WHERE `uid` = ${uid}
@@ -20,7 +20,7 @@
     <select id="selectScheduleList" parameterType="Schedule" resultType="Schedule">
         SELECT `uid`,
                `member_uid`,
-               `context`,
+               `content`,
                `date`
         FROM schedule
         WHERE `account_uid` = #{accountUid}
@@ -30,7 +30,7 @@
     <select id="selectScheduleListByMemberUid" parameterType="Long" resultType="Schedule">
         SELECT `uid`,
                `member_uid`,
-               `context`,
+               `content`,
                `date`
         FROM schedule
         WHERE `member_uid` = #{member_uid} AND `date` = #{date}
@@ -40,7 +40,7 @@
     <select id="selectScheduleListByDate" parameterType="Schedule" resultType="Schedule">
         SELECT `uid`,
                `member_uid`,
-               `context`,
+               `content`,
                `date`
         FROM schedule
         WHERE `account_uid` = #{accountUid} AND `date` = #{date}
@@ -48,8 +48,8 @@
 
     <!-- create -->
     <insert id="insertSchedule" parameterType="Schedule">
-        INSERT INTO schedule(`account_uid`, `member_uid`, `context`, `date`)
-        VALUES (#{account_uid}, #{member_uid}, #{context}, #{date})
+        INSERT INTO schedule(`account_uid`, `member_uid`, `content`, `date`)
+        VALUES (#{account_uid}, #{member_uid}, #{content}, #{date})
         <selectKey resultType="long" keyProperty="uid" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -58,7 +58,7 @@
     <!-- update -->
     <update id="updateSchedule" parameterType="Schedule">
         UPDATE schedule
-        SET `context` = #{context}, `date` = #{date}
+        SET `content` = #{content}, `date` = #{date}
         WHERE `uid` = #{uid} AND `member_uid` = #{memberUid}
     </update>
 

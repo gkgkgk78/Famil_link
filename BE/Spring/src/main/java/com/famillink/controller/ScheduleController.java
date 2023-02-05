@@ -60,6 +60,10 @@ public class ScheduleController {
         Long accountUid = Long.parseLong(member.getUser_uid());
         Long memberUid = member.getUid();
 
+        //Test
+//        Long accountUid = schedule.getAccount_uid();
+//        Long memberUid = schedule.getMember_uid();
+
         scheduleService.addSchedule(accountUid, memberUid, schedule);
 
         return ResponseEntity.status(HttpStatus.OK).body("스케줄 등록에 성공했습니다");
