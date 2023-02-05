@@ -9,7 +9,7 @@
     <!-- 스케줄 uid로 스케줄 한 개 조회 -->
     <select id="selectSchedule" parameterType="Long" resultType="Schedule">
         SELECT `uid`,
-               `member_uid` AS memberUid,
+               `member_uid`,
                `context`,
                `date`
         FROM schedule
@@ -19,7 +19,7 @@
     <!-- 가족의 전체 스케줄 조회 -->
     <select id="selectScheduleList" parameterType="Schedule" resultType="Schedule">
         SELECT `uid`,
-               `member_uid` AS memberUid,
+               `member_uid`,
                `context`,
                `date`
         FROM schedule
@@ -29,7 +29,7 @@
     <!-- 특정 멤버가 작성한 스케줄 조회 -->
     <select id="selectScheduleListByMemberUid" parameterType="Long" resultType="Schedule">
         SELECT `uid`,
-               `member_uid` AS memberUid,
+               `member_uid`,
                `context`,
                `date`
         FROM schedule
@@ -39,7 +39,7 @@
     <!-- 특정 날짜 일정 조회 -->
     <select id="selectScheduleListByDate" parameterType="Schedule" resultType="Schedule">
         SELECT `uid`,
-               `member_uid` AS memberUid,
+               `member_uid`,
                `context`,
                `date`
         FROM schedule

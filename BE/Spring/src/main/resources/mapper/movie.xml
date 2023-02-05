@@ -29,13 +29,12 @@
         where uid = #{movie_uid}
     </select>
 
-    <select id="findMovieByMemberTo" parameterType="Long" resultType="MovieSenderDTO">
+    <select id="findMovieByMemberTo" parameterType="long" resultType="MovieDTO">
         SELECT `uid`,
-               `member_to` AS `to_member_uid`,
+               `member_to`
         FROM movie
-        WHERE member_to = #{to_member_uid} AND status = 0
-        ORDER BY udate DESC
-        LIMIT 5;
+        WHERE member_to = #{member_to} AND status = "0"
+        ORDER BY udate DESC;
     </select>
 
 </mapper>

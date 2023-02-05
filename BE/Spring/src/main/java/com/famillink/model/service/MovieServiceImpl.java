@@ -2,6 +2,7 @@ package com.famillink.model.service;
 
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
+import com.famillink.model.domain.param.MovieDTO;
 import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
@@ -110,8 +111,11 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieSenderDTO> showMovieList(Long to_member_uid) throws Exception {
-        return movieMapper.findMovieByMemberTo(to_member_uid);
+    public List<MovieDTO> showMovieList(Long member_to) throws Exception {
+
+        List<MovieDTO> list = movieMapper.findMovieByMemberTo(member_to);
+
+        return list;
     }
 
 

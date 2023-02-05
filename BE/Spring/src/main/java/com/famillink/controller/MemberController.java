@@ -2,6 +2,7 @@ package com.famillink.controller;
 
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
+import com.famillink.model.domain.param.MovieDTO;
 import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.param.ImageDTO;
 import com.famillink.model.domain.user.Account;
@@ -179,14 +180,21 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
-    @GetMapping("/videoList/{to_member_uid}")
+    @GetMapping("/videoList/{member_to}")
     @ApiOperation(value = "동영상 리스트 전송", notes = "이 컨트롤러는 최신 영상 5개를 담은 동영상 리스트를 전송합니다.")
-    public ResponseEntity<?> sendList(@PathVariable("to_member_uid") Long to_member_uid) throws Exception {
+    public ResponseEntity<?> sendList(@PathVariable("member_to") Long member_to) throws Exception {
 
-        List<MovieSenderDTO> movieList = movieService.showMovieList(to_member_uid);
+        List<MovieDTO> movieList = movieService.showMovieList(member_to);
+
         Map<String, Object> responseResult = new HashMap<>();
+
+        if(movieList.isEmpty()){
+            responseResult.put("msg", "도착한 영상이 없습니다");
+            return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+        }
+
         responseResult.put("movieList", movieList);
-        responseResult.put("msg", "최근 수신된 영상 5개입니다");
+        responseResult.put("msg", "최근 수신된 영상 리스트입니다");
 
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }

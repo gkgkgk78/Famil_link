@@ -1,5 +1,6 @@
 package com.famillink.model.mapper;
 
+import com.famillink.model.domain.param.MovieDTO;
 import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Account;
 import org.apache.ibatis.annotations.Mapper;
@@ -22,7 +23,7 @@ public interface MovieMapper {
 
     void setMovie(Long movie_uid);
 
-    List<MovieSenderDTO> findMovieByMemberTo(Long to_member_uid);
+    List<MovieDTO> findMovieByMemberTo(Long member_to);
 
 
 }
