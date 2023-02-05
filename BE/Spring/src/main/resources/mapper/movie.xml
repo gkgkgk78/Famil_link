@@ -23,6 +23,14 @@
     </select>
 
 
+    <select id="getOneMovie" parameterType="Long" resultType="int">
+
+        SELECT count(*)
+        FROM movie
+        WHERE `uid` = #{movie_uid}
+    </select>
+
+
     <select id="setMovie" parameterType="Long" resultType="MovieSenderDTO">
         update movie
         set status="1"

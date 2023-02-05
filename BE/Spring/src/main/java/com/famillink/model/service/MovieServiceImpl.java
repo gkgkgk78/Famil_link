@@ -53,7 +53,7 @@ public class MovieServiceImpl implements MovieService {
 
         m = memberMapper.findUserByUid(sender.getFrom_member_uid()).get();
         //가족 uid로 폴더에 저장을 해줌
-        String get = fileService.store(file, m.getUser_uid());
+        String get = fileService.store(file, m.getUser_uid().toString());
         movieMapper.sendMovie(sender, get);
 
     }
@@ -69,7 +69,7 @@ public class MovieServiceImpl implements MovieService {
 
             Member auth = (Member) authentication.getPrincipal();
 
-            if(!get.equals(auth.getUid()))
+            if (!get.equals(auth.getUid()))
                 throw new BaseException(ErrorMessage.NOT_GET_FILE);
             //여기까지 해서 받은 사용자에게 온 영상인지를 파악을 했음
 
@@ -102,11 +102,13 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void setRead(Long movie_uid) throws Exception {
 
-        try {
-            movieMapper.setMovie(movie_uid);
-        } catch (Exception e) {
+        int now = movieMapper.getOneMovie(movie_uid);
+        if (now != 1) {
             throw new BaseException(ErrorMessage.NOT_READ_FILE);
+        } else {
+            movieMapper.setMovie(movie_uid);
         }
+
     }
 
     @Override

@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `famil_link`.`account` (
   `salt` VARCHAR(100) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci' NULL DEFAULT NULL COMMENT '개인',
   `level` TINYINT NOT NULL DEFAULT '0' COMMENT '권한',
   `model_path` VARCHAR(100) NULL DEFAULT NULL,
+  `photo_path` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY USING BTREE (`uid`),
   UNIQUE INDEX `email` USING BTREE (`email`) VISIBLE,
   UNIQUE INDEX `phone` (`phone` ASC) VISIBLE,
@@ -108,17 +109,20 @@ COMMENT = '영상';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `famil_link`.`todo` (
   `account_uid` BIGINT NOT NULL,
-  `content` VARCHAR(100) NULL,
+  `content` VARCHAR(100) NULL DEFAULT NULL,
   `uid` BIGINT NOT NULL AUTO_INCREMENT,
   `sdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` ENUM('0', '1') NOT NULL DEFAULT '0',
   PRIMARY KEY (`uid`),
+  INDEX `fk_table1_account1` (`account_uid` ASC) VISIBLE,
   CONSTRAINT `fk_table1_account1`
     FOREIGN KEY (`account_uid`)
     REFERENCES `famil_link`.`account` (`uid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_general_ci;
 
 
 -- -----------------------------------------------------

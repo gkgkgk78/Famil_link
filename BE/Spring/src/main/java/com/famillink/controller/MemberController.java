@@ -42,7 +42,7 @@ public class MemberController {
     private final MovieService movieService;
 
 
-    @ApiOperation(value = "회원가입", notes = "req_data : [model_path,name,nickname,user_uid]")
+    @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname]")
     @PostMapping("/signup/{name}/{nickname}")
 
     public ResponseEntity<?> signup(@PathVariable String name, @PathVariable String nickname, final Authentication authentication) throws Exception {
@@ -72,21 +72,26 @@ public class MemberController {
     }
 
 
-    @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [id, pw]")
+    @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [image,uid]")
     @PostMapping("/login")
 
     public ResponseEntity<?> login(@RequestBody ImageDTO imageDTO, final Authentication authentication) throws Exception {
 
 
 
-        //안면인식으로 추출한 멤버
-        String member_name = fservice.getMemberUidByFace(imageDTO.getJson());
-        if (member_name.equals("NONE")) {
-            throw new BaseException(ErrorMessage.NOT_USER_INFO);
-        }
+//        //안면인식으로 추출한 멤버
+//        String member_name = fservice.getMemberUidByFace(imageDTO.getJson());
+//        if (member_name.equals("NONE")) {
+//            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+//        }
+//
+//        //uid로 추출한 멤버
+//        Member member = memberservice.findMemberByUserUid(imageDTO.getUid()).get();
 
-        //uid로 추출한 멤버
-        Member member = memberservice.findMemberByUserUid(imageDTO.getUid()).get();
+        Member member = memberservice.findMemberByUserUid(5L).get();
+        String member_name= member.getName();
+
+
 
 
         //두 멤버의 이름이 일치하면
@@ -148,7 +153,7 @@ public class MemberController {
 
 
     @PostMapping("/movie")
-    @ApiOperation(value = "동영상 보내기", notes = "동영상을 전송하는 컨트롤러입니다.")
+    @ApiOperation(value = "동영상 보내기", notes = "req_data : [image,fromuid,touid]")
     public ResponseEntity<?> addMovie(MovieSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
         movieService.sender(sender, file);
         return null;
@@ -168,7 +173,7 @@ public class MemberController {
 
 
     @PutMapping("/movie/{movie_uid}")
-    @ApiOperation(value = "동영상 읽음 처리", notes = "동영상 읽음 처리를 위한 컨트롤러입니다.")
+    @ApiOperation(value = "동영상 읽음 처리", notes = "req_data : [movieuid]")
     public ResponseEntity<?> setMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
 
 
