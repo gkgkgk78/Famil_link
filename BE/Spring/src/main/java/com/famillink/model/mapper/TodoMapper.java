@@ -10,7 +10,6 @@ import java.util.List;
 @Mapper
 public interface TodoMapper {
 
-    //CRD를 하면됨
 
     void createtodo(Todo todo) throws Exception;
 
@@ -21,7 +20,7 @@ public interface TodoMapper {
     Todo getonetodo(Long uid) throws Exception;
 
 
-    void updatetodo(Long uid) throws  Exception;
+    void updatetodo(Long uid) throws Exception;
 
 
 }

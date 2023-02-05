@@ -109,17 +109,20 @@ COMMENT = '영상';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `famil_link`.`todo` (
   `account_uid` BIGINT NOT NULL,
-  `content` VARCHAR(100) NULL,
+  `content` VARCHAR(100) NULL DEFAULT NULL,
   `uid` BIGINT NOT NULL AUTO_INCREMENT,
   `sdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` ENUM('0', '1') NOT NULL DEFAULT '0',
   PRIMARY KEY (`uid`),
+  INDEX `fk_table1_account1` (`account_uid` ASC) VISIBLE,
   CONSTRAINT `fk_table1_account1`
     FOREIGN KEY (`account_uid`)
     REFERENCES `famil_link`.`account` (`uid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_general_ci;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

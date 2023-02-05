@@ -166,15 +166,17 @@ public class AccountController {
 
     @PostMapping("/flask/model")
     @ApiOperation(value = "Flask 모델 저장 ", notes = "Flask 모델을 전송하는 컨트롤러입니다.")
-    public ResponseEntity<?> addModel(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
-        flaskService.send_model(account, file);
+    public ResponseEntity<?> addModel(final Authentication authentication, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+        Account auth = (Account) authentication.getPrincipal();
+
+        flaskService.send_model(auth, file);
         return null;
     }
 
     @GetMapping("/flask/model")
     @ApiOperation(value = "Flask의 Model 불러오기", notes = "Flask의 Model을 다운받는 컨트롤러입니다.")
-    public ResponseEntity<?> returnModel(Account account) throws Exception {
-
+    public ResponseEntity<?> returnModel(final Authentication authentication) throws Exception {
+        Account account = (Account) authentication.getPrincipal();
         if (account.getEmail() == null)
             throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
 
@@ -187,7 +189,8 @@ public class AccountController {
 
     @PostMapping("/flask/label")
     @ApiOperation(value = "Flask Label 저장 ", notes = "Flask Label을 전송하는 컨트롤러입니다.")
-    public ResponseEntity<?> addLabel(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+    public ResponseEntity<?> addLabel(final Authentication authentication, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+        Account account = (Account) authentication.getPrincipal();
         flaskService.send_label(account, file);
         Map<String, Object> responseResult = new HashMap<>();
         responseResult.put("result", true);
@@ -197,8 +200,8 @@ public class AccountController {
 
     @GetMapping("/flask/label")
     @ApiOperation(value = "Flask의 Label 불러오기", notes = "Flask의 Label을 다운받는 컨트롤러입니다.")
-    public ResponseEntity<?> returnLabel(Account account) throws Exception {
-
+    public ResponseEntity<?> returnLabel(final Authentication authentication) throws Exception {
+        Account account = (Account) authentication.getPrincipal();
         if (account.getEmail() == null)
             throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
 
@@ -273,12 +276,22 @@ public class AccountController {
     @ApiOperation(value = "개인 멤버 사진 보내기 불러오기", notes = "개인 멤버 사진을 다운받는 컨트롤러입니다.")
     public ResponseEntity<?> getPhoto(@PathVariable String name, final Authentication authentication) throws Exception {
 
-
         InputStreamResource resource = photoService.download(name, authentication);
-        String filename=name+".jpg";
+        String filename = name + ".jpg";
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename).body(resource);
 
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename).body(resource);
+    }
+    
+    @DeleteMapping("/photo/{name}}")
+    @ApiOperation(value = "개인 멤버 사진 삭제하기", notes = "req_data : [name,token]")
+    public ResponseEntity<?> deletePhoto(@PathVariable String name, final Authentication authentication) throws Exception {
 
+        photoService.delete(name,authentication);
+
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "개인 멤버 삭제 완료");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
 
