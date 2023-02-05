@@ -72,26 +72,21 @@ public class MemberController {
     }
 
 
-    @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [image,uid]")
+    @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [image file,uid]")
     @PostMapping("/login")
 
     public ResponseEntity<?> login(@RequestBody ImageDTO imageDTO, final Authentication authentication) throws Exception {
 
 
 
-//        //안면인식으로 추출한 멤버
-//        String member_name = fservice.getMemberUidByFace(imageDTO.getJson());
-//        if (member_name.equals("NONE")) {
-//            throw new BaseException(ErrorMessage.NOT_USER_INFO);
-//        }
-//
-//        //uid로 추출한 멤버
-//        Member member = memberservice.findMemberByUserUid(imageDTO.getUid()).get();
+        //안면인식으로 추출한 멤버
+        String member_name = fservice.getMemberUidByFace(imageDTO.getJson());
+        if (member_name.equals("NONE")) {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+        }
 
-        Member member = memberservice.findMemberByUserUid(5L).get();
-        String member_name= member.getName();
-
-
+        //uid로 추출한 멤버
+        Member member = memberservice.findMemberByUserUid(imageDTO.getUid()).get();
 
 
         //두 멤버의 이름이 일치하면
@@ -160,7 +155,7 @@ public class MemberController {
     }
 
     @GetMapping("/movie/{movie_uid}")
-    @ApiOperation(value = "동영상 보기", notes = "동영상을 다운받는 컨트롤러입니다.")
+    @ApiOperation(value = "동영상 보기", notes = "req_data : [token, movie uid]")
     public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid,Authentication authentication) throws Exception {
         final HttpHeaders responseHeaders = new HttpHeaders();
 
@@ -173,7 +168,7 @@ public class MemberController {
 
 
     @PutMapping("/movie/{movie_uid}")
-    @ApiOperation(value = "동영상 읽음 처리", notes = "req_data : [movieuid]")
+    @ApiOperation(value = "동영상 읽음 처리", notes = "req_data : [movieuid,token]")
     public ResponseEntity<?> setMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
 
 
