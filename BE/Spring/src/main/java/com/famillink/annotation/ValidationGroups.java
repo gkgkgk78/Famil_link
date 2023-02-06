@@ -13,4 +13,10 @@ public class ValidationGroups {
 
     public interface find_password extends Default {};
 
+    public interface mail extends Default {};
+
+    public interface date extends Default {};
+
+    public interface regist extends Default {};
+
 }

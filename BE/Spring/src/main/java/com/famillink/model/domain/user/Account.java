@@ -20,7 +20,7 @@ public class Account implements UserDetails {
     @ApiModelProperty(hidden = true)
     protected Long uid;
 
-    @NotNull(groups = {ValidationGroups.signup.class, ValidationGroups.signup.class, ValidationGroups.find_password.class}, message = "이메일은 공백일 수 없습니다.")
+    @NotNull(groups = {ValidationGroups.signup.class, ValidationGroups.signup.class, ValidationGroups.find_password.class, ValidationGroups.mail.class}, message = "이메일은 공백일 수 없습니다.")
     @Email(groups = {ValidationGroups.signup.class}, message = "이메일 형식이 아닙니다.")
     protected String email;
 

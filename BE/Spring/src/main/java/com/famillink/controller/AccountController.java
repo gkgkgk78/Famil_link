@@ -78,7 +78,7 @@ public class AccountController {
 
     @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody @Validated(ValidationGroups.signup.class) Account account) throws Exception {
+    public ResponseEntity<?> loginUser(@RequestBody @Validated(ValidationGroups.login.class) Account account) throws Exception {
 
         Map<String, Object> token = accountService.login(account); //access token, refresh token
 
@@ -136,7 +136,7 @@ public class AccountController {
 
     @ApiOperation(value = "인증 이메일 재발송", notes = "인증 메일을 재발송한다.")
     @PostMapping("/mail")
-    public ResponseEntity<?> resendCheckMail(@RequestBody @Validated(ValidationGroups.signup.class) Account loginAccount) throws Exception {
+    public ResponseEntity<?> resendCheckMail(@RequestBody @Validated(ValidationGroups.mail.class) Account loginAccount) throws Exception {
         accountService.resendCheckMail(loginAccount);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
