@@ -4,11 +4,14 @@ package com.famillink.controller;
 import com.famillink.annotation.ValidationGroups;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
-import com.famillink.model.domain.param.MovieSenderDTO;
+import com.famillink.model.domain.param.PhotoSenderDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.domain.user.Todo;
 import com.famillink.model.service.AccountService;
 import com.famillink.model.service.FlaskService;
+import com.famillink.model.service.PhotoService;
+import com.famillink.model.service.TodoService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,9 +42,13 @@ public class AccountController {
     private final AccountService accountService;
     private final FlaskService flaskService;
 
+    private final TodoService todoService;
+
+    private final PhotoService photoService;
+
     @ApiOperation(value = "회원가입", notes = "req_data : [pw, email, name]")
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody Account account) throws Exception {
+    public ResponseEntity<?> signup(@RequestBody @Validated(ValidationGroups.signup.class) Account account) throws Exception {
         Account savedAccount = accountService.signup(account);
 
         //비동기 처리
@@ -70,15 +77,13 @@ public class AccountController {
 
     @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody Account account) throws Exception {
+    public ResponseEntity<?> loginUser(@RequestBody @Validated(ValidationGroups.signup.class) Account account) throws Exception {
 
         Map<String, Object> token = accountService.login(account); //access token, refresh token
 
         Map<String, Object> responseResult = new HashMap<>();
 
         HttpStatus sts = HttpStatus.BAD_REQUEST;
-
-        List<Member> members = accountService.allMembers(account);
 
         if (token != null) {
             sts = HttpStatus.OK;
@@ -88,10 +93,28 @@ public class AccountController {
             responseResult.put("refresh-token", token.get("refresh-token"));
             responseResult.put("uid", token.get("uid"));
             responseResult.put("nickname", token.get("nickname"));
-            responseResult.put("members", members);
         }
 
         return ResponseEntity.status(sts).body(responseResult);
+    }
+
+    @ApiOperation(value = "멤버 리스트 반환", notes = "로그인 후 요청 시, 해당 account에 속해 있는 멤버 리스트를 반환하는 컨트롤러 입니다")
+    @GetMapping("/{account_uid}")
+    public ResponseEntity<?> getMembers(Authentication authentication, @PathVariable Long account_uid) throws Exception {
+
+        Account account = (Account) authentication.getPrincipal();
+
+        if(account.getUid() != account_uid){
+            throw new BaseException(ErrorMessage.NOT_USER_INFO_MATCH);
+        }
+
+        List<Member> members = accountService.allMembers(account);
+
+        if (members.isEmpty()){
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(members);
     }
 
 
@@ -158,16 +181,18 @@ public class AccountController {
 
 
     @PostMapping("/flask/model")
-    @ApiOperation(value = "Flask 모델 저장 ", notes = "Flask 모델을 전송하는 컨트롤러입니다.")
-    public ResponseEntity<?> addModel(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
-        flaskService.send_model(account, file);
+    @ApiOperation(value = "Flask 모델 저장 ", notes = "req_data : [token, flask 파일]")
+    public ResponseEntity<?> addModel(final Authentication authentication, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+        Account auth = (Account) authentication.getPrincipal();
+
+        flaskService.send_model(auth, file);
         return null;
     }
 
     @GetMapping("/flask/model")
-    @ApiOperation(value = "Flask의 Model 불러오기", notes = "Flask의 Model을 다운받는 컨트롤러입니다.")
-    public ResponseEntity<?> returnModel(Account account) throws Exception {
-
+    @ApiOperation(value = "Flask의 Model 불러오기", notes = "req_data : [token]")
+    public ResponseEntity<?> returnModel(final Authentication authentication) throws Exception {
+        Account account = (Account) authentication.getPrincipal();
         if (account.getEmail() == null)
             throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
 
@@ -179,16 +204,20 @@ public class AccountController {
 
 
     @PostMapping("/flask/label")
-    @ApiOperation(value = "Flask Label 저장 ", notes = "Flask Label을 전송하는 컨트롤러입니다.")
-    public ResponseEntity<?> addLabel(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+    @ApiOperation(value = "Flask Label 저장 ", notes = "req_data : [token, label 파일]")
+    public ResponseEntity<?> addLabel(final Authentication authentication, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+        Account account = (Account) authentication.getPrincipal();
         flaskService.send_label(account, file);
-        return null;
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "label저장 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
     @GetMapping("/flask/label")
-    @ApiOperation(value = "Flask의 Label 불러오기", notes = "Flask의 Label을 다운받는 컨트롤러입니다.")
-    public ResponseEntity<?> returnLabel(Account account) throws Exception {
-
+    @ApiOperation(value = "Flask의 Label 불러오기", notes ="req_data : [token]")
+    public ResponseEntity<?> returnLabel(final Authentication authentication) throws Exception {
+        Account account = (Account) authentication.getPrincipal();
         if (account.getEmail() == null)
             throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
 
@@ -197,19 +226,89 @@ public class AccountController {
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=labels.txt").body(resource);
 
     }
-//
-//
-//    @GetMapping("/Flask/Label")
-//    @ApiOperation(value = "Flask 의 Label", notes = "Flask 의 Label을 다운받는 컨트롤러입니다.")
-//    public ResponseEntity<?> getMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
-//
-//        InputStreamResource resource = flaskService.download(movie_uid);
-//
-//        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=movie.mp4").body(resource);
-//    }
+
+    @PostMapping("/todo/{content}")
+    @ApiOperation(value = "가족 todo생성", notes = "req_data : [token, 내용]")
+    public ResponseEntity<?> AddTodo(Authentication authentication, @PathVariable String content) throws Exception {
+        Account auth = (Account) authentication.getPrincipal();
+        Long tt = auth.getUid();
+        todoService.createtodo(tt, content);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "todo생성 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
 
 
+    @GetMapping("/todo")
+    @ApiOperation(value = "가족 todo불러오기", notes = "req_data : [token, flask 파일]")
+    public ResponseEntity<?> GetTodo(Authentication authentication) throws Exception {
+        Account auth = (Account) authentication.getPrincipal();
+        Long tt = auth.getUid();
+        List<Todo> list = todoService.gettodo(tt);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "todo불러오기 성공");
+        responseResult.put("todolist", list);
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
 
+    @DeleteMapping("/todo/{uid}")
+    @ApiOperation(value = "가족 todo삭제하기", notes = "req_data : [token]")
+    public ResponseEntity<?> DeleteTodo(@PathVariable Long uid) throws Exception {
+        todoService.deletetodo(uid);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "todo삭제 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
+
+
+    @PutMapping("/todo/{uid}")
+    @ApiOperation(value = "가족 todo완료처리", notes = "req_data : [token,가족 uid]")
+    public ResponseEntity<?> CompleteTodo(@PathVariable Long uid) throws Exception {
+        todoService.updatetodo(uid);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "todo완료처리 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
+
+
+    //프사 등록을 위한 부분
+
+    @PostMapping("/photo/{name}")
+    @ApiOperation(value = "개인 멤버 사진 보내기", notes = "req_data : [token, img file, 보내는 사람 uid, 받는 사람이름]")
+    public ResponseEntity<?> addPhoto(PhotoSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+        photoService.sender(sender, file);
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "개인 멤버 사진 완료");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
+
+    //프사 넘겨줌
+    @GetMapping("/photo/{name}}")
+    @ApiOperation(value = "개인 멤버 사진 보내기 불러오기", notes = "req_data : [token]")
+    public ResponseEntity<?> getPhoto(@PathVariable String name, final Authentication authentication) throws Exception {
+
+        InputStreamResource resource = photoService.download(name, authentication);
+        String filename = name + ".jpg";
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename).body(resource);
+
+    }
+    
+    @DeleteMapping("/photo/{name}}")
+    @ApiOperation(value = "개인 멤버 사진 삭제하기", notes = "req_data : [name,token]")
+    public ResponseEntity<?> deletePhoto(@PathVariable String name, final Authentication authentication) throws Exception {
+
+        photoService.delete(name,authentication);
+
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "개인 멤버 삭제 완료");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
 
 
 }

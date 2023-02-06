@@ -3,15 +3,12 @@ package com.famillink.model.service;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
-public interface FileService {
+public interface PhotoFileService {
     void init();
 
-    String store(MultipartFile file, String user);
-
-    String saveRegistVideo(MultipartFile files, String name, Long account_uid) throws IOException;
+    String store(MultipartFile file, String user,String name);
 
     Path load(String filename);
 

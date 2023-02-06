@@ -4,18 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImageDTO {
+public class MovieDTO {
 
-    private Long uid; //
+    private Long uid;
 
+    private Long member_to;
 
-
-    private List<List<List<Integer>>> json;
 
 
 }

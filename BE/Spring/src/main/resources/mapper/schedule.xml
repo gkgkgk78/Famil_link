@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.famillink.model.mapper.ScheduleMapper">
+
+    <!-- read -->
+    <!-- 스케줄 uid로 스케줄 한 개 조회 -->
+    <select id="selectSchedule" parameterType="Long" resultType="Schedule">
+        SELECT `uid`,
+               `member_uid`,
+               `content`,
+               `date`
+        FROM schedule
+        WHERE `uid` = ${uid}
+    </select>
+
+    <!-- 가족의 전체 스케줄 조회 -->
+    <select id="selectScheduleList" parameterType="Schedule" resultType="Schedule">
+        SELECT `uid`,
+               `member_uid`,
+               `content`,
+               `date`
+        FROM schedule
+        WHERE `account_uid` = #{account_uid}
+    </select>
+
+    <!-- 특정 멤버가 작성한 스케줄 조회 -->
+    <select id="selectScheduleListByMemberUid" parameterType="Long" resultType="Schedule">
+        SELECT `uid`,
+               `member_uid`,
+               `content`,
+               `date`
+        FROM schedule
+        WHERE `member_uid` = #{member_uid} AND `date` = #{date}
+    </select>
+
+    <!-- 특정 날짜 일정 조회 -->
+    <select id="selectScheduleListByDate" parameterType="Schedule" resultType="Schedule">
+        SELECT `uid`,
+               `member_uid`,
+               `content`,
+               `date`
+        FROM schedule
+        WHERE `account_uid` = #{account_uid} AND `date` = #{date}
+    </select>
+
+    <!-- create -->
+    <insert id="insertSchedule" parameterType="Schedule">
+        INSERT INTO schedule(`account_uid`, `member_uid`, `content`, `date`)
+        VALUES (#{account_uid}, #{member_uid}, #{content}, #{date})
+        <selectKey resultType="long" keyProperty="uid" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <!-- update -->
+    <update id="updateSchedule" parameterType="Schedule">
+        UPDATE schedule
+        SET `content` = #{content}, `date` = #{date}
+        WHERE `uid` = #{uid} AND `member_uid` = #{member_uid}
+    </update>
+
+    <!-- delete -->
+    <delete id="deleteSchedule" parameterType="Schedule">
+        DELETE FROM schedule
+        WHERE `uid` = #{uid} AND member_uid = #{member_uid}
+    </delete>
+
+
+</mapper>

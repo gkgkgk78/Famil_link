@@ -23,19 +23,27 @@
     </select>
 
 
+    <select id="getOneMovie" parameterType="Long" resultType="int">
+
+        SELECT count(*)
+        FROM movie
+        WHERE `uid` = #{movie_uid}
+    </select>
+
+
     <select id="setMovie" parameterType="Long" resultType="MovieSenderDTO">
         update movie
         set status="1"
         where uid = #{movie_uid}
     </select>
 
-    <select id="findLetterByMemberTo" parameterType="Long" resultType="MovieSenderDTO">
+    <select id="findMovieByMemberTo" parameterType="long" resultType="MovieDTO">
         SELECT `uid`,
-               `member_to` AS `to_member_uid`,
+               `member_to`
         FROM movie
-        WHERE member_to = #{to_member_uid} AND status = 0
+        WHERE member_to = #{member_to} AND status = "0"
         ORDER BY udate DESC
-            LIMIT 5;
+        LIMIT 0, 5;
     </select>
 
 </mapper>

@@ -5,7 +5,6 @@ import com.famillink.exception.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,38 +17,31 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class FileServiceImpl implements FileService {
+public class PhotoFileServiceImpl implements PhotoFileService {
     @Value("upfiles")
-    private String moviePath;
-
+    private String photoPath;
 
     @Override
     public void init() {
         try {
-            Files.createDirectories(Paths.get(moviePath));
+            Files.createDirectories(Paths.get(photoPath));
         } catch (IOException e) {
             throw new RuntimeException("Could not create upload folder!");
         }
     }
 
     @Override
-    public String store(MultipartFile file, String user) {
+    public String store(MultipartFile file, String user,String name) {
         try {
             if (file.isEmpty()) {
                 throw new Exception("ERROR : File is empty.");
             }
-            Path root = Paths.get(moviePath);
+            Path root = Paths.get(photoPath);
             if (!Files.exists(root)) {
                 init();
             }
-
-            //파일명 랜덤 저장
-            long millis = System.currentTimeMillis();
-            UUID uuid = UUID.randomUUID();
-            String u1 = uuid.toString() + Long.toString(millis);//밀리초 까지 해서 저장 하고자 함
             try (InputStream inputStream = file.getInputStream()) {
-
-                File f = root.resolve(Paths.get("family", user)).toFile();
+                File f = root.resolve(Paths.get("Photo", user)).toFile();//여기까지 해서 upfiles/Photo/4/로만듦
                 // 폴더 생성: mkdir()
                 if (!f.exists()) {    // 폴더가 존재하는지 체크, 없다면 생성
                     try {
@@ -59,12 +51,11 @@ public class FileServiceImpl implements FileService {
                     }
                 }
 
-
-                Path target = (Path) Paths.get("family", user, u1.toString() + file.getOriginalFilename());
+                Path target = (Path) Paths.get("Photo", user, name+".jpg");//이렇게 이름을 저장하고자 함
                 Files.copy(inputStream, root.resolve(target), StandardCopyOption.REPLACE_EXISTING);
                 return root.resolve(target).toString();
-
             }
+
         } catch (Exception e) {
             //파일 저장 불가시 처리하기 위한 부분
             throw new BaseException(ErrorMessage.NOT_STORE_FILE);
@@ -74,8 +65,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public Path load(String filename) {
-        // TODO Auto-generated method stub
-        return Paths.get(moviePath).resolve(filename);
+        return Paths.get(photoPath).resolve(filename);
     }
 
     @Override
@@ -85,50 +75,6 @@ public class FileServiceImpl implements FileService {
         } catch (FileNotFoundException e) {
             throw new BaseException(ErrorMessage.NOT_READ_FILE);
         }
-    }
-
-    @Override
-    public String saveRegistVideo(MultipartFile files, String name, Long account_uid) throws IOException {
-        if (files.isEmpty()) {
-            throw new BaseException(ErrorMessage.NOT_FOUND_FILE);
-        }
-
-        //String uploadPath = servletContext.getRealPath("/file");
-
-        //test
-        //File upload = new File("C:\\registFace");
-
-        Path root = Paths.get(moviePath);
-
-        if (!Files.exists(root)) {
-            init();
-        }
-
-
-        //test
-        //File upload = root.resolve(Paths.get("C:\\", "face")).toFile();
-
-        String accountUid = String.valueOf(account_uid);
-
-        File upload = root.resolve("faceRegist").toFile();
-
-        if (!upload.exists()) upload.mkdir();
-
-        String fileName = accountUid + "_" + name + "_" + files.getOriginalFilename();
-
-        File target = new File(upload, fileName);
-
-        InputStream inputStream = files.getInputStream();
-
-        if (!files.isEmpty()) {
-	        // 파일 저장
-            Path path = (Path) Paths.get("faceRegist", fileName);
-            Files.copy(inputStream, root.resolve(path), StandardCopyOption.REPLACE_EXISTING);
-
-        }
-
-        return target.toString();
-
     }
 
 
