@@ -10,49 +10,44 @@ import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.util.JwtTokenProvider;
 import lombok.Data;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 /**
+ * @version 1.1
  * @author cjw.git
- * <p>
- * 1. 회원가입
- * 2. 회원로그인
- * 3. 멤버추가
- * 4. 멤버로그인
- * <p>
- * <p>
- * 주의사항
- * 1. class 위 @Transactional 가 존재하면 실제 DB에 반영되지 않는다.
- * 2. 로그인 할 때 member_uid가 오기 때문에 멤버를 추가하고 다시 로그인하여 멤버 uid를 받아야한다.
- * 3. @Disabled 로 Test 비활성화 가능하다.
- * 현재 결론
- * 1. 회원가입 돌리고 -> 로그인되고 -> 에러,
- * 회원가입 비활성화하고 로그인 -> 멤버추가 -> 에러,
- * 회원가입 비활성화하고 로그인 -> 멤버로그인 -> 성공
- * <p>
- * 과 같은 절차를 따른다.
- * 추후 fix예정
+ * @author SSAFY
+ * @apiNote DB를 초기화 후 해야합니다. 회원가입 후 log창에 logger.info로 표시되면 DB 가서 level을 1로 바꾸어줘야합니다.
+ *
+ * BE 자동으로 코드를 테스트해준다.
+ * 1. 가족계정 가입
+ * 2. 가족계정 로그인
+ * 3. 모델 저장 (flask를 위해)
+ * 4. 멤버 조회 (처음엔 아무도 없음)
+ * 5. 멤버 추가
+ * 6. 멤버 조회1 (한명이 나옴)
+ * 7. 멤버로그인
  */
 @Data
 class TestData {
@@ -86,6 +81,8 @@ class AllInfoProjectApplicationTests {
     private MemberController memberController;
     @Autowired
     private MovieController movieController;
+    @Autowired
+    private FlaskController flaskController;
     @Autowired
     private ScheduleController scheduleController;
     @Autowired
@@ -149,6 +146,25 @@ class AllInfoProjectApplicationTests {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    @Test
+    @Order(33)
+    void 모델저장() throws Exception {
+        String token = TestData.getInstance().getAccount_access_token();
+        assert token != null;
+
+        Authentication authentication = doFilter(token, "qwer/member/signup");
+        assert authentication != null;
+
+        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\keras_model.h5").toPath()));
+        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\labels.txt").toPath()));
+
+        accountController.addModel(authentication, model);
+        accountController.addLabel(authentication, label);
+
+        flaskController.addLabel(authentication);
+        flaskController.addModel(authentication);
     }
 
     @Test
