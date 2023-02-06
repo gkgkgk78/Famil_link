@@ -8,6 +8,7 @@ import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.ImageDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.mapper.AccountMapper;
 import com.famillink.util.JwtTokenProvider;
 import lombok.Data;
 import org.junit.jupiter.api.MethodOrderer;
@@ -29,17 +30,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
- * @version 1.1
  * @author cjw.git
  * @author SSAFY
+ * @version 1.1
  * @apiNote DB를 초기화 후 해야합니다. 회원가입 후 log창에 logger.info로 표시되면 DB 가서 level을 1로 바꾸어줘야합니다.
- *
+ * <p>
  * BE 자동으로 코드를 테스트해준다.
  * 1. 가족계정 가입
  * 2. 가족계정 로그인
@@ -87,6 +85,9 @@ class AllInfoProjectApplicationTests {
     private ScheduleController scheduleController;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private AccountMapper accountMapper;
 
     @Test
     @Order(10)
@@ -157,14 +158,25 @@ class AllInfoProjectApplicationTests {
         Authentication authentication = doFilter(token, "qwer/member/signup");
         assert authentication != null;
 
-        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\keras_model.h5").toPath()));
-        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\labels.txt").toPath()));
+        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\keras_model.h5").toPath()));
+        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\labels.txt").toPath()));
 
         accountController.addModel(authentication, model);
         accountController.addLabel(authentication, label);
 
-        flaskController.addLabel(authentication);
-        flaskController.addModel(authentication);
+        Account auth = (Account) authentication.getPrincipal();
+
+        Optional<Account> temp = accountMapper.findUserByUid(auth.getUid());//이렇게 해서 가족중에서 보낸 name를 가진자가 있는지 판단을함
+        Account account=null;
+        if (temp.isPresent()) {
+            account = temp.get();
+        } else {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);//보낸 가족 정보와 일치하는 유저 정보가 없음을 의미를 함
+        }
+
+
+        flaskController.addLabel(account.getUid());
+        flaskController.addModel(account.getUid());
     }
 
     @Test
@@ -246,7 +258,7 @@ class AllInfoProjectApplicationTests {
             imageDTO.setUid(TestData.getInstance().getMember_user_uid());
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = new BufferedReader(
-                    new FileReader("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Spring\\src\\test\\java\\com\\famillink\\face.txt")
+                    new FileReader("C:\\Users\\SSAFY\\Downloads\\face.txt")
             );
             String str;
             while ((str = reader.readLine()) != null) {

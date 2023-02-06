@@ -30,18 +30,17 @@ public class FlaskController {
 
     @PostMapping("/model")
     @ApiOperation(value = "flask로 학습된 model 보내기", notes = "req data:[token]")
-    public ResponseEntity<?> addModel(Authentication authentication) throws Exception {
-        toFlask.send(authentication, "model");
+    public ResponseEntity<?> addModel(Long uid) throws Exception {
+        toFlask.send(uid, "model");
         Map<String, Object> responseResult = new HashMap<>();
         responseResult.put("result", true);
-
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
     @PostMapping("/label")
     @ApiOperation(value = "flask로 학습된 label 보내기", notes = "req data:[token]")
-    public ResponseEntity<?> addLabel(Authentication authentication) throws Exception {
-        toFlask.send(authentication, "label");
+    public ResponseEntity<?> addLabel(Long uid) throws Exception {
+        toFlask.send(uid, "label");
         Map<String, Object> responseResult = new HashMap<>();
         responseResult.put("result", true);
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
