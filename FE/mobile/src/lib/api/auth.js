@@ -2,13 +2,13 @@ import family from "./family";
 
 //로그인
 
-export const login = ({ username, password }) =>
-    family.post('/api/auth/login', { username, password });
+export const login = ({ email, pw }) =>
+    family.post('/api/auth/login', { email, pw });
 
 //회원가입
 
-export const signup = ({ username, password, familyname, phone, email, path }) =>
-    family.post('/api/auth/signup', { username, password, familyname, email, phone, path });
+export const signup = ({ pw, nickname, phone, email, address }) =>
+    family.post('/api/auth/signup', { pw, nickname, phone, email, address });
 
 //로그인 상태 확인
 

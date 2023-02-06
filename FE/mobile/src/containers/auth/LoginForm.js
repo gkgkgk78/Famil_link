@@ -4,6 +4,10 @@ import { changeField, initializeForm, login } from "../../modules/auth";
 import AuthForm from "../../components/auth/AuthForm";
 import { check } from "../../modules/user";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { SET_TOKEN } from "../../store/Auth";
+import { setRefreshToken } from "../../storage/Cookie";
+import { loginUser } from "../../lib/api/users";
 
 const LoginForm = ({ history }) => {
   const navigate = useNavigate();
@@ -15,7 +19,22 @@ const LoginForm = ({ history }) => {
     authError: auth.authError,
     user: user.user,
   }));
-  //인풋 변경 이벤트 핸들러
+
+//   const onValid = async({ email, pw}) => {
+//     setValue("pw","");
+    
+//     const response = await loginUser({ email, pw});
+    
+//   if (response.status) {
+//     setRefreshToken(response.json.refresh_token);
+//     dispatch(SET_TOKEN(response.json.access_token));
+
+//     return navigate("/");
+//   } else {
+//     console.log(response.json);
+//   }
+// }
+//인풋 변경 이벤트 핸들러
   const onChange = (e) => {
     const { value, name } = e.target;
     dispatch(
@@ -31,8 +50,27 @@ const LoginForm = ({ history }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const { username, password } = form;
-    dispatch(login({ username, password }));
+    const { email, pw } = form;
+    dispatch(login({ email, pw }));
+    
+    if (
+      [
+        email,
+        pw,
+      ].includes("")
+    ) {
+      setError("빈 칸을 모두 입력하세요.");
+    }
+
+  //axios 요청
+    axios.post('http://i8a208.p.ssafy.io:3000/account/login', {
+      email: email,
+      pw: pw,
+    }).then((res) => {
+      console.log(res)
+    }).catch((err) => {
+      console.log(err)
+    })
   };
 
   //컴포넌트가 처음 랜더링될 때 form 을 초기화
@@ -41,26 +79,24 @@ const LoginForm = ({ history }) => {
     dispatch(initializeForm("login"));
   }, [dispatch]);
 
-  useEffect(() => {
-    if (authError) {
-      console.log("오류 발생");
-      console.log(authError);
-      setError("로그인 실패");
-      return;
-    }
-    if (auth) {
-      console.log("로그인 성공");
-      dispatch(check());
-    }
-  }, [auth, authError, dispatch]);
+  // useEffect(() => {
+  //   if (authError) {
+  //     console.log("오류 발생");
+  //     console.log(authError);
+  //     setError("로그인 실패");
+  //     return;
+  //   }
+  //   if (auth) {
+  //     console.log("로그인 성공");
+  //     dispatch(check());
+  //   }
+  // }, [auth, authError, dispatch]);
 
   useEffect(() => {
     if (user) {
       navigate("/");
     }
-  }, [history, user]);
-
-
+  }, );
 
   return (
     <AuthForm

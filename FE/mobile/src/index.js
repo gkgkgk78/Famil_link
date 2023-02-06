@@ -9,6 +9,7 @@ import { applyMiddleware, legacy_createStore as createStore } from '@reduxjs/too
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga'
 import rootReducer, {rootSaga} from './modules';
+import { CookiesProvider} from 'react-cookie';
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
@@ -19,11 +20,13 @@ sagaMiddleware.run(rootSaga);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>
+  <CookiesProvider>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </CookiesProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

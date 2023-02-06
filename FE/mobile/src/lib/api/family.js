@@ -1,7 +1,7 @@
 // import axios from "axios";
 
 
-// const API_BASE_URL = "http://i8a208.p.ssafy.io:3000/v2/api-docs?group=V1"
+// const API_BASE_URL = "http://i8a208.p.ssafy.io:3000/"
 // const family = axios.create({
 //   baseURL: API_BASE_URL
 // });

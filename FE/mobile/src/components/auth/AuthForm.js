@@ -91,72 +91,62 @@ const AuthForm = ({ type, form, onChange, onSubmit, error }) => {
       <h3>{wcText}</h3>
       <form onSubmit={onSubmit}>
         <StyledInput
-          autoComplete="username"
-          name="username"
-          placeholder="아이디"
+          autoComplete="email"
+          name="email"
+          placeholder="이메일"
           onChange={onChange}
-          value={form.username}
+          value={form.email}
         />
         <StyledInput
           autoComplete="new-password"
-          name="password"
+          name="pw"
           placeholder="비밀번호"
           type="password"
           onChange={onChange}
-          value={form.password}
+          value={form.pw}
         />
         {type === "signup" && (
           <StyledInput
             autoComplete="new-password"
-            name="passwordConfirm"
+            name="pwConfirm"
             placeholder="비밀번호 확인"
             type="password"
             onChange={onChange}
-            value={form.passwordConfirm}
+            value={form.pwConfirm}
           />
         )}
         {type === "signup" && (
           <StyledInput
-            autoComplete="familyname"
-            name="familyname"
+            autoComplete="nickname"
+            name="nickname"
             placeholder="가족명"
             type="text"
             onChange={onChange}
-            value={form.familyname}
+            value={form.nickname}
           />
         )}
         {type === "signup" && (
           <StyledInput
-            autoComplete="email"
-            name="email"
-            placeholder="이메일"
-            type="email"
-            onChange={onChange}
-            value={form.email}
-          />
-        )}
-        {type === "signup" && (
-          <StyledInput
-            autoComplete="path"
-            name="path"
+            autoComplete="address"
+            name="address"
             placeholder="주소"
-            type="email"
+            type="search"
             onChange={onChange}
-            value={form.path}
+            value={form.address}
           />
         )}
         {type === "signup" && (
           <StyledInput
             autoComplete="phone"
             name="phone"
-            placeholder="핸드폰 번호"
-            type="number"
+            placeholder="대표 전화번호"
+            type="tel"
             onChange={onChange}
             value={form.phone}
           />
         )}
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        <ButtonWithMarginTop cyan fullWidth>
+        <ButtonWithMarginTop orange fullWidth>
           {text}
         </ButtonWithMarginTop>
       </form>
