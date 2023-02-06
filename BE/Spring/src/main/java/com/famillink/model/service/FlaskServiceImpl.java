@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 
 @Service
@@ -32,6 +33,17 @@ public class FlaskServiceImpl implements FlaskService {
     @Override
     public void send_model(Account sender, MultipartFile file) throws Exception {
 
+        Optional<Account> temp = accountMapper.findUserByUid(uid);//이렇게 해서 가족중에서 보낸 name를 가진자가 있는지 판단을함
+        Account account = null;
+        if (temp.isPresent()) {
+            account = temp.get();
+        } else {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);//보낸 가족 정보와 일치하는 유저 정보가 없음을 의미를 함
+        }
+
+
+
+
         Account a1 = accountMapper.findUserByEmail(sender.getEmail()).get();
         String get = fileService.storeModel(file, a1.getUid().toString());//이렇게 해서 저장을 함
 
@@ -41,6 +53,15 @@ public class FlaskServiceImpl implements FlaskService {
     //label을 보내고자 할시에 작동을 함
     @Override
     public void send_label(Account sender, MultipartFile file) throws Exception {
+
+        Optional<Account> temp = accountMapper.findUserByUid(uid);//이렇게 해서 가족중에서 보낸 name를 가진자가 있는지 판단을함
+        Account account = null;
+        if (temp.isPresent()) {
+            account = temp.get();
+        } else {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);//보낸 가족 정보와 일치하는 유저 정보가 없음을 의미를 함
+        }
+
         Account a1 = accountMapper.findUserByEmail(sender.getEmail()).get();
         String get = fileService.storeLabel(file, a1.getUid().toString());//이렇게 해서 저장을 함
 
@@ -49,6 +70,8 @@ public class FlaskServiceImpl implements FlaskService {
     //얼굴 인증을 하고자 할시에 임시로 저장을 하기 위해 진행하는 메서드이다.
     @Override
     public String send_temp(Account sender, MultipartFile file) throws Exception {
+
+
 
         Account a1 = accountMapper.findUserByEmail(sender.getEmail()).get();
         String get = fileService.storeTemp(file, a1.getUid().toString());//이렇게 해서 저장을 함

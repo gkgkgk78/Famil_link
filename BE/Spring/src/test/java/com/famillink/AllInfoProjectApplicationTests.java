@@ -161,8 +161,8 @@ class AllInfoProjectApplicationTests {
         MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\keras_model.h5").toPath()));
         MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\labels.txt").toPath()));
 
-        accountController.addModel(authentication, model);
-        accountController.addLabel(authentication, label);
+        flaskController.addModel(authentication, model);
+        flaskController.addLabel(authentication, label);
 
         Account auth = (Account) authentication.getPrincipal();
 
