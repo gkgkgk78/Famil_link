@@ -35,12 +35,15 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
- * @version 1.1
  * @author cjw.git
  * @author SSAFY
- * @apiNote DB를 초기화 후 해야합니다. 회원가입 후 log창에 logger.info로 표시되면 DB 가서 level을 1로 바꾸어줘야합니다.
+ * @version 1.1
+ * @apiNote
+ * 1. DB를 초기화 후 해야합니다. 회원가입 후 log창에 logger.info로 표시되면 DB 가서 level을 1로 바꾸어줘야합니다.
+ * 2. 맨 밑에 final 변수를 적정하게 변경합니다. (model_path, label_path, face_path)
+ * 3. flask 주소를 localhost로 변경해줍니다.
  *
- * BE 자동으로 코드를 테스트해준다.
+ * @see BE 자동으로 코드를 테스트해준다.
  * 1. 가족계정 가입
  * 2. 가족계정 로그인
  * 3. 모델 저장 (flask를 위해)
@@ -157,8 +160,8 @@ class AllInfoProjectApplicationTests {
         Authentication authentication = doFilter(token, "qwer/member/signup");
         assert authentication != null;
 
-        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\keras_model.h5").toPath()));
-        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\labels.txt").toPath()));
+        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File(model_path).toPath()));
+        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File(label_path).toPath()));
 
         accountController.addModel(authentication, model);
         accountController.addLabel(authentication, label);
@@ -246,7 +249,7 @@ class AllInfoProjectApplicationTests {
             imageDTO.setUid(TestData.getInstance().getMember_user_uid());
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = new BufferedReader(
-                    new FileReader("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Spring\\src\\test\\java\\com\\famillink\\face.txt")
+                    new FileReader(face_path)
             );
             String str;
             while ((str = reader.readLine()) != null) {
@@ -377,4 +380,9 @@ class AllInfoProjectApplicationTests {
     private static final String account_address = "경기도 고양시 덕양구 성사동";
     private static final String member_name = "최진우";
     private static final String member_nickname = "CJW";
+
+    private static final String model_path = "C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\keras_model.h5";
+    private static final String label_path = "C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\labels.txt";
+
+    private static final String face_path = "C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Spring\\src\\test\\java\\com\\famillink\\face.txt";
 }
