@@ -35,22 +35,22 @@ import java.util.Scanner;
 
 /**
  * @author cjw.git
- *
+ * <p>
  * 1. 회원가입
  * 2. 회원로그인
  * 3. 멤버추가
  * 4. 멤버로그인
- *
- *
+ * <p>
+ * <p>
  * 주의사항
  * 1. class 위 @Transactional 가 존재하면 실제 DB에 반영되지 않는다.
  * 2. 로그인 할 때 member_uid가 오기 때문에 멤버를 추가하고 다시 로그인하여 멤버 uid를 받아야한다.
  * 3. @Disabled 로 Test 비활성화 가능하다.
  * 현재 결론
  * 1. 회원가입 돌리고 -> 로그인되고 -> 에러,
- *    회원가입 비활성화하고 로그인 -> 멤버추가 -> 에러,
- *    회원가입 비활성화하고 로그인 -> 멤버로그인 -> 성공
- *    
+ * 회원가입 비활성화하고 로그인 -> 멤버추가 -> 에러,
+ * 회원가입 비활성화하고 로그인 -> 멤버로그인 -> 성공
+ * <p>
  * 과 같은 절차를 따른다.
  * 추후 fix예정
  */
@@ -77,7 +77,7 @@ class TestData {
 @Transactional
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AllInfoProjectApplicationTests {
-    private final Logger logger = LoggerFactory.getLogger(AllInfoProjectApplicationTests.class);
+
 
     @Autowired
     private AccountController accountController;
@@ -104,11 +104,11 @@ class AllInfoProjectApplicationTests {
     @Disabled
     void 회원가입_테스트() throws Exception {
         Account account = new Account();
-        account.setEmail("test@test.com");
-        account.setPw("ss1235789");
-        account.setAddress("경기도 테스트");
-        account.setNickname("테스트 가족");
-        account.setPhone("0101234789");
+        account.setEmail(email);
+        account.setPw(password);
+        account.setAddress(account_address);
+        account.setNickname(account_nickname);
+        account.setPhone(phone);
         try {
             ResponseEntity<?> temp = accountController.signup(account);
             assert temp.getStatusCode().value() == 200;
@@ -124,8 +124,8 @@ class AllInfoProjectApplicationTests {
     @Order(3)
     void 회원로그인_테스트() throws Exception {
         Account account = new Account();
-        account.setEmail("test@test.com");
-        account.setPw("ss1235789");
+        account.setEmail(email);
+        account.setPw(password);
         try {
             ResponseEntity<?> temp = accountController.loginUser(account);
             assert temp.getStatusCode().value() == 200;
@@ -163,7 +163,7 @@ class AllInfoProjectApplicationTests {
             Authentication authentication = doFilter(token, "qwer/member/signup");
             assert authentication != null;
 
-            ResponseEntity<?> temp = memberController.signup("테스트", "TEST", authentication);
+            ResponseEntity<?> temp = memberController.signup(member_name, member_nickname, authentication);
             assert temp.getStatusCode().value() == 200;
         } catch (Exception e) {
             throw e;
@@ -302,8 +302,17 @@ class AllInfoProjectApplicationTests {
                 return authentication;
             }
         } catch (BaseException e) {
-            logger.info(e.getErrorMessage().toString());
+
         }
         return null;
     }
+
+    private final Logger logger = LoggerFactory.getLogger(AllInfoProjectApplicationTests.class);
+    private static final String email = "cjw.git@gmail.com";
+    private static final String password = "ss1235789";
+    private static final String phone = "01046182150";
+    private static final String account_nickname = "진우네 가족";
+    private static final String account_address = "경기도 고양시 덕양구 성사동";
+    private static final String member_name = "최진우";
+    private static final String member_nickname = "CJW";
 }
