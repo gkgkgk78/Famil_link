@@ -4,20 +4,15 @@ package com.famillink.model.service;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.PhotoSenderDTO;
-
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.MemberMapper;
-import jdk.internal.org.objectweb.asm.Handle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.File;
 import java.nio.file.Path;
