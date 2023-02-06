@@ -44,7 +44,6 @@ public class FlaskController {
         toFlask.send(authentication, "label");
         Map<String, Object> responseResult = new HashMap<>();
         responseResult.put("result", true);
-        responseResult.put("msg", "도착한 영상이 없습니다");
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
