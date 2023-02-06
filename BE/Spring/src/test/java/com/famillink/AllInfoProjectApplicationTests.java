@@ -68,7 +68,6 @@ class TestData {
     private String account_refresh_token;
     private Long account_user_uid;
     private Long member_user_uid;
-
     private String member_access_token;
     private String member_refresh_token;
 
