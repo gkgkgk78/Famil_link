@@ -95,11 +95,50 @@ public class FlaskServiceImpl implements FlaskService {
 
         String templast = temppath.toString();
         templast = "./" + templast;
+
+        System.out.println(templast);
+
         // 파일 리소스 리턴
         return fileService.loadAsResource(templast);
 
 
     }
 
+    public String read_label_totext(String email) throws Exception {
+        Account temp = accountMapper.findUserByEmail(email).get();
+
+        Path temppath = Paths.get("upfiles", "Flask", temp.getUid().toString(), "Label", "labels.txt");
+        File f = (temppath).toFile();
+        // 폴더 생성: mkdir()
+        if (!f.exists()) {    // 폴더가 존재하는지 체크, 없다면 생성
+            throw new BaseException(ErrorMessage.NOT_READ_FILE);
+        }
+
+        String templast = temppath.toString();
+        templast = "./" + templast;
+
+        // 파일 리소스 리턴
+        return templast;
+    }
+
+    public String read_model_totext(String email) throws Exception {
+
+        //이제 모델을 불러오면 됨
+
+        //upfiles/Flask/가족uid/Model
+        Account temp = accountMapper.findUserByEmail(email).get();
+
+        Path temppath = Paths.get("upfiles", "Flask", temp.getUid().toString(), "Model", "model.h5");
+        File f = (temppath).toFile();
+        // 폴더 생성: mkdir()
+        if (!f.exists()) {    // 폴더가 존재하는지 체크, 없다면 생성
+            throw new BaseException(ErrorMessage.NOT_READ_FILE);
+        }
+
+        String templast = temppath.toString();
+        templast = "./" + templast;
+        // 파일 리소스 리턴
+        return templast;
+    }
 
 }

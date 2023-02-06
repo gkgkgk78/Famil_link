@@ -11,7 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 public class ImageDTO {
 
-    private Long uid;
+    private Long uid; //
+
+
+
     private List<List<List<Integer>>> json;
 
 

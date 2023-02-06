@@ -9,16 +9,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.famillink.model.domain.user.Account;
 import org.json.simple.JSONObject;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FaceDetectionImpl implements FaceDetection {
-    public String getMemberUidByFace(List<List<List<Integer>>> params) throws Exception {
-
+    public String getMemberUidByFace(List<List<List<Integer>>> params, Authentication authentication) throws Exception {
+        Account account = (Account) authentication.getPrincipal();
         //쭉 변환 하는 과정입니다
         Map<String, Object> map = new HashMap<>();
         map.put("img", params);
+        map.put("uid", account.getUid().toString());
+
 
         //dict형태로 상대방에게 전달하여 flask 서버에서 판단 가능하게 해줍니다
         JSONObject resultObj = new JSONObject(map);
@@ -26,6 +30,7 @@ public class FaceDetectionImpl implements FaceDetection {
 
         //post보내는 부분
         String host_url = "http://flask-deploy:5000";
+//        String host_url = "http://localhost:5000";
         HttpURLConnection conn = null;
         URL url = new URL(host_url);
 
@@ -55,7 +60,7 @@ public class FaceDetectionImpl implements FaceDetection {
             result.append((char) data);
         }
 
-        String resultName = result.toString().replace(",","").replace("\"","");
+        String resultName = result.toString().replace(",", "").replace("\"", "");
 
 
         return resultName;
