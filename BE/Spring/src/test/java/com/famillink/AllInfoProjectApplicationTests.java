@@ -68,6 +68,7 @@ class TestData {
     private String account_refresh_token;
     private Long account_user_uid;
     private Long member_user_uid;
+    private String member_name;
     private String member_access_token;
     private String member_refresh_token;
 
@@ -101,7 +102,7 @@ class AllInfoProjectApplicationTests {
 
     @Test
     @Order(20)
-    @Disabled
+//    @Disabled
     void 회원가입_테스트() throws Exception {
         Account account = new Account();
         account.setEmail(email);
@@ -161,23 +162,16 @@ class AllInfoProjectApplicationTests {
 
         try {
             ResponseEntity<?> temp = accountController.getMembers(authentication);
-            assert temp.getStatusCode().value() == 200;
 
-            Map<String, Object> response = (Map<String, Object>) temp.getBody();
-            if(response.containsKey("members")){
-
-            }
-
-        } catch (Exception e) {
-            throw e;
+        } catch (BaseException be) {
+            assert be.getHttpStatus().value() == 400;
         }
     }
 
     @Test
     @Order(40)
-    @Disabled
+//    @Disabled
     void 멤버_추가() throws Exception {
-        Member member = new Member();
         try {
             String token = TestData.getInstance().getAccount_access_token();
             assert token != null;
@@ -187,6 +181,36 @@ class AllInfoProjectApplicationTests {
 
             ResponseEntity<?> temp = memberController.signup(member_name, member_nickname, authentication);
             assert temp.getStatusCode().value() == 200;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Test
+    @Order(45)
+    void 멤버_조회1() throws Exception {
+        String token = TestData.getInstance().getAccount_access_token();
+        assert token != null;
+
+        Authentication authentication = doFilter(token, "qwer/member/signup");
+        assert authentication != null;
+
+        try {
+            ResponseEntity<?> temp = accountController.getMembers(authentication);
+            assert temp.getStatusCode().value() == 200;
+
+            List<Member> response = (ArrayList<Member>) temp.getBody();
+            assert response.size() > 0;
+
+            assert response.get(0).getUid() != null;
+            assert response.get(0).getName() != null;
+
+            assert response.get(0).getUid() > 0;
+            assert !response.get(0).getName().equals("");
+
+            TestData.getInstance().setMember_user_uid(response.get(0).getUid());
+            TestData.getInstance().setMember_name(response.get(0).getName());
+
         } catch (Exception e) {
             throw e;
         }
@@ -206,7 +230,7 @@ class AllInfoProjectApplicationTests {
             imageDTO.setUid(TestData.getInstance().getMember_user_uid());
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = new BufferedReader(
-                    new FileReader("C:\\Users\\SSAFY\\Documents\\PROJECT\\S08P12A208\\BE\\Spring\\src\\test\\java\\com\\famillink\\face.txt")
+                    new FileReader("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Spring\\src\\test\\java\\com\\famillink\\face.txt")
             );
             String str;
             while ((str = reader.readLine()) != null) {
