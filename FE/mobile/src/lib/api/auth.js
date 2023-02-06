@@ -7,8 +7,8 @@ export const login = ({ username, password }) =>
 
 //회원가입
 
-export const signup = ({ username, password }) =>
-    family.post('/api/auth/signup', { username, password });
+export const signup = ({ username, password, familyname, phone, email, path }) =>
+    family.post('/api/auth/signup', { username, password, familyname, email, phone, path });
 
 //로그인 상태 확인
 

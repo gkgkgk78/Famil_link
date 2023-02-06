@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import palette from "../../lib/styles/palette";
 import Button from "../common/Button";
+import { signup } from "../../modules/auth";
 
 // 회원가입과 로그인 폼
 
@@ -77,11 +78,17 @@ const textMap = {
   signup: "회원가입",
 };
 
+const welcomeText = {
+  login: "안녕하세요 패밀링크입니다.",
+  signup: "패밀링크 회원가입"
+}
+
 const AuthForm = ({ type, form, onChange, onSubmit, error }) => {
   const text = textMap[type];
+  const wcText = welcomeText[type];
   return (
     <StyledAuthForm>
-      <h3>{text}</h3>
+      <h3>{wcText}</h3>
       <form onSubmit={onSubmit}>
         <StyledInput
           autoComplete="username"

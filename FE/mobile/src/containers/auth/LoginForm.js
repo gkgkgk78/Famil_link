@@ -59,6 +59,9 @@ const LoginForm = ({ history }) => {
       navigate("/");
     }
   }, [history, user]);
+
+
+
   return (
     <AuthForm
       type="login"

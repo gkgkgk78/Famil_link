@@ -101,7 +101,6 @@ const SignupForm = ({ history }) => {
     if (user) {
       console.log("check API 성공");
       console.log(user);
-
       navigate("/");
     }
   }, [history, user]);
