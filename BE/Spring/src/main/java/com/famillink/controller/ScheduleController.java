@@ -1,6 +1,8 @@
 package com.famillink.controller;
 
 import com.famillink.annotation.ValidationGroups;
+import com.famillink.exception.BaseException;
+import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.domain.user.Schedule;
@@ -83,8 +85,13 @@ public class ScheduleController {
 
         Member member = (Member) authentication.getPrincipal();
 
-        //TODO: schedule에 member uid가 안 담겨 오려나? 담겨올수도 있겠다 흠 위처럼 굳이 권한에서 member uid를 뽑아내지 않아도 되는지 갑자기 헷갈림..
         Long memberUid = member.getUid();
+
+        //변경 사항이 없는데 요청이 올 경우
+        Schedule compareSchedule = scheduleService.findSchedule(uid);
+        if (schedule.getContent().equals(compareSchedule.getContent()) && schedule.getDate().toString().equals(compareSchedule.getDate().toString())){
+            return ResponseEntity.status(HttpStatus.OK).body("수정 사항이 없습니다");
+        }
 
         //test
 //        Long memberUid = 7L;
@@ -106,6 +113,10 @@ public class ScheduleController {
 
         //test
 //        Long memberUid = 7L;
+
+        if(scheduleService.findSchedule(uid) == null){
+            throw new BaseException(ErrorMessage.NOT_CORRECT_INFORMATION);
+        }
 
         scheduleService.removeSchedule(uid, memberUid);
 
