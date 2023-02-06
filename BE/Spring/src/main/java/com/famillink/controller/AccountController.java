@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -27,12 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Api("Account Controller")
 @RequiredArgsConstructor
@@ -78,7 +73,7 @@ public class AccountController {
 
     @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody @Validated(ValidationGroups.signup.class) Account account) throws Exception {
+    public ResponseEntity<?> loginUser(@RequestBody @Validated(ValidationGroups.login.class) Account account) throws Exception {
 
         Map<String, Object> token = accountService.login(account); //access token, refresh token
 
@@ -136,7 +131,7 @@ public class AccountController {
 
     @ApiOperation(value = "인증 이메일 재발송", notes = "인증 메일을 재발송한다.")
     @PostMapping("/mail")
-    public ResponseEntity<?> resendCheckMail(@RequestBody Account loginAccount) throws Exception {
+    public ResponseEntity<?> resendCheckMail(@RequestBody @Validated(ValidationGroups.mail.class) Account loginAccount) throws Exception {
         accountService.resendCheckMail(loginAccount);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
