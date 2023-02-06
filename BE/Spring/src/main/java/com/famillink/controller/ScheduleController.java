@@ -61,8 +61,8 @@ public class ScheduleController {
 
         Member member = (Member) authentication.getPrincipal();
 
-        //TODO; user_uid String으로 설정한 이유가 있는지 물어보고 Long으로 수정되면 바꾸깅
-        Long accountUid = Long.parseLong(member.getUser_uid());
+
+        Long accountUid = member.getUser_uid();
         Long memberUid = member.getUid();
 
         //Test
