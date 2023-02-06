@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import mqtt from "precompiled-mqtt";
 import axios from "axios"
-import { setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setValid, setVideos, startRecording, stopRecording } from '../modules/valid';
+import { setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setToMember, setValid, setVideos, startRecording, stopRecording } from '../modules/valid';
 import {useSelector, useDispatch } from "react-redux";
 
 
@@ -26,7 +26,9 @@ function MQTT() {
   const saveMe = (me) => dispatch(setMe(me)) 
   const saveMemberToken = (membertoken) => dispatch(setMemberAccessToken(membertoken))
   const saveMemberRefreshToken = (memreftoken) => dispatch(setMemberRefreshToken(memreftoken))
+  const saveToMember = (tomember) => dispatch(setToMember(tomember))
 
+  const [resVideos, setResVideos] = useState([]);
 
   // mqtt 연결 준비
   const URL = "ws://localhost:9001";
@@ -162,18 +164,21 @@ function MQTT() {
       console.log(`나는 ${me}`)
       axios({
         method: "get",
-        url: `http://i8a208.p.ssafy.io:3000/movie/videoList/${me}`,
+        url: `http://i8a208.p.ssafy.io:3000/movie/video-list/${me}`,
         headers: {
           "Authorization": `Bearer ${memberAccessToken}`
         }
       })
       .then ((res) => {
-        console.log(res)
-        const response = res
-        setVideoList((response) => {
-          return [...storedVideos,response.videos]
+        const objectList = res.data["movieList"]
+        for (let movie of objectList) {
+          setResVideos(() => {
+            return [...resVideos, movie["uid"]]
+          })
+        }
+        console.log(resVideos)  
+        setVideoList(resVideos)
         })
-      })
       .catch ((err) => {
         console.log(err)
         console.log("동영상이 없어")
@@ -188,21 +193,21 @@ function MQTT() {
     } else {
       if (recording === false) {
         // 녹화가 끝났으면 녹화가 끝났다는 메세지를 보냄
-        client.publish("/record/", 0)
+        client.publish("/local/record/", "0")
       } else {
         // 녹화가 시작되었으면 데이터와 신호를 쏴줌
         const publishData = {
           "from" : me,
           "to" : toMember,
-          "accessToken" : memberAccessToken,
+          "token" : memberAccessToken,
         }
         const jsonData = JSON.stringify(publishData)
         console.log(jsonData)
         if (publishData["to"]) {
-          // 신호
-          client.publish("record", 1)
-          // 데이터
           client.publish("/local/token/", jsonData)
+
+          client.publish("/local/record/", "1")
+          saveToMember(null)
         } else {
           console.log("받으실 분이 없어요")
         }

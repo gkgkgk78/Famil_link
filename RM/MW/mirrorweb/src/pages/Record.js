@@ -28,20 +28,22 @@ const Record = () => {
             console.log("받으시는 분 이름을 말씀해주세요")
         }, 1000)
     },[])
-    
+
     // STT를 통해 받는 멤버가 바뀌었을 때(설정되었을 때)
     useEffect(() => {
         if (!toMounted.current) {
             toMounted.current = true
         } else {
+            if (to) {
+                startRecord();
+                console.log(` to useEffect 안에서 ${recording}`)
+                setInterval(() => {
+                    setTimer( (timer) => {
+                            return timer+1
+                    })
+                }, 1000)
+            }
             // 녹화 시작
-            startRecord();
-            console.log(` to useEffect 안에서 ${recording}`)
-            setInterval(() => {
-                setTimer( (timer) => {
-                        return timer+1
-                })
-            }, 1000)
         }
     }, [to])
 

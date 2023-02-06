@@ -31,8 +31,8 @@ export const setVideos = videoList => ({type: SET_VIDEOS, videoList})
 // 초기 상태
 const initialState = {
     me: null,
-    familyAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTY0NTc2OCwiZXhwIjoxMDAxNjc1NjQ1NzY4fQ.QB9Fgaa4VZM5antpGZcdaqBSxlpWLH_nIMRn9UncZ_g",
-    familyRefreshToken: "",
+    familyAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTY2NDUwNywiZXhwIjoxMDAxNjc1NjY0NTA3fQ.at0tI3D_G1fqGhAckLTpFx9qfZmPZo9FC-VwH_7uhYI",
+    familyRefreshToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTY2NDUwOCwiZXhwIjoxNjg1NjY0NTA4fQ.9lRH2t0orgsy3IaLUrOi08Ysz1Ke6-RRNMNWwcTvJaI",
     memberAccessToken: "",
     memberRefreshToken: "",
     validation: false,
