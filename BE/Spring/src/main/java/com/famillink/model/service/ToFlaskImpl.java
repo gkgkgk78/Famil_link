@@ -4,7 +4,6 @@ import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.user.Account;
 import lombok.RequiredArgsConstructor;
-
 import okhttp3.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -22,34 +21,27 @@ public class ToFlaskImpl implements ToFlask {
     private final FlaskService flaskService;
 
     @Override
-    public void send(Authentication authentication, String path) throws IOException {
+    public void send(Authentication authentication, String path) throws Exception {
 
         Account account = (Account) authentication.getPrincipal();
         String pa = null;
-        MediaType MEDIA_TYPE_PNG =null;
-        String filename="";
-        try {
-            if (path.equals("label")) {
-                pa = flaskService.read_label_totext(account.getEmail());
-                MEDIA_TYPE_PNG = MediaType.parse("text/txt");
-                filename="labels.txt";
-            } else if (path.equals("model")) {
-                pa = flaskService.read_model_totext(account.getEmail());
-                MEDIA_TYPE_PNG = MediaType.parse("text/h5");
-                filename="model.h5";
-            }
+        MediaType MEDIA_TYPE_PNG = null;
+        String filename = "";
 
-        } catch (Exception e) {
-            throw new BaseException(ErrorMessage.NOT_CORRECT_INFORMATION);
+        if (path.equals("label")) {
+            pa = flaskService.read_label_totext(account.getEmail());
+            MEDIA_TYPE_PNG = MediaType.parse("text/txt");
+            filename = "labels.txt";
+        } else if (path.equals("model")) {
+            pa = flaskService.read_model_totext(account.getEmail());
+            MEDIA_TYPE_PNG = MediaType.parse("text/h5");
+            filename = "model.h5";
         }
-
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("title", account.getUid().toString())
-                .addFormDataPart("file", filename
-                        ,
-                        RequestBody.create(MEDIA_TYPE_PNG, new File(pa)))
+                .addFormDataPart("file", filename, RequestBody.create(MEDIA_TYPE_PNG, new File(pa)))
                 .build();
         //http://localhost:5555/
         Request request = new Request.Builder()
