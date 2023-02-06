@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -99,14 +100,10 @@ public class AccountController {
     }
 
     @ApiOperation(value = "멤버 리스트 반환", notes = "로그인 후 요청 시, 해당 account에 속해 있는 멤버 리스트를 반환하는 컨트롤러 입니다")
-    @GetMapping("/{account_uid}")
-    public ResponseEntity<?> getMembers(Authentication authentication, @PathVariable Long account_uid) throws Exception {
+    @GetMapping("/member-list")
+    public ResponseEntity<?> getMembers(Authentication authentication) throws Exception {
 
         Account account = (Account) authentication.getPrincipal();
-
-        if(account.getUid() != account_uid){
-            throw new BaseException(ErrorMessage.NOT_USER_INFO_MATCH);
-        }
 
         List<Member> members = accountService.allMembers(account);
 
