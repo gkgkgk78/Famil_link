@@ -9,6 +9,7 @@ import LoginMirror from './pages/loginMirror';
 import FaceValid from './pages/FaceValid';
 import PlayVideo from './pages/PlayVideo';
 import Record from './pages/Record';
+import TextToSpeech from './components/TTS';
 
 import { Box } from '@mui/system';
 import { Route, Routes } from 'react-router-dom';
@@ -39,6 +40,7 @@ function App() {
         <Route path="/facevalid" element={ <FaceValid /> } />
         <Route path="/playvideo" element={ <PlayVideo /> } />
         <Route path="/record" element={<Record/>} />
+        <Route path="/texttospeech" element={<TextToSpeech/>} />
       </Routes>
       </section>
 
