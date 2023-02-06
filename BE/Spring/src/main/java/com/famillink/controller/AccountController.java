@@ -85,8 +85,6 @@ public class AccountController {
 
         HttpStatus sts = HttpStatus.BAD_REQUEST;
 
-        List<Member> members = accountService.allMembers(account);
-
         if (token != null) {
             sts = HttpStatus.OK;
             responseResult.put("result", true);
@@ -95,10 +93,28 @@ public class AccountController {
             responseResult.put("refresh-token", token.get("refresh-token"));
             responseResult.put("uid", token.get("uid"));
             responseResult.put("nickname", token.get("nickname"));
-            responseResult.put("members", members);
         }
 
         return ResponseEntity.status(sts).body(responseResult);
+    }
+
+    @ApiOperation(value = "멤버 리스트 반환", notes = "로그인 후 요청 시, 해당 account에 속해 있는 멤버 리스트를 반환하는 컨트롤러 입니다")
+    @GetMapping("/{account_uid}")
+    public ResponseEntity<?> getMembers(Authentication authentication, @PathVariable Long account_uid) throws Exception {
+
+        Account account = (Account) authentication.getPrincipal();
+
+        if(account.getUid() != account_uid){
+            throw new BaseException(ErrorMessage.NOT_USER_INFO_MATCH);
+        }
+
+        List<Member> members = accountService.allMembers(account);
+
+        if (members.isEmpty()){
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(members);
     }
 
 
