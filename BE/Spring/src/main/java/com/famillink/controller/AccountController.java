@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -27,12 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Api("Account Controller")
 @RequiredArgsConstructor

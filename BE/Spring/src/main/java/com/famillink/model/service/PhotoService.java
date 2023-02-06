@@ -1,17 +1,9 @@
 package com.famillink.model.service;
 
-import com.famillink.exception.BaseException;
-import com.famillink.exception.ErrorMessage;
-import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.param.PhotoSenderDTO;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
-import java.io.File;
-import java.util.List;
 
 public interface PhotoService {
 
