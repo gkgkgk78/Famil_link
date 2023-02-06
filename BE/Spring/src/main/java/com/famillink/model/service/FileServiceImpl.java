@@ -22,6 +22,7 @@ public class FileServiceImpl implements FileService {
     @Value("upfiles")
     private String moviePath;
 
+
     @Override
     public void init() {
         try {
@@ -58,6 +59,7 @@ public class FileServiceImpl implements FileService {
                     }
                 }
 
+
                 Path target = (Path) Paths.get("family", user, u1.toString() + file.getOriginalFilename());
                 Files.copy(inputStream, root.resolve(target), StandardCopyOption.REPLACE_EXISTING);
                 return root.resolve(target).toString();
@@ -83,6 +85,50 @@ public class FileServiceImpl implements FileService {
         } catch (FileNotFoundException e) {
             throw new BaseException(ErrorMessage.NOT_READ_FILE);
         }
+    }
+
+    @Override
+    public String saveRegistVideo(MultipartFile files, String name, Long account_uid) throws IOException {
+        if (files.isEmpty()) {
+            throw new BaseException(ErrorMessage.NOT_FOUND_FILE);
+        }
+
+        //String uploadPath = servletContext.getRealPath("/file");
+
+        //test
+        //File upload = new File("C:\\registFace");
+
+        Path root = Paths.get(moviePath);
+
+        if (!Files.exists(root)) {
+            init();
+        }
+
+
+        //test
+        //File upload = root.resolve(Paths.get("C:\\", "face")).toFile();
+
+        String accountUid = String.valueOf(account_uid);
+
+        File upload = root.resolve("faceRegist").toFile();
+
+        if (!upload.exists()) upload.mkdir();
+
+        String fileName = accountUid + "_" + name + "_" + files.getOriginalFilename();
+
+        File target = new File(upload, fileName);
+
+        InputStream inputStream = files.getInputStream();
+
+        if (!files.isEmpty()) {
+	        // 파일 저장
+            Path path = (Path) Paths.get("faceRegist", fileName);
+            Files.copy(inputStream, root.resolve(path), StandardCopyOption.REPLACE_EXISTING);
+
+        }
+
+        return target.toString();
+
     }
 
 

@@ -29,13 +29,18 @@ public class ScheduleController {
     //account login 이후 조회 이루어짐
     @ApiOperation(value = "오늘 일정 조회", notes = "req_data : [ date(조회를 원하는 날짜) ] \n 현재는 로그인 이후, 멤버등록 전 조회할 것으로 예상하여 권한을 Account로 받아 이용합니다")
     @GetMapping("/{date}")
-    public ResponseEntity<?> getTodaySchedule(Authentication authentication, @PathVariable Date date) {
+    public ResponseEntity<?> getTodaySchedule(Authentication authentication, @PathVariable String date){
 
         Account account = (Account) authentication.getPrincipal();
 
-        Long accountUid = account.getUid();
+        Long account_uid = account.getUid();
 
-        List<Schedule> scheduleList = scheduleService.findScheduleListByDate(accountUid, date);
+        //test
+//        Long account_uid = 4L;
+
+        Date date1 = Date.valueOf(date);
+
+        List<Schedule> scheduleList = scheduleService.findScheduleListByDate(account_uid, date1);
 
         if (scheduleList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body("등록된 일정이 없습니다");
@@ -56,9 +61,13 @@ public class ScheduleController {
 
         Member member = (Member) authentication.getPrincipal();
 
-        //TODO; user_uid String으로 설정한 이유가 있는지 물어보고 Long으로 수정되면 바꾸깅
-        Long accountUid = (member.getUser_uid());
+
+        Long accountUid = member.getUser_uid();
         Long memberUid = member.getUid();
+
+        //Test
+//        Long accountUid = schedule.getAccount_uid();
+//        Long memberUid = schedule.getMember_uid();
 
         scheduleService.addSchedule(accountUid, memberUid, schedule);
 
@@ -75,6 +84,9 @@ public class ScheduleController {
         //TODO: schedule에 member uid가 안 담겨 오려나? 담겨올수도 있겠다 흠 위처럼 굳이 권한에서 member uid를 뽑아내지 않아도 되는지 갑자기 헷갈림..
         Long memberUid = member.getUid();
 
+        //test
+//        Long memberUid = 7L;
+
         scheduleService.modifySchedule(uid, memberUid, schedule);
 
         return ResponseEntity.status(HttpStatus.OK).body("일정이 수정되었습니다");
@@ -89,6 +101,9 @@ public class ScheduleController {
         Member member = (Member) authentication.getPrincipal();
 
         Long memberUid = member.getUid();
+
+        //test
+//        Long memberUid = 7L;
 
         scheduleService.removeSchedule(uid, memberUid);
 

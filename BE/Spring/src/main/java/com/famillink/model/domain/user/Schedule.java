@@ -13,11 +13,11 @@ public class Schedule {
 
     private long uid; //일정 uid
 
-    private long accountUid; //가족 uid
+    private long account_uid; //가족 uid
 
-    private long memberUid; //등록자 uid
+    private long member_uid; //등록자 uid
 
-    private String context; //일정 내용
+    private String content; //일정 내용
 
     private Date date; //(일단은 시간 없는) 날짜
 
