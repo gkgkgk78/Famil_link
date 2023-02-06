@@ -74,7 +74,7 @@ class TestData {
 }
 
 @SpringBootTest
-@Transactional
+//@Transactional
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AllInfoProjectApplicationTests {
 
@@ -91,7 +91,7 @@ class AllInfoProjectApplicationTests {
     private JwtTokenProvider jwtTokenProvider;
 
     @Test
-    @Order(1)
+    @Order(10)
     void contextLoads() {
         assert accountController != null;
         assert memberController != null;
@@ -100,7 +100,7 @@ class AllInfoProjectApplicationTests {
     }
 
     @Test
-    @Order(2)
+    @Order(20)
     @Disabled
     void 회원가입_테스트() throws Exception {
         Account account = new Account();
@@ -115,13 +115,16 @@ class AllInfoProjectApplicationTests {
             Map<String, Object> result = (Map<String, Object>) temp.getBody();
             assert (boolean) result.get("result");
             logger.debug(result.get("msg").toString());
+
+            logger.info("10초 이내 회원인증을 완료해주세요.");
+            Thread.sleep(10000);
         } catch (Exception e) {
             throw e;
         }
     }
 
     @Test
-    @Order(3)
+    @Order(30)
     void 회원로그인_테스트() throws Exception {
         Account account = new Account();
         account.setEmail(email);
@@ -140,11 +143,7 @@ class AllInfoProjectApplicationTests {
             TestData.getInstance().setAccount_user_uid(Long.parseLong(result.get("uid").toString()));
             TestData.getInstance().setAccount_access_token(result.get("access-token").toString());
             TestData.getInstance().setAccount_access_token(result.get("refresh-token").toString());
-            if (result.containsKey("members")) {
-                long member_uid = ((List<Member>) result.get("members")).get(0).getUid();
-                assert member_uid > 0;
-                TestData.getInstance().setMember_user_uid(member_uid);
-            }
+
             logger.debug(result.get("msg").toString());
         } catch (Exception e) {
             throw e;
@@ -152,7 +151,30 @@ class AllInfoProjectApplicationTests {
     }
 
     @Test
-    @Order(4)
+    @Order(35)
+    void 멤버_조회() throws Exception {
+        String token = TestData.getInstance().getAccount_access_token();
+        assert token != null;
+
+        Authentication authentication = doFilter(token, "qwer/member/signup");
+        assert authentication != null;
+
+        try {
+            ResponseEntity<?> temp = accountController.getMembers(authentication);
+            assert temp.getStatusCode().value() == 200;
+
+            Map<String, Object> response = (Map<String, Object>) temp.getBody();
+            if(response.containsKey("members")){
+
+            }
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Test
+    @Order(40)
     @Disabled
     void 멤버_추가() throws Exception {
         Member member = new Member();
@@ -171,7 +193,7 @@ class AllInfoProjectApplicationTests {
     }
 
     @Test
-    @Order(5)
+    @Order(50)
     void 멤버로그인_테스트() throws Exception {
         ImageDTO imageDTO = new ImageDTO();
         try {
