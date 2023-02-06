@@ -23,10 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Api("Member Controller")
 @RequiredArgsConstructor
@@ -180,7 +180,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
-    @GetMapping("/videoList/{member_to}")
+    @GetMapping("/video-list/{member_to}")
     @ApiOperation(value = "동영상 리스트 전송", notes = "이 컨트롤러는 최신 영상 5개를 담은 동영상 리스트를 전송합니다.")
     public ResponseEntity<?> sendList(@PathVariable("member_to") Long member_to) throws Exception {
 
@@ -193,14 +193,26 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.OK).body(responseResult);
         }
 
-        responseResult.put("movieList", movieList);
+        responseResult.put("movie-list", movieList);
         responseResult.put("msg", "최근 수신된 영상 리스트입니다");
 
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
 
-
-
+        //TODO: 파일 다운로드 test
+//    @PostMapping( "/regist-member/{name}")
+//    @ApiOperation(value = "멤버 등록 영상입니다", notes = "이 컨트롤러는 멤버 등록을 위한 영상을 받는 컨트롤러입니다.")
+//    public ResponseEntity<?> registMember(Authentication authentication, @PathVariable String name, @RequestPart(value = "file", required = true) MultipartFile file) throws FileNotFoundException {
+//
+//        Account account = (Account) authentication.getPrincipal();
+//
+//
+//        String date = LocalDate.now().format((DateTimeFormatter.ofPattern("yyyyMMdd"));
+//        String videoName = date + "_" + account.getUsername() + "_" + name;
+//
+//
+//
+//    }
 
 }
