@@ -33,6 +33,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * @author cjw.git
+ *
+ * 1. 회원가입
+ * 2. 회원로그인
+ * 3. 멤버추가
+ * 4. 멤버로그인
+ *
+ *
+ * 주의사항
+ * 1. class 위 @Transactional 가 존재하면 실제 DB에 반영되지 않는다.
+ * 2. 로그인 할 때 member_uid가 오기 때문에 멤버를 추가하고 다시 로그인하여 멤버 uid를 받아야한다.
+ * 3. @Disabled 로 Test 비활성화 가능하다.
+ * 현재 결론
+ * 1. 회원가입 돌리고 -> 로그인되고 -> 에러,
+ *    회원가입 비활성화하고 로그인 -> 멤버추가 -> 에러,
+ *    회원가입 비활성화하고 로그인 -> 멤버로그인 -> 성공
+ *    
+ * 과 같은 절차를 따른다.
+ * 추후 fix예정
+ */
 @Data
 class TestData {
     private static TestData instance;
