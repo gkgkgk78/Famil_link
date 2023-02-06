@@ -28,32 +28,15 @@ const Record = () => {
             console.log("받으시는 분 이름을 말씀해주세요")
         }, 1000)
     },[])
-
-    // 현재 recording에 따라 
-    useEffect(() => {
-        if (!navMounted.current) {
-            navMounted.current = true;
-        } else {
-            if (recording === false) {
-                console.log(to)
-                console.log("녹화가 종료되었습니다. 메인 페이지로 돌아갑니다.")
-                setTimeout(() => {
-                    Navigate("/")
-                }, 3000)
-            } else {
-                console.log("녹화가 시작됩니다.")
-            }
-        }
-
-    },[recording])
-
+    
     // STT를 통해 받는 멤버가 바뀌었을 때(설정되었을 때)
     useEffect(() => {
         if (!toMounted.current) {
             toMounted.current = true
         } else {
             // 녹화 시작
-            startRecord()
+            startRecord();
+            console.log(` to useEffect 안에서 ${recording}`)
             setInterval(() => {
                 setTimer( (timer) => {
                         return timer+1
@@ -62,9 +45,31 @@ const Record = () => {
         }
     }, [to])
 
+    // 현재 recording에 따라 
+    useEffect(() => {
+        if (!navMounted.current) {
+            navMounted.current = true;
+        } else {
+            if (recording === false) {
+                console.log("녹화가 종료되었습니다. 메인 페이지로 돌아갑니다.")
+                setTimeout(() => {
+                    Navigate("/")
+                }, 3000)
+            } else if (recording === true) { 
+                console.log("녹화가 시작됩니다.")
+                console.log(`recording useEffect 안에서 ${recording}`)
+                setTimeout(() => {
+                    stopRecord()
+                },30000)
+            }
+        }
+
+    },[recording])
+
+
     return ( 
         <div>
-            <p>00:{timer < 10 ? `0${timer}` : 10<=timer<30 ? timer : 30}</p>
+            <p>00:{timer < 10 ? `0${timer}` : 10<=timer<=30 ? `${timer}` : "30"}</p>
             <button onClick={startRecord}>임시 시작버튼</button>
             <button onClick={stopRecord}>임시 중단버튼</button>
         </div>

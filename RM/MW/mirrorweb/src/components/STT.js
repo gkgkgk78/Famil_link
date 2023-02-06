@@ -58,6 +58,7 @@ const STT = () => {
                       }
                 // 현재 녹화 페이지이면
                   } else if (location.pathname === "/record") {
+                    console.log(text)
                     if (memberInf) {
                       // 음성 인식한 텍스트가 멤버 중에 있으면
                       if (Object.keys(memberInf).includes(text)) {

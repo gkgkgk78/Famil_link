@@ -1,5 +1,9 @@
 // 액션 타입
-const SET_ACCESSTOKEN = "valid/SET_ACCESSTOKEN"
+const SET_FAMILYACCESSTOKEN = "valid/SET_FAMILYACCESSTOKEN"
+const SET_FAMILYREFRSCHTOKEN = "valid/SET_FAMILYREFRSCHTOKEN"
+const SET_MEMBERACCESSTOKEN = "valid/SET_MEMBERACCESSTOKEN"
+const SET_MEMBERREFRSCHTOKEN = "valid/SET_MEMBERREFRSCHTOKEN"
+
 const CHANGE_VALID = "valid/CHANGE_VALID"
 const SET_ME = "valid/SET_ME"
 const SET_INFO = "valid/SET_INFO"
@@ -10,7 +14,11 @@ const SET_VIDEOS = "valid/SET_VIDEOS"
 
 
 // 액션 생성 함수
-export const setAccessToken = (token) => ({type:SET_ACCESSTOKEN, token})
+export const setFamilyAccessToken = (familytoken) => ({type:SET_FAMILYACCESSTOKEN, familytoken})
+export const setFamilyRefreshToken = (familyrefreshtoken) => ({type:SET_FAMILYREFRSCHTOKEN, familyrefreshtoken})
+export const setMemberAccessToken = (membertoken) => ({type:SET_MEMBERACCESSTOKEN, membertoken})
+export const setMemberRefreshToken = (memberrefreshtoken) => ({type:SET_FAMILYREFRSCHTOKEN, memberrefreshtoken})
+
 export const setValid = () => ({type:CHANGE_VALID})
 export const setMe = data => ({type:SET_ME, data})
 export const setInfo = info => ({type: SET_INFO, info})
@@ -23,12 +31,14 @@ export const setVideos = videoList => ({type: SET_VIDEOS, videoList})
 // 초기 상태
 const initialState = {
     me: null,
-    accessToken: null,
+    familyAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTY0NTc2OCwiZXhwIjoxMDAxNjc1NjQ1NzY4fQ.QB9Fgaa4VZM5antpGZcdaqBSxlpWLH_nIMRn9UncZ_g",
+    familyRefreshToken: "",
+    memberAccessToken: "",
+    memberRefreshToken: "",
     validation: false,
     isRecording: false,
     memberInfo: {
-        "최진우": 1,
-        "정우진": 2
+        "최진우": 4
     },
     toMember: null,
     videos: []
@@ -38,10 +48,25 @@ const initialState = {
 // 리듀서
 export default function valid(state = initialState, action) {
     switch (action.type) {
-        case SET_ACCESSTOKEN:
+        case SET_FAMILYACCESSTOKEN:
             return {
                 ...state,
-                accessToken: action.token
+                familyAccessToken: action.familytoken
+            }
+        case SET_FAMILYREFRSCHTOKEN:
+            return {
+                ...state,
+                familyRefreshToken: action.familyrefreshtoken
+            }
+        case SET_MEMBERACCESSTOKEN:
+            return {
+                ...state,
+                memberAccessToken: action.membertoken
+            }
+        case SET_MEMBERREFRSCHTOKEN:
+            return {
+                ...state,
+                memberRefreshToken: action.memberrefreshtoken
             }
         case CHANGE_VALID:
             return {
