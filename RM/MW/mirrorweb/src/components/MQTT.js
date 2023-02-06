@@ -173,19 +173,24 @@ function MQTT() {
         setVideoList((response) => {
           return [...storedVideos,response.videos]
         })
-        })
-        .catch ((err) => {
-          console.log(err)
-          console.log("동영상이 없어")
-        })
+      })
+      .catch ((err) => {
+        console.log(err)
+        console.log("동영상이 없어")
+      })
     }
   }, [memberAccessToken])
 
+  // 녹화 상태가 변경될 때 브로커로 메세지 보냄
   useEffect(() => {
     if (!recordMounted) {
       recordMounted.current = true
     } else {
       if (recording === false) {
+        // 녹화가 끝났으면 녹화가 끝났다는 메세지를 보냄
+        client.publish("/record/", 0)
+      } else {
+        // 녹화가 시작되었으면 데이터와 신호를 쏴줌
         const publishData = {
           "from" : me,
           "to" : toMember,
@@ -194,10 +199,15 @@ function MQTT() {
         const jsonData = JSON.stringify(publishData)
         console.log(jsonData)
         if (publishData["to"]) {
+          // 신호
+          client.publish("record", 1)
+          // 데이터
           client.publish("/local/token/", jsonData)
+        } else {
+          console.log("받으실 분이 없어요")
         }
       }
-      }
+    }
     },[recording])
 }
 
