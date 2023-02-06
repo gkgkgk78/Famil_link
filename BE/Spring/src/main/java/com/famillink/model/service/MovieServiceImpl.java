@@ -4,20 +4,15 @@ import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.MovieDTO;
 import com.famillink.model.domain.param.MovieSenderDTO;
-import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.MemberMapper;
 import com.famillink.model.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
