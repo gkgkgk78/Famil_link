@@ -77,10 +77,6 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody ImageDTO imageDTO, final Authentication authentication) throws Exception {
 
-        //flask에 학습된 모델과 labels를 보내는 과정임
-        toFlask.send(authentication, "model");
-        toFlask.send(authentication, "label");
-
 
         //안면인식으로 추출한 멤버
         String member_name = fservice.getMemberUidByFace(imageDTO.getJson(), authentication);
@@ -207,7 +203,7 @@ public class MemberController {
     }
 
 
-        //TODO: 파일 다운로드 test
+    //TODO: 파일 다운로드 test
 //    @PostMapping( "/regist-member/{name}")
 //    @ApiOperation(value = "멤버 등록 영상입니다", notes = "이 컨트롤러는 멤버 등록을 위한 영상을 받는 컨트롤러입니다.")
 //    public ResponseEntity<?> registMember(Authentication authentication, @PathVariable String name, @RequestPart(value = "file", required = true) MultipartFile file) throws FileNotFoundException {
