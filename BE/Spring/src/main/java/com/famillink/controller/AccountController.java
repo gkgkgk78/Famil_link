@@ -48,7 +48,7 @@ public class AccountController {
 
     @ApiOperation(value = "회원가입", notes = "req_data : [pw, email, name]")
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody Account account) throws Exception {
+    public ResponseEntity<?> signup(@RequestBody @Validated(ValidationGroups.signup.class) Account account) throws Exception {
         Account savedAccount = accountService.signup(account);
 
         //비동기 처리
@@ -77,7 +77,7 @@ public class AccountController {
 
     @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody Account account) throws Exception {
+    public ResponseEntity<?> loginUser(@RequestBody @Validated(ValidationGroups.signup.class) Account account) throws Exception {
 
         Map<String, Object> token = accountService.login(account); //access token, refresh token
 
