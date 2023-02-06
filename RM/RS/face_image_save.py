@@ -5,7 +5,7 @@ import mediapipe as mp
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 
-camera = cv2.VideoCapture(1)
+camera = cv2.VideoCapture(0)
 idx = 0
 while True:
     ret, image = camera.read()

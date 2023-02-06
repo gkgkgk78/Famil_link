@@ -319,7 +319,7 @@ def opencv_publish():
 
 
 print("1")
-camera = cv2.VideoCapture(1)
+camera = cv2.VideoCapture(0)
 print("2")
 fourcc = cv2.VideoWriter_fourcc(*"MJPG")  # 인코딩 포맷 문자
 camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # 1280
