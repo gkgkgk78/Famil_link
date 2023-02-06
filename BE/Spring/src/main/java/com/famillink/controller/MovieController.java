@@ -2,6 +2,8 @@ package com.famillink.controller;
 
 import com.famillink.model.domain.param.MovieDTO;
 import com.famillink.model.domain.param.MovieSenderDTO;
+import com.famillink.model.domain.user.Account;
+import com.famillink.model.service.FileService;
 import com.famillink.model.service.MovieService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +30,8 @@ public class MovieController {
 
     private final MovieService movieService;
 
+    private final FileService fileService;
+
     @PostMapping("")
     @ApiOperation(value = "동영상 보내기", notes = "동영상을 전송하는 컨트롤러입니다.")
     public ResponseEntity<?> addMovie(MovieSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
@@ -36,7 +41,7 @@ public class MovieController {
 
     @GetMapping("/{movie_uid}")
     @ApiOperation(value = "동영상 보기", notes = "동영상을 다운받는 컨트롤러입니다.")
-    public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid,Authentication authentication) throws Exception {
+    public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid, Authentication authentication) throws Exception {
         final HttpHeaders responseHeaders = new HttpHeaders();
 
         // TODO: Service단에서 http 관련 작업을 하면 안된다.
@@ -59,7 +64,7 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
-    @GetMapping("/videoList/{to_member_uid}")
+    @GetMapping("/video-list/{to_member_uid}")
     @ApiOperation(value = "동영상 리스트 전송", notes = "이 컨트롤러는 최신 영상 5개를 담은 동영상 리스트를 전송합니다.")
     public ResponseEntity<?> sendList(@PathVariable("to_member_uid") Long to_member_uid) throws Exception {
 
@@ -67,7 +72,7 @@ public class MovieController {
 
         Map<String, Object> responseResult = new HashMap<>();
 
-        if(movieList.isEmpty()){
+        if (movieList.isEmpty()) {
             responseResult.put("msg", "도착한 영상이 없습니다");
             return ResponseEntity.status(HttpStatus.OK).body(responseResult);
         }
@@ -76,6 +81,20 @@ public class MovieController {
         responseResult.put("msg", "최근 수신된 영상 리스트입니다");
 
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
+
+    @PostMapping(value = "/regist-member/{name}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @ApiOperation(value = "멤버 등록 영상 저장", notes = "이 컨트롤러는 멤버 등록 영상을 저장합니다.")
+    public ResponseEntity<?> registMember(@RequestPart("file") MultipartFile file, @PathVariable String name, Authentication authentication) throws IOException {
+
+        Account account = (Account) authentication.getPrincipal();
+
+        //test
+        //String path = fileService.saveRegistVideo(file, name, 6L);
+
+        String path = fileService.saveRegistVideo(file, name, account.getUid());
+
+        return ResponseEntity.status(HttpStatus.OK).body(path);
     }
 
 

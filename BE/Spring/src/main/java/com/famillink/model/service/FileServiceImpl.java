@@ -22,6 +22,7 @@ public class FileServiceImpl implements FileService {
     @Value("upfiles")
     private String moviePath;
 
+
     @Override
     public void init() {
         try {
@@ -83,6 +84,46 @@ public class FileServiceImpl implements FileService {
         } catch (FileNotFoundException e) {
             throw new BaseException(ErrorMessage.NOT_READ_FILE);
         }
+    }
+
+    @Override
+    public String saveRegistVideo(MultipartFile files, String name, Long account_uid) throws IOException {
+        if (files.isEmpty()) {
+            throw new BaseException(ErrorMessage.NOT_FOUND_FILE);
+        }
+
+        //String uploadPath = servletContext.getRealPath("/file");
+
+        //test
+        //File upload = new File("C:\\registFace");
+
+        Path root = Paths.get(moviePath);
+        if (!Files.exists(root)) {
+            init();
+        }
+
+
+        //test
+        //File upload = root.resolve(Paths.get("C:\\", "face")).toFile();
+
+        //TODO: 파일경로 어디에 생기는건지 알아보기
+        File upload = root.resolve(Paths.get("faceRegist")).toFile();
+        if (!upload.exists()) upload.mkdir();
+
+        String accountUid = String.valueOf(account_uid);
+        String fileName = accountUid + "_" + name + "_" + files.getOriginalFilename();
+
+        File target = new File(upload, fileName);
+
+
+        if (!files.isEmpty()) {
+//	        // 파일 저장
+            files.transferTo(new File(upload + "/" + fileName));
+            // 중복방지를 위해 파일 이름앞에 현재 시간 추가
+        }
+
+        return target.toString();
+
     }
 
 
