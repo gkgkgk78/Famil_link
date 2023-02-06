@@ -16,7 +16,7 @@ public enum ErrorMessage {
     DONT_EXIST_ACCOUNT(102, "이미 삭제 된 계정입니다.", HttpStatus.BAD_REQUEST),
     NOT_MATCH_ACCOUNT_INFO(103, "입력하신 계정과 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     SIGNUP_LISTEN(110, "가입 대기중인 아이디입니다.", HttpStatus.BAD_REQUEST),
-    
+
     NOT_STORE_FILE(103, "파일을 저장 불가능 합니다", HttpStatus.BAD_REQUEST),
     NOT_READ_FILE(111, "파일을 읽을수 없습니다", HttpStatus.BAD_REQUEST),
 
@@ -25,10 +25,8 @@ public enum ErrorMessage {
     NOT_GET_FILE(113, "로그인한 사용자에게  온 파일이 아닙니다", HttpStatus.BAD_REQUEST),
 
     NOT_FOUND_SCHEDULE(114, "일정을 찾을 수 없습니다", HttpStatus.BAD_REQUEST),
-    
 
-
-
+    NOT_MATCH_FAMILY(115, "로그인한 사용자와 같은 가족에 속하지 않습니다", HttpStatus.BAD_REQUEST),
 
 
     EXIST_NICKNAME(200, "이미 존재하는 닉네임입니다.", HttpStatus.BAD_REQUEST),

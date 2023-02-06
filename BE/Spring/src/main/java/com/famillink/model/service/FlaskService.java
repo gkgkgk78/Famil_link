@@ -22,6 +22,9 @@ public interface FlaskService {
     InputStreamResource read_label(String email) throws Exception;
 
 
+    String read_label_totext(String email) throws Exception;
+
+    String read_model_totext(String email) throws Exception ;
 
 
 

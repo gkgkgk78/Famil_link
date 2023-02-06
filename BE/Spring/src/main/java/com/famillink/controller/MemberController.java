@@ -7,10 +7,7 @@ import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.param.ImageDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
-import com.famillink.model.service.FaceDetection;
-import com.famillink.model.service.FlaskService;
-import com.famillink.model.service.MemberService;
-import com.famillink.model.service.MovieService;
+import com.famillink.model.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +35,10 @@ public class MemberController {
 
     private final FaceDetection fservice;
 
-    private final FlaskService flaskService;
 
     private final MovieService movieService;
+
+    private final ToFlask toFlask;
 
 
     @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname]")
@@ -67,32 +65,39 @@ public class MemberController {
             put("result", true);
             put("msg", "멤버 가입 성공");
         }}, HttpStatus.OK);
-        
-        
-        
+
+
     }
 
 
+    //웹용 로그인
     @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [image file,uid]")
     @PostMapping("/login")
-
     public ResponseEntity<?> login(@RequestBody ImageDTO imageDTO, final Authentication authentication) throws Exception {
 
+        //flask에 학습된 모델과 labels를 보내는 과정임
+        toFlask.send(authentication, "model");
+        toFlask.send(authentication, "label");
 
 
         //안면인식으로 추출한 멤버
-        String member_name = fservice.getMemberUidByFace(imageDTO.getJson());
+        String member_name = fservice.getMemberUidByFace(imageDTO.getJson(), authentication);
         if (member_name.equals("NONE")) {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
+
         }
 
-        //uid로 추출한 멤버
-        Member member = memberservice.findMemberByUserUid(imageDTO.getUid()).get();
+        //멤버 정보는 존재를 했지만 찾아온 멤버 정보가 지금 로그인한 가족 계정에 속하는지 아닌지를 판단을 해야함
+        //즉, 판단한 얼굴 정보 <=> 로그인한 token이 찾은 얼굴에 속하는지 판단
+        Member member = memberservice.findMemberByUserUid(imageDTO.getUid()).get();//uid로 추출한 멤버
+
+        Account account = (Account) authentication.getPrincipal();
+        if (account.getUid() != member.getUser_uid())
+            throw new BaseException(ErrorMessage.NOT_MATCH_FAMILY);
 
 
         //두 멤버의 이름이 일치하면
-        if(member.getName().equals(member_name)){
-
+        if (member.getName().equals(member_name)) {
             Long member_uid = memberservice.findByUserName(member_name);
 
             //임시로 uid8로 넣은후 인증 되는지 확인(download시)
@@ -110,7 +115,7 @@ public class MemberController {
         }
 
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HashMap<String, Object>(){{
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HashMap<String, Object>() {{
             put("result", false);
             put("msg", "로그인 시도자와 멤버 정보가 일치하지 않습니다");
         }});
@@ -157,7 +162,7 @@ public class MemberController {
 
     @GetMapping("/movie/{movie_uid}")
     @ApiOperation(value = "동영상 보기", notes = "req_data : [token, movie uid]")
-    public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid,Authentication authentication) throws Exception {
+    public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid, Authentication authentication) throws Exception {
         final HttpHeaders responseHeaders = new HttpHeaders();
 
         // TODO: Service단에서 http 관련 작업을 하면 안된다.
@@ -188,7 +193,7 @@ public class MemberController {
 
         Map<String, Object> responseResult = new HashMap<>();
 
-        if(movieList.isEmpty()){
+        if (movieList.isEmpty()) {
             responseResult.put("msg", "도착한 영상이 없습니다");
             return ResponseEntity.status(HttpStatus.OK).body(responseResult);
         }
