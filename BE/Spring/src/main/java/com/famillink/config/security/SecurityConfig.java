@@ -52,19 +52,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(//밑에 게시된 경로들에 대한 요청을 승인할수 있다
                         "/account/signup",
                         "/account/login",
-                        "/account/refresh",
                         "/account/mail",
                         "/account/check/**",
-                        "/account/find/**",
-                        "/member/signup/**",
-                        "/member/login/**",
-                        "/member/refresh",
-                        "/member/auth",
-                        "/member/pick",
-                        "/movie/**",
-                        "/streaming/**",
+                        "/account/find/password",
                         "/flask/label",
-                        "/flask/model"
+                        "/flask/model",
+                        "/flask/learn_model",
+                        "/flask/learn_label"
                 )
                 .permitAll()//모든 인증을 요구를 하지는 않지만
                 .anyRequest().hasRole("USER")//USER라는 권한을 가진 회원은 , 위에 설정된 경로에 대해서 권한, 인증설정을 한다
