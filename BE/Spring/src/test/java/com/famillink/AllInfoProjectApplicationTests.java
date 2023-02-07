@@ -158,12 +158,6 @@ class AllInfoProjectApplicationTests {
         Authentication authentication = doFilter(token, "qwer/member/signup");
         assert authentication != null;
 
-        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\keras_model.h5").toPath()));
-        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\labels.txt").toPath()));
-
-        flaskController.addModel(authentication, model);
-        flaskController.addLabel(authentication, label);
-
         Account auth = (Account) authentication.getPrincipal();
 
         Optional<Account> temp = accountMapper.findUserByUid(auth.getUid());//이렇게 해서 가족중에서 보낸 name를 가진자가 있는지 판단을함
@@ -173,6 +167,14 @@ class AllInfoProjectApplicationTests {
         } else {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);//보낸 가족 정보와 일치하는 유저 정보가 없음을 의미를 함
         }
+
+        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\keras_model.h5").toPath()));
+        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\labels.txt").toPath()));
+
+        flaskController.addModel(account.getUid(), model);
+        flaskController.addLabel(account.getUid(), label);
+
+
 
 
         flaskController.addLabel(account.getUid());

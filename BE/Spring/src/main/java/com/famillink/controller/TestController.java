@@ -84,17 +84,7 @@ public class TestController {
         return ResponseEntity.ok().headers(responseHeaders).body(streamingResponseBody);
     }
 
-    @ApiOperation(value = "얼굴인식 파일저장")
-    @PostMapping(path = "/facetemp")
-    public ResponseEntity<?> facetemp(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
 
-        //우선은 온 파일의 정보를 임시로 저장을 해두면 될듯 하다.
-
-        String temp = flaskService.send_temp(account, file);
-        System.out.println(temp);
-
-        return null;
-    }
 
 
     @GetMapping("/toflask/")
