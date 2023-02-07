@@ -32,7 +32,7 @@ public class ScheduleController {
 
     //account login 이후 조회 이루어짐
     @ApiOperation(value = "오늘 일정 조회", notes = "req_data : [ date(조회를 원하는 날짜) ] \n 현재는 로그인 이후, 멤버등록 전 조회할 것으로 예상하여 권한을 Account로 받아 이용합니다")
-    @GetMapping("/{date}")
+    @GetMapping("/list/{date}")
     public ResponseEntity<?> getTodaySchedule(Authentication authentication, @PathVariable @Validated(ValidationGroups.date.class) String date){
 
         Account account = (Account) authentication.getPrincipal();
@@ -60,7 +60,7 @@ public class ScheduleController {
 
     //member login 이후 등록, 수정, 삭제 이루어짐
     @ApiOperation(value = "일정 등록", notes = "일정 등록하는 컨트롤러입니다. req_data : [ context, date(조회를 원하는 일정의 날짜) ]")
-    @PostMapping()
+    @PostMapping("/regist")
     public ResponseEntity<?> addSchedule(Authentication authentication, @RequestBody @Validated(ValidationGroups.regist.class) Schedule schedule) {
 
         Member member = (Member) authentication.getPrincipal();
@@ -80,7 +80,7 @@ public class ScheduleController {
 
 
     @ApiOperation(value = "일정 수정", notes = "req_data : [uid(글 번호), context(수정내용), date(일정 예정일 수정)] \n 글을 등록한 멤버만 수정할 수 있습니다")
-    @PutMapping("/{uid}")
+    @PutMapping("/reschedule/{uid}")
     public ResponseEntity<?> rearrangeSchedule(Authentication authentication, @PathVariable Long uid, @RequestBody @Validated(ValidationGroups.regist.class) Schedule schedule) {
 
         Member member = (Member) authentication.getPrincipal();
@@ -104,7 +104,7 @@ public class ScheduleController {
 
 
     @ApiOperation(value = "일정 삭제", notes = "req_data : [uid(글 번호)] \n 글을 등록한 멤버만 삭제할 수 있습니다")
-    @DeleteMapping("/{uid}")
+    @DeleteMapping("/remove/{uid}")
     public ResponseEntity<?> deleteSchedule(Authentication authentication, @PathVariable Long uid) {
 
         Member member = (Member) authentication.getPrincipal();

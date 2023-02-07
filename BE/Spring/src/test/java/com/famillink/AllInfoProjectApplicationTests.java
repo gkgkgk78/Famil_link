@@ -8,51 +8,44 @@ import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.ImageDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.mapper.AccountMapper;
 import com.famillink.util.JwtTokenProvider;
 import lombok.Data;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.nio.file.Files;
+import java.util.*;
 
 /**
  * @author cjw.git
+ * @author SSAFY
+ * @version 1.1
+ * @apiNote DB를 초기화 후 해야합니다. 회원가입 후 log창에 logger.info로 표시되면 DB 가서 level을 1로 바꾸어줘야합니다.
  * <p>
- * 1. 회원가입
- * 2. 회원로그인
- * 3. 멤버추가
- * 4. 멤버로그인
- * <p>
- * <p>
- * 주의사항
- * 1. class 위 @Transactional 가 존재하면 실제 DB에 반영되지 않는다.
- * 2. 로그인 할 때 member_uid가 오기 때문에 멤버를 추가하고 다시 로그인하여 멤버 uid를 받아야한다.
- * 3. @Disabled 로 Test 비활성화 가능하다.
- * 현재 결론
- * 1. 회원가입 돌리고 -> 로그인되고 -> 에러,
- * 회원가입 비활성화하고 로그인 -> 멤버추가 -> 에러,
- * 회원가입 비활성화하고 로그인 -> 멤버로그인 -> 성공
- * <p>
- * 과 같은 절차를 따른다.
- * 추후 fix예정
+ * BE 자동으로 코드를 테스트해준다.
+ * 1. 가족계정 가입
+ * 2. 가족계정 로그인
+ * 3. 모델 저장 (flask를 위해)
+ * 4. 멤버 조회 (처음엔 아무도 없음)
+ * 5. 멤버 추가
+ * 6. 멤버 조회1 (한명이 나옴)
+ * 7. 멤버로그인
  */
 @Data
 class TestData {
@@ -87,9 +80,14 @@ class AllInfoProjectApplicationTests {
     @Autowired
     private MovieController movieController;
     @Autowired
+    private FlaskController flaskController;
+    @Autowired
     private ScheduleController scheduleController;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private AccountMapper accountMapper;
 
     @Test
     @Order(10)
@@ -149,6 +147,38 @@ class AllInfoProjectApplicationTests {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    @Test
+    @Order(33)
+    void 모델저장() throws Exception {
+        String token = TestData.getInstance().getAccount_access_token();
+        assert token != null;
+
+        Authentication authentication = doFilter(token, "qwer/member/signup");
+        assert authentication != null;
+
+        Account auth = (Account) authentication.getPrincipal();
+
+        Optional<Account> temp = accountMapper.findUserByUid(auth.getUid());//이렇게 해서 가족중에서 보낸 name를 가진자가 있는지 판단을함
+        Account account=null;
+        if (temp.isPresent()) {
+            account = temp.get();
+        } else {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);//보낸 가족 정보와 일치하는 유저 정보가 없음을 의미를 함
+        }
+
+        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\model.h5").toPath()));
+        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\labels.txt").toPath()));
+
+        flaskController.addModel(account.getUid(), model);
+        flaskController.addLabel(account.getUid(), label);
+
+
+
+
+        flaskController.addLabel(account.getUid());
+        flaskController.addModel(account.getUid());
     }
 
     @Test
@@ -230,7 +260,7 @@ class AllInfoProjectApplicationTests {
             imageDTO.setUid(TestData.getInstance().getMember_user_uid());
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = new BufferedReader(
-                    new FileReader("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Spring\\src\\test\\java\\com\\famillink\\face.txt")
+                    new FileReader("C:\\Users\\SSAFY\\Downloads\\face.txt")
             );
             String str;
             while ((str = reader.readLine()) != null) {

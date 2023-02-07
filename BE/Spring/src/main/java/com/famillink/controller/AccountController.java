@@ -172,52 +172,6 @@ public class AccountController {
     }
 
 
-    @PostMapping("/flask/model")
-    @ApiOperation(value = "Flask 모델 저장 ", notes = "req_data : [token, flask 파일]")
-    public ResponseEntity<?> addModel(final Authentication authentication, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
-        Account auth = (Account) authentication.getPrincipal();
-
-        flaskService.send_model(auth, file);
-        return null;
-    }
-
-    @GetMapping("/flask/model")
-    @ApiOperation(value = "Flask의 Model 불러오기", notes = "req_data : [token]")
-    public ResponseEntity<?> returnModel(final Authentication authentication) throws Exception {
-        Account account = (Account) authentication.getPrincipal();
-        if (account.getEmail() == null)
-            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
-
-        InputStreamResource resource = flaskService.read_model(account.getEmail());
-
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=model.h5").body(resource);
-
-    }
-
-
-    @PostMapping("/flask/label")
-    @ApiOperation(value = "Flask Label 저장 ", notes = "req_data : [token, label 파일]")
-    public ResponseEntity<?> addLabel(final Authentication authentication, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
-        Account account = (Account) authentication.getPrincipal();
-        flaskService.send_label(account, file);
-        Map<String, Object> responseResult = new HashMap<>();
-        responseResult.put("result", true);
-        responseResult.put("msg", "label저장 성공");
-        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
-    }
-
-    @GetMapping("/flask/label")
-    @ApiOperation(value = "Flask의 Label 불러오기", notes ="req_data : [token]")
-    public ResponseEntity<?> returnLabel(final Authentication authentication) throws Exception {
-        Account account = (Account) authentication.getPrincipal();
-        if (account.getEmail() == null)
-            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
-
-        InputStreamResource resource = flaskService.read_label(account.getEmail());
-
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=labels.txt").body(resource);
-
-    }
 
     @PostMapping("/todo/{content}")
     @ApiOperation(value = "가족 todo생성", notes = "req_data : [token, 내용]")

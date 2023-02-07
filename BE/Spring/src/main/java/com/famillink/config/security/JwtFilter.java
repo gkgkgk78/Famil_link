@@ -57,6 +57,8 @@ public class JwtFilter extends GenericFilterBean {
                         throw new BaseException(ErrorMessage.NOT_EXIST_ROUTE);
                     if (route[1].equals("member"))
                         throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);//token정보가 없을시에는 member에 접근하는건 불가능하게 함
+                    if (route[1].equals("schedule"))
+                        throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);
                 }
 
             } else {//토큰이 존재하는 경우를 의미를 함
@@ -82,12 +84,44 @@ public class JwtFilter extends GenericFilterBean {
                             if (next == false)
                                 throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);//account의 계정으로는 member의 login,signup을 제외하고 접근 불가
                         }
+                    } else if (route[1].equals("schedule")) { //가족 계정을 가지고 schedule에 접근하고자 할 때
+                        // 가족 계정이 컨트롤러에서 할 수 있는 건
+                            boolean next = false;
+
+                            if ((route[2].equals("list")))
+                                next = true;
+
+                            if (!next)
+                                throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);//account의 계정으로는 스케줄 조회만 가능
+
                     }
 
                 } else if (level_type.equals("member")) {
                     flag = jwtTokenProvider.validateToken1(token);
                     if (flag == false)
                         return;
+
+                    //멤버 계정을 가지고 schedule 컨트롤러에 접근하고자 할 시
+                    if (route[1].equals("schedule")) { //가족 계정을 가지고 schedule에 접근하고자 할 때
+                        // 가족 계정이 컨트롤러에서 할 수 있는 건 CUD
+                            boolean next = false;
+
+                            if ((route[2].equals("list")))
+                                next = true;
+
+                            if ((route[2].equals("regist")))
+                                next = true;
+
+                            if ((route[2].equals("reschedule")))
+                                next = true;
+
+                            if ((route[2].equals("remove")))
+                                next = true;
+
+                            if (!next)
+                            throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);//account의 계정으로는 스케줄 조회만 가능
+                    }
+
                 }
                 Authentication authentication = null;
 
