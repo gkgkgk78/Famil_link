@@ -15,13 +15,13 @@ export const tokenSlice = createSlice({
             state.authenticated = true;
             state.accessToken = action.payload;
             state.expireTime = new Date().getTime() + TOKEN_TIME_OUT;        
-        }
+        },  
+        DELETE_TOKEN: (state) => {
+            state.authenticated = false;
+            state.accessToken = null;
+            state.expireTime = null;
+        },
     },
-    DELETE_TOKEN: (state) => {
-        state.authenticated = false;
-        state.accessToken = null;
-        state.expireTime = null;
-    }
 })
 
 export const { SET_TOKEN, DELETE_TOKEN } = tokenSlice.actions;

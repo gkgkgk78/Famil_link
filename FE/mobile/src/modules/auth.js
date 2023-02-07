@@ -44,6 +44,10 @@ export const login = createAction(LOGIN, ({ email, pw }) => ({
   pw,
 }));
 
+export const isLoggIn = createAction(LOGIN, ({logIn}) => ({
+  logIn,
+}) )
+
 // 회원가입
 export const signup = createAction(
   SIGNUP,
@@ -90,6 +94,7 @@ const initialState = {
   },
   auth: null,
   authError: null,
+  logIn: false,
 };
 
 const auth = handleActions(
@@ -104,10 +109,9 @@ const auth = handleActions(
       authError: null, //폼 전환시 회원 인증 에러 초기화
     }),
     // 회원 가입 성공
-    [SIGNUP_SUCCESS]: (state, { payload: auth }) => ({
+    [SIGNUP_SUCCESS]: (state) => ({
       ...state,
       authError: null,
-      auth,
     }),
     // 회원 가입 실패
     [SIGNUP_FAILURE]: (state, { payload: error }) => ({
@@ -119,6 +123,7 @@ const auth = handleActions(
       ...state,
       authError: null,
       auth,
+      logIn: true,
     }),
     //로그인 실패
     [LOGIN_FAILURE]: (state, { payload: error }) => ({

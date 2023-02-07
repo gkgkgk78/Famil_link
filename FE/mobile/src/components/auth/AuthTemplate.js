@@ -13,7 +13,8 @@ const StyledAuthTemplate = styled.div`
   top: 0;
   bottom: 0;
   right: 0;
-  background: ${palette.gray[2]};
+  background: var(--body-color);
+  // background: ${palette.gray[2]};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -34,7 +35,7 @@ const WhiteBox = styled.div`
   padding: 2rem;
   width: 360px;
   background: white;
-  border-radius: 2px;
+  border-radius: 10px;
 `;
 
 const AuthTemplate = ({ children }) => {

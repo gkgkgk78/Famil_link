@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeField, initializeForm, login } from "../../modules/auth";
+import { setFamilyAccess, setFamilyRefresh } from '../../modules/user'
 import AuthForm from "../../components/auth/AuthForm";
 import { check } from "../../modules/user";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { SET_TOKEN } from "../../store/Auth";
-import { setRefreshToken } from "../../storage/Cookie";
-import { loginUser } from "../../lib/api/users";
+// import { SET_TOKEN } from "../../store/Auth";
+// import { setRefreshToken } from "../../storage/Cookie";
+// import { loginUser } from "../../lib/api/users";
 
 const LoginForm = ({ history }) => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
-  const { form, auth, authError, user } = useSelector(({ auth, user }) => ({
+  const { form, auth, authError, user, fatoken, } = useSelector(({ auth, user }) => ({
     form: auth.login,
     auth: auth.auth,
     authError: auth.authError,
     user: user.user,
+    fatoken: user.fatoken,
   }));
 
 //   const onValid = async({ email, pw}) => {
@@ -68,6 +70,10 @@ const LoginForm = ({ history }) => {
       pw: pw,
     }).then((res) => {
       console.log(res)
+      dispatch(setFamilyAccess(res.data['access-token']))
+      if(res.data['result']) {
+        navigate('/')
+      }
     }).catch((err) => {
       console.log(err)
     })
@@ -79,24 +85,6 @@ const LoginForm = ({ history }) => {
     dispatch(initializeForm("login"));
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (authError) {
-  //     console.log("오류 발생");
-  //     console.log(authError);
-  //     setError("로그인 실패");
-  //     return;
-  //   }
-  //   if (auth) {
-  //     console.log("로그인 성공");
-  //     dispatch(check());
-  //   }
-  // }, [auth, authError, dispatch]);
-
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, );
 
   return (
     <AuthForm

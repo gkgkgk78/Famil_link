@@ -74,49 +74,18 @@ const SignupForm = ({ history }) => {
       phone: phone,
       address: address
     }).then((res) => {
-      console.log(res)
+      if(res.status === 200) {
+        navigate('/SignUpSuccess')
+      }
     }).catch((err) => {
       console.log(err)
     })
   }
 
   //컴포넌트가 처음 랜더링될 때 form 을 초기화
-
   useEffect(() => {
     dispatch(initializeForm("signup"));
   }, [dispatch]);
-
-  // 회원가입 성공/실패 처리
-
-  // useEffect(() => {
-  //   if (authError) {
-  //     // 계정명이 이미 존재할 때
-  //     if (authError.response.status === 409) {
-  //       setError("이미 존재하는 계정입니다.");
-  //       return;
-  //     }
-
-  //     //기타이유
-  //     setError("회원가입 실패");
-  //     return;
-  //   }
-
-  //   if (auth) {
-  //     console.log("회원가입 성공");
-  //     console.log(auth);
-  //     dispatch(check());
-  //   }
-  // }, [auth, authError, dispatch]);
-
-  // user 값이 잘 설정되었는지 확인
-  // useEffect(() => {
-  //   if (user) {
-  //     console.log("check API 성공");
-  //     console.log(user);
-  //     navigate("/");
-  //   }
-  //   }
-  ;
 
   return (
     <AuthForm
