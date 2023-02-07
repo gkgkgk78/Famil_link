@@ -48,15 +48,6 @@ public class MemberController {
 
     public ResponseEntity<?> signup(@PathVariable String name, @PathVariable String nickname, final Authentication authentication) throws Exception {
 
-        //우선은 온 파일의 정보를 임시로 저장을 해두면 될듯 하다.
-
-//        String temp = flaskService.send_temp(account, file);
-//        long flag = fservice.isCongnitive("", temp);
-//        flaskService.delete_temp(temp);
-//
-//        if (flag == 0) {
-//            throw new BaseException(ErrorMessage.NOT_USER_INFO);
-//        }
 
         Account auth = (Account) authentication.getPrincipal();
         Long tt = auth.getUid();
@@ -112,7 +103,6 @@ public class MemberController {
 
         }
 
-
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HashMap<String, Object>() {{
             put("result", false);
             put("msg", "로그인 시도자와 멤버 정보가 일치하지 않습니다");
@@ -151,71 +141,7 @@ public class MemberController {
     }
 
 
-    @PostMapping("/movie")
-    @ApiOperation(value = "동영상 보내기", notes = "req_data : [image,fromuid,touid]")
-    public ResponseEntity<?> addMovie(MovieSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
-        movieService.sender(sender, file);
-        return null;
-    }
-
-    @GetMapping("/movie/{movie_uid}")
-    @ApiOperation(value = "동영상 보기", notes = "req_data : [token, movie uid]")
-    public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid, Authentication authentication) throws Exception {
-        final HttpHeaders responseHeaders = new HttpHeaders();
-
-        // TODO: Service단에서 http 관련 작업을 하면 안된다.
-        StreamingResponseBody resource = movieService.download(movie_uid, responseHeaders, authentication);
-
-        responseHeaders.add("Content-Type", "video/mp4");
-        return ResponseEntity.ok().headers(responseHeaders).body(resource);
-    }
 
 
-    @PutMapping("/movie/{movie_uid}")
-    @ApiOperation(value = "동영상 읽음 처리", notes = "req_data : [movieuid,token]")
-    public ResponseEntity<?> setMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
-
-
-        movieService.setRead(movie_uid);
-        Map<String, Object> responseResult = new HashMap<>();
-        responseResult.put("result", true);
-        responseResult.put("msg", "동영상 읽음처리 성공");
-        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
-    }
-
-    @GetMapping("/video-list/{member_to}")
-    @ApiOperation(value = "동영상 리스트 전송", notes = "이 컨트롤러는 최신 영상 5개를 담은 동영상 리스트를 전송합니다.")
-    public ResponseEntity<?> sendList(@PathVariable("member_to") Long member_to) throws Exception {
-
-        List<MovieDTO> movieList = movieService.showMovieList(member_to);
-
-        Map<String, Object> responseResult = new HashMap<>();
-
-        if (movieList.isEmpty()) {
-            responseResult.put("msg", "도착한 영상이 없습니다");
-            return ResponseEntity.status(HttpStatus.OK).body(responseResult);
-        }
-
-        responseResult.put("movie-list", movieList);
-        responseResult.put("msg", "최근 수신된 영상 리스트입니다");
-
-        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
-    }
-
-
-    //TODO: 파일 다운로드 test
-//    @PostMapping( "/regist-member/{name}")
-//    @ApiOperation(value = "멤버 등록 영상입니다", notes = "이 컨트롤러는 멤버 등록을 위한 영상을 받는 컨트롤러입니다.")
-//    public ResponseEntity<?> registMember(Authentication authentication, @PathVariable String name, @RequestPart(value = "file", required = true) MultipartFile file) throws FileNotFoundException {
-//
-//        Account account = (Account) authentication.getPrincipal();
-//
-//
-//        String date = LocalDate.now().format((DateTimeFormatter.ofPattern("yyyyMMdd"));
-//        String videoName = date + "_" + account.getUsername() + "_" + name;
-//
-//
-//
-//    }
 
 }
