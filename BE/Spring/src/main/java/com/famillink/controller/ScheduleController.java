@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,17 +30,20 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     //account login 이후 조회 이루어짐
-    @ApiOperation(value = "오늘 일정 조회", notes = "req_data : [ date(조회를 원하는 날짜) ] \n 현재는 로그인 이후, 멤버등록 전 조회할 것으로 예상하여 권한을 Account로 받아 이용합니다")
-    @GetMapping("/list/{date}")
-    public ResponseEntity<?> getTodaySchedule(Authentication authentication, @PathVariable @Validated(ValidationGroups.date.class) String date) {
+    @ApiOperation(value = "이번달 전체 일정 조회", notes = "이번달 전체 일정을 조회합니다")
+    @GetMapping("/list")
+    public ResponseEntity<?> getFromTodayToMonthSchedule(Authentication authentication){
 
         Account account = (Account) authentication.getPrincipal();
 
         Long account_uid = account.getUid();
 
-        Date date1 = Date.valueOf(date);
+        //test
+        //Long account_uid = 13L;
 
-        List<Schedule> scheduleList = scheduleService.findScheduleListByDate(account_uid, date1);
+        List<Schedule> scheduleList = scheduleService.findScheduleListForMonth(account_uid);
+
+
 
         if (scheduleList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body("등록된 일정이 없습니다");
@@ -50,6 +52,33 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
             put("list", scheduleList);
         }});
+    }
+
+    @ApiOperation(value = "일정 5개 조회", notes = "이번달 전체 일정 중 최근 5개의 일정 조회")
+    @GetMapping("/list/5")
+    public ResponseEntity<?> getMonthSchedule(Authentication authentication){
+
+        Account account = (Account) authentication.getPrincipal();
+
+        Long account_uid = account.getUid();
+
+        //test
+        //Long account_uid = 13L;
+
+        List<Schedule> scheduleList = scheduleService.findScheduleListForMonthTop5(account_uid);
+
+
+
+        if (scheduleList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body("등록된 일정이 없습니다");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
+
+            put("topList", scheduleList);
+
+        }});
+
     }
 
     //member login 이후 등록, 수정, 삭제 이루어짐

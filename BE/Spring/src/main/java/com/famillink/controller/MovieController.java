@@ -2,6 +2,7 @@ package com.famillink.controller;
 
 import com.famillink.model.domain.param.MovieDTO;
 import com.famillink.model.domain.param.MovieSenderDTO;
+import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.FileService;
 import com.famillink.model.service.MovieService;
 import io.swagger.annotations.Api;
@@ -64,9 +65,13 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
-    @GetMapping("/video-list/{member_to}")
+    @GetMapping("/video-list")
     @ApiOperation(value = "동영상 리스트 전송", notes = "이 컨트롤러는 최신 영상 5개를 담은 동영상 리스트를 전송합니다.")
-    public ResponseEntity<?> sendList(@PathVariable("member_to") Long member_to) throws Exception {
+    public ResponseEntity<?> sendList(Authentication authentication) throws Exception {
+
+        Member member = (Member) authentication.getPrincipal();
+
+        Long member_to = member.getUser_uid();
 
         List<MovieDTO> movieList = movieService.showMovieList(member_to);
 
@@ -85,7 +90,7 @@ public class MovieController {
 
     @PostMapping(value = "/member", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation(value = "멤버 등록 영상 저장", notes = "이 컨트롤러는 멤버 등록 영상을 저장합니다.")
-    public ResponseEntity<?> registMember(@RequestPart String name, @RequestPart("file") MultipartFile file, Authentication authentication) throws IOException {
+    public ResponseEntity<?> registMember(@RequestPart("name") String name ,@RequestPart("file") MultipartFile file,Authentication authentication) throws IOException {
 
         //Account account = (Account) authentication.getPrincipal();
 

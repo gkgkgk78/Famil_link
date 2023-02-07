@@ -18,7 +18,9 @@ public interface ScheduleService {
 
     List<Schedule> findScheduleListByMemberUid(Long memberUid);
 
-    List<Schedule> findScheduleListByDate(Long account_uid, Date date);
+    List<Schedule> findScheduleListForMonth(Long account_uid);
+
+    List<Schedule> findScheduleListForMonthTop5(Long account_uid);
 
     //일정 수정
     void modifySchedule(Long uid, Long memberUid, Schedule schedule);
