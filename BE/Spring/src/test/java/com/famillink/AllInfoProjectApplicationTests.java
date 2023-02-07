@@ -36,12 +36,9 @@ import java.util.*;
  * @author cjw.git
  * @author SSAFY
  * @version 1.1
- * @apiNote
- * 1. DB를 초기화 후 해야합니다. 회원가입 후 log창에 logger.info로 표시되면 DB 가서 level을 1로 바꾸어줘야합니다.
- * 2. 맨 밑에 final 변수를 적정하게 변경합니다. (model_path, label_path, face_path)
- * 3. flask 주소를 localhost로 변경해줍니다.
- *
- * @see BE 자동으로 코드를 테스트해준다.
+ * @apiNote DB를 초기화 후 해야합니다. 회원가입 후 log창에 logger.info로 표시되면 DB 가서 level을 1로 바꾸어줘야합니다.
+ * <p>
+ * BE 자동으로 코드를 테스트해준다.
  * 1. 가족계정 가입
  * 2. 가족계정 로그인
  * 3. 모델 저장 (flask를 위해)
@@ -161,8 +158,23 @@ class AllInfoProjectApplicationTests {
         Authentication authentication = doFilter(token, "qwer/member/signup");
         assert authentication != null;
 
-        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File(model_path).toPath()));
-        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File(label_path).toPath()));
+        Account auth = (Account) authentication.getPrincipal();
+
+        Optional<Account> temp = accountMapper.findUserByUid(auth.getUid());//이렇게 해서 가족중에서 보낸 name를 가진자가 있는지 판단을함
+        Account account=null;
+        if (temp.isPresent()) {
+            account = temp.get();
+        } else {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);//보낸 가족 정보와 일치하는 유저 정보가 없음을 의미를 함
+        }
+
+        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\model.h5").toPath()));
+        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\labels.txt").toPath()));
+
+        flaskController.addModel(account.getUid(), model);
+        flaskController.addLabel(account.getUid(), label);
+
+
 
 
         flaskController.addLabel(account.getUid());
@@ -248,7 +260,7 @@ class AllInfoProjectApplicationTests {
             imageDTO.setUid(TestData.getInstance().getMember_user_uid());
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = new BufferedReader(
-                    new FileReader(face_path)
+                    new FileReader("C:\\Users\\SSAFY\\Downloads\\face.txt")
             );
             String str;
             while ((str = reader.readLine()) != null) {
@@ -379,9 +391,4 @@ class AllInfoProjectApplicationTests {
     private static final String account_address = "경기도 고양시 덕양구 성사동";
     private static final String member_name = "최진우";
     private static final String member_nickname = "CJW";
-
-    private static final String model_path = "C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\keras_model.h5";
-    private static final String label_path = "C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\labels.txt";
-
-    private static final String face_path = "C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Spring\\src\\test\\java\\com\\famillink\\face.txt";
 }

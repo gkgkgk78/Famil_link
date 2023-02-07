@@ -11,13 +11,13 @@ from io import BytesIO
 app = Flask(__name__)
 
 # Load the model
-model = load_model('keras_model.h5')
+model = load_model('upfiles/4/model.h5')
 
 # CAMERA can be 0 or 1 based on default camera of your computer.
 # camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 # Grab the labels from the labels.txt file. This will be used later.
-labels = open('labels.txt', 'r', encoding='UTF8').readlines()
+labels = open('upfiles/4/labels.txt', 'r', encoding='UTF8').readlines()
 
 
 @app.route("/", methods=["GET", "POST"])
