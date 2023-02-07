@@ -19,7 +19,9 @@ public interface ScheduleMapper {
 
     List<Schedule> selectScheduleListByMemberUid(Long memberUid);
 
-    List<Schedule> selectScheduleListByDate(Schedule schedule);
+    List<Schedule> selectScheduleListForMonth(Long account_uid);
+
+    List<Schedule> selectScheduleListForMonthTop5(Long account_uid);
 
     //일정 수정
     void updateSchedule(Schedule schedule);

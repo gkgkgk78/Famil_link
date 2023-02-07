@@ -54,13 +54,15 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public List<Schedule> findScheduleListByDate(Long account_uid, Date date) {
+    public List<Schedule> findScheduleListForMonth(Long account_uid) {
 
-        Schedule schedule = new Schedule();
-        schedule.setAccount_uid(account_uid);
-        schedule.setDate(date);
 
-        return scheduleMapper.selectScheduleListByDate(schedule);
+        return scheduleMapper.selectScheduleListForMonth(account_uid);
+    }
+
+    @Override
+    public List<Schedule> findScheduleListForMonthTop5(Long account_uid) {
+        return scheduleMapper.selectScheduleListForMonthTop5(account_uid);
     }
 
     @Override
