@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,12 +34,12 @@ public class ScheduleController {
     @GetMapping("/list")
     public ResponseEntity<?> getFromTodayToMonthSchedule(Authentication authentication){
 
-        //Account account = (Account) authentication.getPrincipal();
+        Account account = (Account) authentication.getPrincipal();
 
-        //Long account_uid = account.getUid();
+        Long account_uid = account.getUid();
 
         //test
-        Long account_uid = 13L;
+        //Long account_uid = 13L;
 
         List<Schedule> scheduleList = scheduleService.findScheduleListForMonth(account_uid);
 
