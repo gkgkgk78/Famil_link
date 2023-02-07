@@ -3,7 +3,6 @@ package com.famillink.controller;
 import com.famillink.annotation.ValidationGroups;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
-import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.domain.user.Schedule;
 import com.famillink.model.service.ScheduleService;
@@ -29,14 +28,13 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    //account login 이후 조회 이루어짐
     @ApiOperation(value = "이번달 전체 일정 조회", notes = "이번달 전체 일정을 조회합니다")
     @GetMapping("/list")
     public ResponseEntity<?> getFromTodayToMonthSchedule(Authentication authentication){
 
-        Account account = (Account) authentication.getPrincipal();
+        Member member = (Member) authentication.getPrincipal();
 
-        Long account_uid = account.getUid();
+        Long account_uid = member.getUser_uid();
 
         //test
         //Long account_uid = 13L;
@@ -58,9 +56,9 @@ public class ScheduleController {
     @GetMapping("/list/five-list")
     public ResponseEntity<?> getMonthSchedule(Authentication authentication){
 
-        Account account = (Account) authentication.getPrincipal();
+        Member member = (Member) authentication.getPrincipal();
 
-        Long account_uid = account.getUid();
+        Long account_uid = member.getUser_uid();
 
         //test
         //Long account_uid = 13L;
@@ -81,7 +79,7 @@ public class ScheduleController {
 
     }
 
-    //member login 이후 등록, 수정, 삭제 이루어짐
+
     @ApiOperation(value = "일정 등록", notes = "일정 등록하는 컨트롤러입니다. req_data : [ context, date(조회를 원하는 일정의 날짜) ]")
     @PostMapping("/regist")
     public ResponseEntity<?> addSchedule(Authentication authentication, @RequestBody @Validated(ValidationGroups.regist.class) Schedule schedule) {
