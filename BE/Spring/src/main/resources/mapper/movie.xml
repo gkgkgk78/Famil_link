@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.famillink.model.mapper.MovieMapper">
+    <insert id="sendMovie">
+        INSERT INTO movie (`member_from`, `member_to`, `path`)
+        VALUES (#{sender.from_member_uid}, #{sender.to_member_uid}, #{path})
+    </insert>
+    <select id="getMoviePath" parameterType="Long" resultType="string">
+        SELECT path
+        FROM movie
+        WHERE `uid` = #{movie_uid}
+    </select>
+
+
+    <select id="getMovie" parameterType="Long" resultType="MovieSenderDTO">
+
+        SELECT member_from,member_to
+        FROM movie
+        WHERE `uid` = #{movie_uid}
+    </select>
+
+
+    <select id="getOneMovie" parameterType="Long" resultType="int">
+
+        SELECT count(*)
+        FROM movie
+        WHERE `uid` = #{movie_uid}
+    </select>
+
+
+    <select id="setMovie" parameterType="Long" resultType="MovieSenderDTO">
+        update movie
+        set status="1"
+        where uid = #{movie_uid}
+    </select>
+
+    <select id="findMovieByMemberTo" parameterType="long" resultType="MovieDTO">
+        SELECT `uid`,
+               `member_to`
+        FROM movie
+        WHERE member_to = #{member_to} AND status = "0"
+        ORDER BY udate DESC
+        LIMIT 0, 5;
+    </select>
+
+</mapper>

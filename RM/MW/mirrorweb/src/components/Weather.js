@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 import './Weather.css'
 import { WiDaySunny, WiSnowflakeCold, WiThunderstorm, WiDayRain, WiNightAltRain, WiNightClear, WiRain, WiNightAltCloudy, WiDayCloudy, WiCloud, WiCloudy, WiFog } from "weather-icons-react"
 import { useState } from 'react';
+=======
+import React from 'react';
+>>>>>>> origin/develop
 
 
 function Weather() {
@@ -91,6 +95,7 @@ function Weather() {
     const lon = position.coords.longitude;
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`;
     fetch(url)
+<<<<<<< HEAD
     .then((response) => response.json())
     .then((data) => {
         // 온도는 반올림한다.
@@ -101,6 +106,16 @@ function Weather() {
         setWeatherStatus(data.weather[0].icon)
         const findIndexNum = weatherIcon.findIndex(element => element.icon === weatherStatus)
         setFindWeather(weatherIcon[findIndexNum].img)
+=======
+        .then((response) => response.json())
+        .then((data) => {
+
+        const city = document.querySelector("#weather span:first-child");
+        const weather = document.querySelector("#weather span:last-child");
+        city.innerText = data.name;
+        weather.innerText = `${data.weather[0].description} / ${data.main.temp}ºC`;
+        })
+>>>>>>> origin/develop
     }
     )
 }
@@ -125,4 +140,4 @@ function Weather() {
 }
         
 
-export default Weather;
+export default React.memo(Weather);
