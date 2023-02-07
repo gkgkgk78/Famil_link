@@ -30,14 +30,14 @@ import java.util.Map;
 
 @Api("Account Controller")
 @RequiredArgsConstructor
-@RequestMapping("/account")
+@RequestMapping("/todo")
 @JsonAutoDetect
 @RestController
 public class TodoController {
 
     private final TodoService todoService;
 
-    @PostMapping("/todo")
+    @PostMapping("")
     @ApiOperation(value = "가족 todo생성", notes = "req_data : [token, 내용]")
     public ResponseEntity<?> AddTodo(Authentication authentication, @RequestPart String content) throws Exception {
         Account auth = (Account) authentication.getPrincipal();
@@ -51,7 +51,7 @@ public class TodoController {
 
 
 
-    @GetMapping("/todo")
+    @GetMapping("")
     @ApiOperation(value = "가족 todo불러오기", notes = "req_data : [token, flask 파일]")
     public ResponseEntity<?> GetTodo(Authentication authentication) throws Exception {
         Account auth = (Account) authentication.getPrincipal();
@@ -65,7 +65,7 @@ public class TodoController {
     }
 
 
-    @DeleteMapping("/todo/{uid}")
+    @DeleteMapping("/{uid}")
     @ApiOperation(value = "가족 todo삭제하기", notes = "req_data : [token]")
     public ResponseEntity<?> DeleteTodo(@PathVariable Long uid) throws Exception {
         todoService.deletetodo(uid);
@@ -76,7 +76,7 @@ public class TodoController {
     }
 
 
-    @PutMapping("/todo/{uid}")
+    @PutMapping("/{uid}")
     @ApiOperation(value = "가족 todo완료처리", notes = "req_data : [token,가족 uid]")
     public ResponseEntity<?> CompleteTodo(@PathVariable Long uid) throws Exception {
         todoService.updatetodo(uid);

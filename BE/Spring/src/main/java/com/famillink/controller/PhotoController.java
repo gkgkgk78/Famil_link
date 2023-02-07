@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Api("Account Controller")
 @RequiredArgsConstructor
-@RequestMapping("/account")
+@RequestMapping("/photo")
 @JsonAutoDetect
 @RestController
 public class PhotoController {
@@ -27,7 +27,7 @@ public class PhotoController {
 
     //프사 등록을 위한 부분
 
-    @PostMapping("/photo")
+    @PostMapping("")
     @ApiOperation(value = "개인 멤버 사진 보내기", notes = "req_data : [token, img file, 보내는 사람 uid]")
     public ResponseEntity<?> addPhoto(@RequestBody PhotoSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
         photoService.sender(sender, file);
@@ -38,7 +38,7 @@ public class PhotoController {
     }
 
     //프사 넘겨줌
-    @GetMapping("/photo/{name}}")
+    @GetMapping("/{name}}")
     @ApiOperation(value = "개인 멤버 사진 보내기 불러오기", notes = "req_data : [token]")
     public ResponseEntity<?> getPhoto(@PathVariable String name, final Authentication authentication) throws Exception {
 
@@ -48,7 +48,7 @@ public class PhotoController {
 
     }
 
-    @DeleteMapping("/photo/{name}}")
+    @DeleteMapping("/{name}}")
     @ApiOperation(value = "개인 멤버 사진 삭제하기", notes = "req_data : [name,token]")
     public ResponseEntity<?> deletePhoto(@PathVariable String name, final Authentication authentication) throws Exception {
 

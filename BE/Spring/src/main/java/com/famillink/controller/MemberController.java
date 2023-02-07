@@ -30,8 +30,6 @@ public class MemberController {
     private final FaceDetection fservice;
 
 
-
-
     @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname]")
     @PostMapping("/signup/{name}/{nickname}")
 
@@ -128,9 +126,6 @@ public class MemberController {
             put("data", auth);
         }}, HttpStatus.OK);
     }
-
-
-
 
 
 }
