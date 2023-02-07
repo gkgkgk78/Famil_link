@@ -4,13 +4,10 @@ import MQTT from './components/MQTT';
 
 import Clock from './components/Clock';
 import Weather from './components/Weather';
-import Caption from './components/Caption';
-import Todo from './components/Todo';
 import STT from './components/STT';
 
 import Main from './pages/Main';
 import LoginMirror from './pages/loginMirror';
-import FaceValid from './pages/FaceValid';
 import PlayVideo from './pages/PlayVideo';
 import Record from './pages/Record';
 
@@ -40,18 +37,17 @@ function App() {
         justifyContent:"space-between",
         p: 3
       }}>
-        <Clock />  
+        <Clock />
+        <Weather />  
       </Box>
       <section style={style}>
       <Routes>
         <Route path="/" element= { <Main />} />
         <Route path="/loginmirror" element= { <LoginMirror />} />
-        <Route path="/facevalid" element={ <FaceValid /> } />
         <Route path="/playvideo" element={ <PlayVideo /> } />
         <Route path="/record" element={<Record/>} />
       </Routes>
       </section>
-      <footer> <Caption></Caption> </footer>
 
     </div>
   );
