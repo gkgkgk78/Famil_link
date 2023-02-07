@@ -19,14 +19,13 @@ const STT = () => {
 
     const {
         error,
-        isRecording,
         results,
         startSpeechToText,
-        stopSpeechToText,
       } = useSpeechToText({
         continuous: true,
         useLegacyResults: false,
         crossBrowser: true,
+        timeout: 60000,
         useOnlyGoogleCloud: true,
         googleApiKey: API_KEY,
         googleCloudRecognitionConfig: {
@@ -58,18 +57,21 @@ const STT = () => {
                       }
                 // 현재 녹화 페이지이면
                   } else if (location.pathname === "/record") {
-                    console.log(text)
-                    if (memberInf) {
-                      // 음성 인식한 텍스트가 멤버 중에 있으면
-                      if (Object.keys(memberInf).includes(text)) {
-                        // 받는 멤버를 저장한다.
-                        changeToMember(memberInf[text])
+                    if (to===null) {
+                      if (memberInf) {
+                        // 음성 인식한 텍스트가 멤버 중에 있으면
+                        if (Object.keys(memberInf).includes(text)) {
+                          // 받는 멤버를 저장한다.
+                          changeToMember(memberInf[text])
+                        } else {
+                          // 음성 인식이 잘 안되었으면 다시 한 번 말해라
+                          console.log("다시 한 번 말씀해주세요")
+                        }
                       } else {
-                        // 음성 인식이 잘 안되었으면 다시 한 번 말해라
-                        console.log("다시 한 번 말씀해주세요")
+                        console.log("임시 에러")
                       }
                     } else {
-                      console.log("임시 에러")
+                      console.log("받는 사람이 이미 설정되어 있습니다.")
                     }
                   }
             }
