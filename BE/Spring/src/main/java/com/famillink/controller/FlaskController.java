@@ -55,11 +55,8 @@ public class FlaskController {
     @ApiOperation(value = "Flask의 Model 불러오기", notes = "req_data : [token]")
     public ResponseEntity<?> returnModel(@RequestBody Long uid) throws Exception {
 
-
         InputStreamResource resource = flaskService.read_model(uid);
-
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=model.h5").body(resource);
-
     }
 
 
@@ -79,7 +76,6 @@ public class FlaskController {
     public ResponseEntity<?> returnLabel(@RequestBody Long uid) throws Exception {
 
         InputStreamResource resource = flaskService.read_label(uid);
-
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=labels.txt").body(resource);
 
     }
