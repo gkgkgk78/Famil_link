@@ -34,15 +34,16 @@ public class MovieController {
 
     private final FileService fileService;
 
-    @PostMapping("")
-    @ApiOperation(value = "동영상 보내기", notes = "동영상을 전송하는 컨트롤러입니다.")
+
+    @PostMapping("/")
+    @ApiOperation(value = "동영상 보내기", notes = "req_data : [image,fromuid,touid]")
     public ResponseEntity<?> addMovie(MovieSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
         movieService.sender(sender, file);
         return null;
     }
 
     @GetMapping("/{movie_uid}")
-    @ApiOperation(value = "동영상 보기", notes = "동영상을 다운받는 컨트롤러입니다.")
+    @ApiOperation(value = "동영상 보기", notes = "req_data : [token, movie uid]")
     public ResponseEntity<StreamingResponseBody> getMovie(@PathVariable("movie_uid") Long movie_uid, Authentication authentication) throws Exception {
         final HttpHeaders responseHeaders = new HttpHeaders();
 
@@ -55,7 +56,7 @@ public class MovieController {
 
 
     @PutMapping("/{movie_uid}")
-    @ApiOperation(value = "동영상 읽음 처리", notes = "동영상 읽음 처리를 위한 컨트롤러입니다.")
+    @ApiOperation(value = "동영상 읽음 처리", notes = "req_data : [movieuid,token]")
     public ResponseEntity<?> setMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
 
 
@@ -66,11 +67,11 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
-    @GetMapping("/video-list/{to_member_uid}")
+    @GetMapping("/video-list/{member_to}")
     @ApiOperation(value = "동영상 리스트 전송", notes = "이 컨트롤러는 최신 영상 5개를 담은 동영상 리스트를 전송합니다.")
-    public ResponseEntity<?> sendList(@PathVariable("to_member_uid") Long to_member_uid) throws Exception {
+    public ResponseEntity<?> sendList(@PathVariable("member_to") Long member_to) throws Exception {
 
-        List<MovieDTO> movieList = movieService.showMovieList(to_member_uid);
+        List<MovieDTO> movieList = movieService.showMovieList(member_to);
 
         Map<String, Object> responseResult = new HashMap<>();
 
@@ -79,17 +80,17 @@ public class MovieController {
             return ResponseEntity.status(HttpStatus.OK).body(responseResult);
         }
 
-        responseResult.put("movieList", movieList);
+        responseResult.put("movie-list", movieList);
         responseResult.put("msg", "최근 수신된 영상 리스트입니다");
 
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
-    @PostMapping(value = "/regist-member/{name}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/member", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation(value = "멤버 등록 영상 저장", notes = "이 컨트롤러는 멤버 등록 영상을 저장합니다.")
-    public ResponseEntity<?> registMember(@RequestPart("file") MultipartFile file, @PathVariable String name, Authentication authentication) throws IOException {
+    public ResponseEntity<?> registMember(@RequestBody String name ,@RequestPart("file") MultipartFile file,Authentication authentication) throws IOException {
 
-       //Account account = (Account) authentication.getPrincipal();
+        //Account account = (Account) authentication.getPrincipal();
 
         //test
         String path = fileService.saveRegistVideo(file, name, 6L);

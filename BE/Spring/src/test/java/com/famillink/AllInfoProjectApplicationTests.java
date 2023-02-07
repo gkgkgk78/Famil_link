@@ -8,6 +8,7 @@ import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.ImageDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.mapper.AccountMapper;
 import com.famillink.util.JwtTokenProvider;
 import lombok.Data;
 import org.junit.jupiter.api.MethodOrderer;
@@ -29,10 +30,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @author cjw.git
@@ -90,6 +88,9 @@ class AllInfoProjectApplicationTests {
     private ScheduleController scheduleController;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private AccountMapper accountMapper;
 
     @Test
     @Order(10)
@@ -163,11 +164,9 @@ class AllInfoProjectApplicationTests {
         MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File(model_path).toPath()));
         MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File(label_path).toPath()));
 
-        accountController.addModel(authentication, model);
-        accountController.addLabel(authentication, label);
 
-        flaskController.addLabel(authentication);
-        flaskController.addModel(authentication);
+        flaskController.addLabel(account.getUid());
+        flaskController.addModel(account.getUid());
     }
 
     @Test

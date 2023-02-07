@@ -84,27 +84,17 @@ public class TestController {
         return ResponseEntity.ok().headers(responseHeaders).body(streamingResponseBody);
     }
 
-    @ApiOperation(value = "얼굴인식 파일저장")
-    @PostMapping(path = "/facetemp")
-    public ResponseEntity<?> facetemp(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
 
-        //우선은 온 파일의 정보를 임시로 저장을 해두면 될듯 하다.
-
-        String temp = flaskService.send_temp(account, file);
-        System.out.println(temp);
-
-        return null;
-    }
 
 
     @GetMapping("/toflask/")
     @ApiOperation(value = "flask로 임시 데이터 보내기", notes = "아아아아아아")
-    public ResponseEntity<StreamingResponseBody> getMovie(Authentication authentication) throws Exception {
+    public ResponseEntity<StreamingResponseBody> getMovie(Long uid) throws Exception {
 
 
         //한번은 label을 전송해야 하고
-        toFlask.send(authentication, "model");
-        toFlask.send(authentication, "label");
+        toFlask.send(uid, "model");
+        toFlask.send(uid, "label");
         //한번은 model을 전송해야함
         return null;
     }
