@@ -36,14 +36,29 @@
         WHERE `member_uid` = #{member_uid} AND `date` = #{date}
     </select>
 
-    <!-- 특정 날짜 일정 조회 -->
-    <select id="selectScheduleListByDate" parameterType="Schedule" resultType="Schedule">
+    <!-- 이번달 일정 조회 -->
+    <select id="selectScheduleListForMonth" parameterType="Long" resultType="Schedule">
         SELECT `uid`,
                `member_uid`,
                `content`,
                `date`
         FROM schedule
-        WHERE `account_uid` = #{account_uid} AND `date` = #{date}
+        WHERE `account_uid` = #{account_uid} AND
+               `date` between date_format(now(), '%Y-%m-%d') and date_format(last_day(now()), '%Y-%m-%d')
+        ORDER BY `date`
+    </select>
+
+    <!-- 이번달 일정 조회 top5 -->
+    <select id="selectScheduleListForMonthTop5" parameterType="Long" resultType="Schedule">
+        SELECT `uid`,
+               `member_uid`,
+               `content`,
+               `date`
+        FROM schedule
+        WHERE `account_uid` = #{account_uid} AND
+            `date` between date_format(now(), '%Y-%m-%d') and date_format(last_day(now()), '%Y-%m-%d')
+        ORDER BY `date`
+        LIMIT 0,5
     </select>
 
     <!-- create -->

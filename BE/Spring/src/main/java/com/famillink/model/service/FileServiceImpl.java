@@ -112,7 +112,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String saveRegistVideo(MultipartFile files, String name, Long account_uid) throws IOException {
+    public String saveRegistVideo(MultipartFile files,String name, Long account_uid) throws IOException {
         if (files.isEmpty()) {
             throw new BaseException(ErrorMessage.NOT_FOUND_FILE);
         }
