@@ -50,30 +50,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()//경로에 권한, 인증 설정을 한다는 것임
                 .antMatchers(//밑에 게시된 경로들에 대한 요청을 승인할수 있다
+
                         "/account/signup",
                         "/account/login",
-                        "/account/refresh",
                         "/account/mail",
                         "/account/check/**",
-                        "/account/find/**",
-                        "/member/signup/**",
-                        "/member/login/**",
-                        "/member/refresh",
-                        "/member/auth",
-                        "/member/pick",
-                        "/movie/**",
-                        "/streaming/**",
-                        "/flask/label",
-                        "/flask/model"
+                        "/account/find/password",
+                        "/flask/**"
                 )
                 .permitAll()//모든 인증을 요구를 하지는 않지만
-                .antMatchers("/system/create").access("hasRole('ADMIN')" )
-                .anyRequest()
-                .hasRole("USER")//USER라는 권한을 가진 회원은 , 위에 설정된 경로에 대해서 권한, 인증설정을 한다
+                .antMatchers("/account/refresh"
+                        , "/member/login"
+                        , "/member/signup/**"
+                        , "/account/member-list",
+                        "/movie/member",
+                        "/photo/**",
+                        "/todo/**"
+                ).access("hasRole('ROLE_ACCOUNT')")
+
+                .antMatchers("/movie"
+                        ,"/movie/video-list"
+                        ,"/schedule/**"
+                        ,"/member/refresh"
+                ).access("hasRole('ROLE_MEMBER')")
                 //hasRole("USER")라고 저장을 하였지만 “ROLE_USER”로 UsernamePasswordAuthenticationToken객체에 값을 담아야 한다.
-
                 .and()
-
                 .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())//권한을 확인하는 과정에서 통과하지 못하는 예외가 발생할 경우 예외를 전달을 한다
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())//인증과정에서 예외가 발생할 경우 예외를 전달한다.
