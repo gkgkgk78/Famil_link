@@ -3,28 +3,20 @@ package com.famillink.controller;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.ImageDTO;
-import com.famillink.model.domain.param.MovieDTO;
-import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.FaceDetection;
 import com.famillink.model.service.MemberService;
-import com.famillink.model.service.MovieService;
-import com.famillink.model.service.ToFlask;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Api("Member Controller")
@@ -36,11 +28,6 @@ public class MemberController {
     private final MemberService memberservice;
 
     private final FaceDetection fservice;
-
-
-    private final MovieService movieService;
-
-    private final ToFlask toFlask;
 
 
     @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname]")
@@ -139,9 +126,6 @@ public class MemberController {
             put("data", auth);
         }}, HttpStatus.OK);
     }
-
-
-
 
 
 }

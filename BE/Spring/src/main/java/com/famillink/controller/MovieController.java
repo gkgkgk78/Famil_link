@@ -2,6 +2,7 @@ package com.famillink.controller;
 
 import com.famillink.model.domain.param.MovieDTO;
 import com.famillink.model.domain.param.MovieSenderDTO;
+import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.FileService;
 import com.famillink.model.service.MovieService;
 import io.swagger.annotations.Api;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -35,10 +35,9 @@ public class MovieController {
 
     private final FileService fileService;
 
-
     @PostMapping("/")
     @ApiOperation(value = "동영상 보내기", notes = "req_data : [image,fromuid,touid]")
-    public ResponseEntity<?> addMovie(MovieSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+    public ResponseEntity<?> addMovie(@RequestBody MovieSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
         movieService.sender(sender, file);
         return null;
     }
@@ -50,11 +49,9 @@ public class MovieController {
 
         // TODO: Service단에서 http 관련 작업을 하면 안된다.
         StreamingResponseBody resource = movieService.download(movie_uid, responseHeaders, authentication);
-
         responseHeaders.add("Content-Type", "video/mp4");
         return ResponseEntity.ok().headers(responseHeaders).body(resource);
     }
-
 
     @PutMapping("/{movie_uid}")
     @ApiOperation(value = "동영상 읽음 처리", notes = "req_data : [movieuid,token]")
@@ -68,9 +65,13 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
-    @GetMapping("/video-list/{member_to}")
+    @GetMapping("/video-list")
     @ApiOperation(value = "동영상 리스트 전송", notes = "이 컨트롤러는 최신 영상 5개를 담은 동영상 리스트를 전송합니다.")
-    public ResponseEntity<?> sendList(@PathVariable("member_to") Long member_to) throws Exception {
+    public ResponseEntity<?> sendList(Authentication authentication) throws Exception {
+
+        Member member = (Member) authentication.getPrincipal();
+
+        Long member_to = member.getUser_uid();
 
         List<MovieDTO> movieList = movieService.showMovieList(member_to);
 
@@ -101,7 +102,7 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(path);
     }
 
-    @DeleteMapping("del/{fileName}")
+    @DeleteMapping("/{fileName}")
     @ApiOperation(value = "멤버 등록 영상 삭제", notes = "관리자가 파일을 삭제하는 컨트롤러 입니다")
     public ResponseEntity<?> deleteRegistVideo(@PathVariable String fileName) throws Exception {
 
@@ -109,7 +110,6 @@ public class MovieController {
 
         return ResponseEntity.status(HttpStatus.OK).body("delete OK");
     }
-
 
 
 }
