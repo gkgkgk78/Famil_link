@@ -17,5 +17,7 @@ public interface FileService {
 
     InputStreamResource loadAsResource(String filename) throws Exception;
 
+    void deleteFile(String fileName) throws Exception;
+
 
 }

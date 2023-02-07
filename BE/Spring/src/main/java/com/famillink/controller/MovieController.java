@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -99,6 +100,16 @@ public class MovieController {
 
         return ResponseEntity.status(HttpStatus.OK).body(path);
     }
+
+    @DeleteMapping("del/{fileName}")
+    @ApiOperation(value = "멤버 등록 영상 삭제", notes = "관리자가 파일을 삭제하는 컨트롤러 입니다")
+    public ResponseEntity<?> deleteRegistVideo(@PathVariable String fileName) throws Exception {
+
+        fileService.deleteFile(fileName);
+
+        return ResponseEntity.status(HttpStatus.OK).body("delete OK");
+    }
+
 
 
 }
