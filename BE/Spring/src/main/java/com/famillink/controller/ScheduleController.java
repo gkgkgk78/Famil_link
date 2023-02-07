@@ -33,14 +33,11 @@ public class ScheduleController {
     //account login 이후 조회 이루어짐
     @ApiOperation(value = "오늘 일정 조회", notes = "req_data : [ date(조회를 원하는 날짜) ] \n 현재는 로그인 이후, 멤버등록 전 조회할 것으로 예상하여 권한을 Account로 받아 이용합니다")
     @GetMapping("/list/{date}")
-    public ResponseEntity<?> getTodaySchedule(Authentication authentication, @PathVariable @Validated(ValidationGroups.date.class) String date){
+    public ResponseEntity<?> getTodaySchedule(Authentication authentication, @PathVariable @Validated(ValidationGroups.date.class) String date) {
 
         Account account = (Account) authentication.getPrincipal();
 
         Long account_uid = account.getUid();
-
-        //test
-//        Long account_uid = 4L;
 
         Date date1 = Date.valueOf(date);
 
@@ -51,11 +48,8 @@ public class ScheduleController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
-
             put("list", scheduleList);
-
         }});
-
     }
 
     //member login 이후 등록, 수정, 삭제 이루어짐
@@ -87,19 +81,16 @@ public class ScheduleController {
 
         Long memberUid = member.getUid();
 
+
         //변경 사항이 없는데 요청이 올 경우
         Schedule compareSchedule = scheduleService.findSchedule(uid);
-        if (schedule.getContent().equals(compareSchedule.getContent()) && schedule.getDate().toString().equals(compareSchedule.getDate().toString())){
+        if (schedule.getContent().equals(compareSchedule.getContent()) && schedule.getDate().toString().equals(compareSchedule.getDate().toString())) {
             return ResponseEntity.status(HttpStatus.OK).body("수정 사항이 없습니다");
         }
-
         //test
 //        Long memberUid = 7L;
-
         scheduleService.modifySchedule(uid, memberUid, schedule);
-
         return ResponseEntity.status(HttpStatus.OK).body("일정이 수정되었습니다");
-
     }
 
 
@@ -114,7 +105,7 @@ public class ScheduleController {
         //test
 //        Long memberUid = 7L;
 
-        if(scheduleService.findSchedule(uid) == null){
+        if (scheduleService.findSchedule(uid) == null) {
             throw new BaseException(ErrorMessage.NOT_CORRECT_INFORMATION);
         }
 
