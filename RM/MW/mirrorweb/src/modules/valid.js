@@ -10,9 +10,11 @@ const SET_INFO = "valid/SET_INFO"
 const START_RECORDING = "valid/START_RECORDING"
 const STOP_RECORDING = "valid/STOP_RECORDING"
 const SET_TOMEMBER = "valid/SET_TOMEMBER"
-const SET_VIDEOS = "valid/SET_VIDEOS"
-const SET_CAPTION = "valid/SET_CAPTION"
+const SET_VIDEOS = "valid/git staSET_VIDEOS"
 
+
+
+//123
 
 // 액션 생성 함수
 export const setFamilyAccessToken = (familytoken) => ({type:SET_FAMILYACCESSTOKEN, familytoken})
@@ -27,14 +29,13 @@ export const startRecording = () => ({type: START_RECORDING})
 export const stopRecording = () => ({type: STOP_RECORDING})
 export const setToMember = memberID => ({type: SET_TOMEMBER, memberID}) 
 export const setVideos = videoList => ({type: SET_VIDEOS, videoList})
-export const setCaption = caption => ({type: SET_CAPTION, caption})
 
 
 // 초기 상태
 const initialState = {
-    me: '김아무개',
-    familyAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTY0NTc2OCwiZXhwIjoxMDAxNjc1NjQ1NzY4fQ.QB9Fgaa4VZM5antpGZcdaqBSxlpWLH_nIMRn9UncZ_g",
-    familyRefreshToken: "",
+    me: null,
+    familyAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTc0NDUxMiwiZXhwIjoxMDAxNjc1NzQ0NTEyfQ.2gHH3-GYpE-MMUU4lq89093r8AZyDx8uKIWS5o19Fgw",
+    familyRefreshToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTY2NDUwOCwiZXhwIjoxNjg1NjY0NTA4fQ.9lRH2t0orgsy3IaLUrOi08Ysz1Ke6-RRNMNWwcTvJaI",
     memberAccessToken: "",
     memberRefreshToken: "",
     validation: false,
@@ -43,8 +44,7 @@ const initialState = {
         "최진우": 4
     },
     toMember: null,
-    videos: [],
-    caption:['안녕하세요','오늘 비가 예정되어 있으니 우산을 챙겨주세요','메시지를 남겨보시는건 어떨까요','오늘도 좋은 하루 보내세요',]
+    videos: []
 }
 
 
