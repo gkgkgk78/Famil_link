@@ -55,7 +55,7 @@ public class ScheduleController {
     }
 
     @ApiOperation(value = "일정 5개 조회", notes = "이번달 전체 일정 중 최근 5개의 일정 조회")
-    @GetMapping("/list/5")
+    @GetMapping("/list/five-list")
     public ResponseEntity<?> getMonthSchedule(Authentication authentication){
 
         Account account = (Account) authentication.getPrincipal();
