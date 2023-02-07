@@ -88,6 +88,30 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public void deleteFile(String fileName) throws Exception {
+
+        Path root = Paths.get(moviePath);
+
+
+        File upload = root.resolve("faceRegist").toFile();
+
+        File target = new File(upload, fileName);
+
+        //삭제할 파일이 없는 경우
+        if(!target.exists())
+            throw new BaseException(ErrorMessage.NOT_FOUND_FILE);
+
+        //파일 삭제
+        boolean result = target.delete();
+
+
+        File thumbnail = new File(target.getParent(),"s_"+target.getName());
+        //getParent() - 현재 File 객체가 나태내는 파일의 디렉토리의 부모 디렉토리의 이름 을 String으로 리턴해준다.
+        result = thumbnail.delete();
+
+    }
+
+    @Override
     public String saveRegistVideo(MultipartFile files, String name, Long account_uid) throws IOException {
         if (files.isEmpty()) {
             throw new BaseException(ErrorMessage.NOT_FOUND_FILE);
@@ -130,6 +154,8 @@ public class FileServiceImpl implements FileService {
         return target.toString();
 
     }
+
+
 
 
 }
