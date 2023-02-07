@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -36,10 +35,9 @@ public class MovieController {
 
     private final FileService fileService;
 
-
     @PostMapping("/")
     @ApiOperation(value = "동영상 보내기", notes = "req_data : [image,fromuid,touid]")
-    public ResponseEntity<?> addMovie(MovieSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+    public ResponseEntity<?> addMovie(@RequestBody MovieSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
         movieService.sender(sender, file);
         return null;
     }
@@ -51,11 +49,9 @@ public class MovieController {
 
         // TODO: Service단에서 http 관련 작업을 하면 안된다.
         StreamingResponseBody resource = movieService.download(movie_uid, responseHeaders, authentication);
-
         responseHeaders.add("Content-Type", "video/mp4");
         return ResponseEntity.ok().headers(responseHeaders).body(resource);
     }
-
 
     @PutMapping("/{movie_uid}")
     @ApiOperation(value = "동영상 읽음 처리", notes = "req_data : [movieuid,token]")
@@ -114,7 +110,6 @@ public class MovieController {
 
         return ResponseEntity.status(HttpStatus.OK).body("delete OK");
     }
-
 
 
 }

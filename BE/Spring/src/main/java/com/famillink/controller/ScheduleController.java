@@ -50,11 +50,8 @@ public class ScheduleController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
-
             put("list", scheduleList);
-
         }});
-
     }
 
     @ApiOperation(value = "일정 5개 조회", notes = "이번달 전체 일정 중 최근 5개의 일정 조회")
@@ -113,19 +110,16 @@ public class ScheduleController {
 
         Long memberUid = member.getUid();
 
+
         //변경 사항이 없는데 요청이 올 경우
         Schedule compareSchedule = scheduleService.findSchedule(uid);
-        if (schedule.getContent().equals(compareSchedule.getContent()) && schedule.getDate().toString().equals(compareSchedule.getDate().toString())){
+        if (schedule.getContent().equals(compareSchedule.getContent()) && schedule.getDate().toString().equals(compareSchedule.getDate().toString())) {
             return ResponseEntity.status(HttpStatus.OK).body("수정 사항이 없습니다");
         }
-
         //test
 //        Long memberUid = 7L;
-
         scheduleService.modifySchedule(uid, memberUid, schedule);
-
         return ResponseEntity.status(HttpStatus.OK).body("일정이 수정되었습니다");
-
     }
 
 
@@ -140,7 +134,7 @@ public class ScheduleController {
         //test
 //        Long memberUid = 7L;
 
-        if(scheduleService.findSchedule(uid) == null){
+        if (scheduleService.findSchedule(uid) == null) {
             throw new BaseException(ErrorMessage.NOT_CORRECT_INFORMATION);
         }
 
