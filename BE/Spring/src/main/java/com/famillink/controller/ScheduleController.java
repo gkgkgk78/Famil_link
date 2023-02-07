@@ -106,8 +106,6 @@ public class ScheduleController {
 
         Member member = (Member) authentication.getPrincipal();
 
-        Long memberUid = member.getUid();
-
 
         //변경 사항이 없는데 요청이 올 경우
         Schedule compareSchedule = scheduleService.findSchedule(uid);
@@ -116,7 +114,7 @@ public class ScheduleController {
         }
         //test
 //        Long memberUid = 7L;
-        scheduleService.modifySchedule(uid, memberUid, schedule);
+        scheduleService.modifySchedule(uid, schedule);
         return ResponseEntity.status(HttpStatus.OK).body("일정이 수정되었습니다");
     }
 
@@ -127,7 +125,7 @@ public class ScheduleController {
 
         Member member = (Member) authentication.getPrincipal();
 
-        Long memberUid = member.getUid();
+        Long account_uid = member.getUser_uid();
 
         //test
 //        Long memberUid = 7L;
@@ -136,7 +134,7 @@ public class ScheduleController {
             throw new BaseException(ErrorMessage.NOT_CORRECT_INFORMATION);
         }
 
-        scheduleService.removeSchedule(uid, memberUid);
+        scheduleService.removeSchedule(uid, account_uid);
 
         return ResponseEntity.status(HttpStatus.OK).body("일정이 삭제되었습니다");
 

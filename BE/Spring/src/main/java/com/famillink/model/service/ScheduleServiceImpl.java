@@ -66,21 +66,20 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public void modifySchedule(Long uid, Long memberUid, Schedule schedule) {
+    public void modifySchedule(Long uid, Schedule schedule) {
 
-        schedule.setUid(uid);
-        schedule.setMember_uid(memberUid);
 
-        scheduleMapper.updateSchedule(schedule);
+
+        scheduleMapper.updateSchedule(uid, schedule);
 
     }
 
     @Override
-    public void removeSchedule(Long uid, Long memberUid) {
+    public void removeSchedule(Long uid, Long account_uid) {
 
         Schedule schedule = new Schedule();
         schedule.setUid(uid);
-        schedule.setMember_uid(memberUid);
+        schedule.setAccount_uid(account_uid);
 
         scheduleMapper.deleteSchedule(schedule);
 

@@ -24,7 +24,7 @@ public interface ScheduleMapper {
     List<Schedule> selectScheduleListForMonthTop5(Long account_uid);
 
     //일정 수정
-    void updateSchedule(Schedule schedule);
+    void updateSchedule(Long uid, Schedule schedule);
 
     //일정 삭제
     void deleteSchedule(Schedule schedule);
