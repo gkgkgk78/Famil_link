@@ -26,7 +26,7 @@ def index():
 
     dd=request.get_json()
     uid= dd["uid"]
-    path1=os.path.join("upfiles",uid,"labels.txt")
+    path1=os.path.join("upfiles", uid, "labels.txt")
     path2=os.path.join("upfiles",uid,"model.h5")
     pass_next=False
     
