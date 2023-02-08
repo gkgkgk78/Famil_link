@@ -175,10 +175,11 @@ class AllInfoProjectApplicationTests {
         flaskController.addLabel(account.getUid(), label);
 
 
-
-
         flaskController.addLabel(account.getUid());
         flaskController.addModel(account.getUid());
+
+
+
     }
 
     @Test
