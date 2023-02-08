@@ -39,7 +39,7 @@ public class SseServiceImplTest {
         sseService.subscribe(member.getUid(), lastEventId);
 
         //when, then
-        Assertions.assertDoesNotThrow(() -> sseService.send(member, "new video", "localhotst:9999/movie"));
+        Assertions.assertDoesNotThrow(() -> sseService.send(member.getUid(), "new video", "localhotst:9999/movie"));
     }
 
 }

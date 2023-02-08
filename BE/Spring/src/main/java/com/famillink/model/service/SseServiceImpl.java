@@ -73,11 +73,11 @@ public class SseServiceImpl implements SseService{
     }
 
     @Override
-    public void send(Member reciever, String content, String url) {
+    public void send(Long member_to, String content, String url) {
         Map<String, Object> response = new HashMap<>();
-        response.put("msg", "new video");
+        response.put("msg", content);
 
-        String receiverId = String.valueOf(reciever.getUid());
+        String receiverId = String.valueOf(member_to);
         String eventId = receiverId + "_" + System.currentTimeMillis();
 
         Map<String, SseEmitter> emitters = emitterService.findAllEmitterStartWithByMemberUid(receiverId);
