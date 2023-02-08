@@ -1,12 +1,9 @@
 .Caption {
-        /* border: 3px solid;
+        border: 3px solid;
+        width : 800px;
         border-radius: 15px;
-        border-color: white; */
-        /* margin-left : auto;
-        margin-right : auto; */
-        height : 40px !important;
+        border-color: white;
+        margin-left : auto;
+        margin-right : auto;
         color: white;
-        padding: auto;
-        margin-top : 85px;
-        margin-bottom : 85px;
 }

@@ -11,6 +11,7 @@ const START_RECORDING = "valid/START_RECORDING"
 const STOP_RECORDING = "valid/STOP_RECORDING"
 const SET_TOMEMBER = "valid/SET_TOMEMBER"
 const SET_VIDEOS = "valid/SET_VIDEOS"
+const SET_TODOS = "valid/SET_TODOS"
 
 
 // 액션 생성 함수
@@ -26,14 +27,15 @@ export const startRecording = () => ({type: START_RECORDING})
 export const stopRecording = () => ({type: STOP_RECORDING})
 export const setToMember = memberID => ({type: SET_TOMEMBER, memberID}) 
 export const setVideos = videoList => ({type: SET_VIDEOS, videoList})
+export const setTodos = todoList => ({type: SET_TODOS, todoList})
 
 
 // 초기 상태
 const initialState = {
     me: null,
-    familyAccessToken: "",
-    familyRefreshToken: "",
-    memberAccessToken: "",
+    familyAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2Iiwicm9sZXMiOlsiUk9MRV9BQ0NPVU5UIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTgzMDM2NywiZXhwIjoxMDAxNjc1ODMwMzY3fQ.mkD5sMbVAoUhs6JmbrNfwnNam-eX69bnwgaGbMjTsLM",
+    familyRefreshToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTY2NDUwOCwiZXhwIjoxNjg1NjY0NTA4fQ.9lRH2t0orgsy3IaLUrOi08Ysz1Ke6-RRNMNWwcTvJaI",
+    memberAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZXMiOlsiUk9MRV9NRU1CRVIiXSwibGV2ZWwiOiJtZW1iZXIiLCJpYXQiOjE2NzU4MzEwNjIsImV4cCI6MTAwMTY3NTgzMTA2Mn0.zsKmTONKIEJfYl6ztHFWQRD-8hDEKsv9V5y3KLH1qb8",
     memberRefreshToken: "",
     validation: false,
     isRecording: false,
@@ -41,7 +43,8 @@ const initialState = {
         "최진우": 4
     },
     toMember: null,
-    videos: []
+    videos: [],
+    todos: [],
 }
 
 
@@ -103,6 +106,11 @@ export default function valid(state = initialState, action) {
             return {
                 ...state,
                 toMember: action.memberID
+            }
+        case SET_TODOS:
+            return {
+                ...state,
+                todos: action.todoList
             }
         default :
           return state
