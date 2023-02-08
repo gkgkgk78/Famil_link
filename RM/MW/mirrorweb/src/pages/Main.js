@@ -3,8 +3,21 @@ import React from 'react';
 import "./Main.css"
 import Todo from '../components/Todo';
 import Calendar from '../components/Calendar';
+import {useSelector} from "react-redux";
+import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
+    const {familyaccestoken} = useSelector(state => ({
+      familyaccestoken: state.valid.familyAccessToken
+    }))
+
+    const Navigate = useNavigate()
+    useEffect(()=> {
+      if (!familyaccestoken) {
+        Navigate("/qr")
+      }
+    })
+
     return ( 
         <div>
           <div className='calendardiv'>
