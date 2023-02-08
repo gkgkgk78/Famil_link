@@ -43,7 +43,10 @@ public class ScheduleController {
 
 
         if (scheduleList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body("등록된 일정이 없습니다");
+            return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
+                            put("msg", "등록된 일정이 없습니다");
+                    }}
+            );
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
@@ -66,7 +69,10 @@ public class ScheduleController {
 
 
         if (scheduleList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body("등록된 일정이 없습니다");
+            return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
+                    put("msg", "등록된 일정이 없습니다");
+                }}
+            );
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
@@ -108,7 +114,9 @@ public class ScheduleController {
         //변경 사항이 없는데 요청이 올 경우
         Schedule compareSchedule = scheduleService.findSchedule(uid);
         if (schedule.getContent().equals(compareSchedule.getContent()) && schedule.getDate().toString().equals(compareSchedule.getDate().toString())) {
-            return ResponseEntity.status(HttpStatus.OK).body("수정 사항이 없습니다");
+            return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>(){{
+                put("msg", "수정 사항이 없습니다");
+            }});
         }
         //test
 //        Long memberUid = 7L;
