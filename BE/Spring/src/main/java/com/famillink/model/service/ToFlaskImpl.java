@@ -7,6 +7,7 @@ import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.AccountMapper;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ToFlaskImpl implements ToFlask {
+    @Value("${famillink.flask.domain}")
+    private String flask_ip;
     private static final String IMGUR_CLIENT_ID = "...";
     private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("text/txt");
     private final OkHttpClient client = new OkHttpClient();
@@ -60,8 +63,8 @@ public class ToFlaskImpl implements ToFlask {
         //http://localhost:5555/
         Request request = new Request.Builder()
                 .header("title", account.getUid().toString())
- //               .url("http://localhost:5000/hihi")
-                .url("http://flask-deploy:5000/hihi")
+                //               .url("http://localhost:5000/hihi")
+                .url("http://" + flask_ip + ":5000/hihi")
                 .post(requestBody)
                 .build();
 
