@@ -43,7 +43,6 @@ function App() {
       <section style={style}>
       <Routes>
         <Route path="/" element= { <Main />} />
-        <Route path="/login" element= { <QRReader />} />
         <Route path="/playvideo" element={ <PlayVideo /> } />
         <Route path="/record" element={<Record/>} />
       </Routes>
