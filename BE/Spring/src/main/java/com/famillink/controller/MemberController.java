@@ -1,10 +1,12 @@
 package com.famillink.controller;
 
+import com.famillink.annotation.ValidationGroups;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.ImageDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.mapper.MemberMapper;
 import com.famillink.model.service.FaceDetection;
 import com.famillink.model.service.MemberService;
 import io.swagger.annotations.Api;
@@ -13,11 +15,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Api("Member Controller")
 @RequiredArgsConstructor
@@ -28,6 +32,8 @@ public class MemberController {
     private final MemberService memberservice;
 
     private final FaceDetection fservice;
+
+    private final MemberMapper mapper;
 
 
     @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname]")
@@ -50,10 +56,9 @@ public class MemberController {
     }
 
 
-    //웹용 로그인
     @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [image file,uid]")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody ImageDTO imageDTO, final Authentication authentication) throws Exception {
+    public ResponseEntity<?> login(@RequestBody @Validated(ValidationGroups.member_login.class) ImageDTO imageDTO, final Authentication authentication) throws Exception {
 
 
         //안면인식으로 추출한 멤버
@@ -73,7 +78,23 @@ public class MemberController {
 
         //두 멤버의 이름이 일치하면
         if (member.getName().equals(member_name)) {
-            Long member_uid = memberservice.findByUserName(member_name);
+
+            //하나 만들고자 함
+            //여기서 하나 만 찾아 내야 하는데
+            Map<String, Object> map = new HashMap<>();
+            map.put("user_uid", account.getUid());
+            map.put("name", member_name);
+            Optional<Member> temp = mapper.findUserByNametoAll(map);
+            Member m1 = null;
+            if (temp.isPresent()) {
+                m1 = temp.get();
+            } else {
+                throw new BaseException(ErrorMessage.NOT_USER_INFO);//보낸 가족 정보와 일치하는 유저 정보가 없음을 의미를 함
+            }
+
+
+            Long member_uid = m1.getUid();
+
 
             //임시로 uid8로 넣은후 인증 되는지 확인(download시)
             Map<String, Object> token = memberservice.login(member_uid);

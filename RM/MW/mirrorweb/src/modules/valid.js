@@ -10,11 +10,8 @@ const SET_INFO = "valid/SET_INFO"
 const START_RECORDING = "valid/START_RECORDING"
 const STOP_RECORDING = "valid/STOP_RECORDING"
 const SET_TOMEMBER = "valid/SET_TOMEMBER"
-const SET_VIDEOS = "valid/git staSET_VIDEOS"
+const SET_VIDEOS = "valid/SET_VIDEOS"
 
-
-
-//123
 
 // 액션 생성 함수
 export const setFamilyAccessToken = (familytoken) => ({type:SET_FAMILYACCESSTOKEN, familytoken})
@@ -34,8 +31,8 @@ export const setVideos = videoList => ({type: SET_VIDEOS, videoList})
 // 초기 상태
 const initialState = {
     me: null,
-    familyAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTc0NDUxMiwiZXhwIjoxMDAxNjc1NzQ0NTEyfQ.2gHH3-GYpE-MMUU4lq89093r8AZyDx8uKIWS5o19Fgw",
-    familyRefreshToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTY2NDUwOCwiZXhwIjoxNjg1NjY0NTA4fQ.9lRH2t0orgsy3IaLUrOi08Ysz1Ke6-RRNMNWwcTvJaI",
+    familyAccessToken: "",
+    familyRefreshToken: "",
     memberAccessToken: "",
     memberRefreshToken: "",
     validation: false,

@@ -3,6 +3,7 @@ package com.famillink.model.service;
 
 import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Member;
+import net.bytebuddy.description.NamedElement;
 
 import java.util.Map;
 import java.util.Optional;
@@ -20,4 +21,7 @@ public interface MemberService {
     Long findByUserName(String name) throws Exception;
 
     Optional<Member> findMemberByUserUid(Long uid) throws Exception;
+
+    Optional<Member> findUserByNametoAll(Map<String,Object> map);
+
 }

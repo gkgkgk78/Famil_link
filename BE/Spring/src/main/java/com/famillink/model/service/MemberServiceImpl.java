@@ -129,9 +129,19 @@ public class MemberServiceImpl implements MemberService {
         return mapper.findUserByName(name);
     }
 
+
+
+
     @Override
     public Optional<Member> findMemberByUserUid(Long uid) throws Exception {
         return mapper.findUserByUid(uid);
+    }
+
+    @Override
+    public Optional<Member> findUserByNametoAll(Map<String, Object> map) {
+
+
+        return mapper.findUserByNametoAll(map);
     }
 
 
