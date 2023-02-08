@@ -7,7 +7,7 @@ import Weather from './components/Weather';
 import STT from './components/STT';
 
 import Main from './pages/Main';
-import QRReader from './pages/QRReader';
+import QR from './pages/QR';
 import PlayVideo from './pages/PlayVideo';
 import Record from './pages/Record';
 
@@ -45,6 +45,7 @@ function App() {
         <Route path="/" element= { <Main />} />
         <Route path="/playvideo" element={ <PlayVideo /> } />
         <Route path="/record" element={<Record/>} />
+        <Route path="/qr" element={<QR/>} />
       </Routes>
       </section>
 

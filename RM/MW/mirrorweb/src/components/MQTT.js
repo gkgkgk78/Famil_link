@@ -91,7 +91,7 @@ function MQTT() {
         } 
       }
       // 토픽이 로그인관련 이면
-    } else if (topic === "local/account/login") {
+    } else if (topic === "/local/qr/") {
       console.log(JSON.parse(message))
       let msg = JSON.parse(message)
       saveFAToken(msg["access-token"])
