@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 
 import axios from 'axios';
-import Caption from '../components/Caption';
 
 const FaceValid = () => {
     const navigate = useNavigate();
@@ -39,10 +38,7 @@ const FaceValid = () => {
 
     return (
         <div>
-            <div style={{
-              height:'401.5px'
-            }}></div>
-            <Caption></Caption>
+            <p>안면인식중입니다.</p>
             <Button
             onClick={() => {
               navigate("/playvideo")

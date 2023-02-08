@@ -1,17 +1,16 @@
 import './App.css';
 
-import MQTT from './modules/MQTT';
+import MQTT from './components/MQTT';
 
 import Clock from './components/Clock';
 import Weather from './components/Weather';
 import Caption from './components/Caption';
+import Todo from './components/Todo';
 
 import Main from './pages/Main';
-import LoginMirror from './pages/loginMirror';
-import FaceValid from './pages/FaceValid';
+import QR from './pages/QR';
 import PlayVideo from './pages/PlayVideo';
 import Record from './pages/Record';
-import TextToSpeech from './components/TTS';
 
 
 import { Box } from '@mui/system';
@@ -25,29 +24,30 @@ function App() {
   // 초음파 센서 신호가 오면 안면 인식 화면으로 이동한다.
   // 초음파 센서 신호가 사라지면 메인 페이지로 돌아가는데, 어차피 디스플레이는 꺼진다.
   // App.js에서 제스쳐나 음성 신호 등이 들어오면 영상 녹화 화면으로 이동한다.
+
   const style = {
     height : '1100px'
   }
   return (
     <div className="App">
       <MQTT/>
+      <STT />
       <Box sx={{
         display: "flex",
         justifyContent:"space-between",
         p: 3
       }}>
-        <Clock />  
+        <Clock />
+        <Weather />
       </Box>
       <section style = {style}>
       <Routes>
         <Route path="/" element= { <Main />} />
-        <Route path="/loginmirror" element= { <LoginMirror />} />
-        <Route path="/facevalid" element={ <FaceValid /> } />
         <Route path="/playvideo" element={ <PlayVideo /> } />
         <Route path="/record" element={<Record/>} />
-        <Route path="/texttospeech" element={<TextToSpeech/>} />
       </Routes>
       </section>
+      <footer> <Caption></Caption> </footer>
 
     </div>
   );
