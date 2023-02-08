@@ -1,5 +1,6 @@
 package com.famillink.model.domain.user;
 
+import com.famillink.annotation.ValidationGroups;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,17 +24,12 @@ public class Member implements UserDetails {
     }
 
 
-
     @ApiModelProperty(hidden = true)
     protected String sdate;
 
-    @NotNull(message = "빈문자열은 허용하지 않습니다")
-    @NotBlank(message="반드시 입력해 주세요")
+
     protected String name;
 
-
-    @NotNull(message = "빈문자열은 허용하지 않습니다")
-    @NotBlank(message="반드시 입력해 주세요")
     protected String nickname;
 
 

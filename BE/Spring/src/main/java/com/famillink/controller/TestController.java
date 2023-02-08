@@ -1,6 +1,5 @@
 package com.famillink.controller;
 
-import com.famillink.model.domain.user.Account;
 import com.famillink.model.service.FlaskService;
 import com.famillink.model.service.TestService;
 import com.famillink.model.service.ToFlask;
