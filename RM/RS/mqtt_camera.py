@@ -1,6 +1,5 @@
 from __future__ import print_function, division
 
-import mediapipe as mp
 import subprocess
 import time
 import wave
@@ -12,7 +11,7 @@ import numpy as np
 import paho.mqtt.client as mqtt
 import json
 from json import JSONEncoder
-
+import mediapipe as mp
 import requests
 
 mp_face_detection = mp.solutions.face_detection
@@ -20,15 +19,16 @@ mp_drawing = mp.solutions.drawing_utils
 
 isRecord = False
 token = None
+isQr = True
 
 from_member_uid = 4
-to_member_uid = 5
+to_member_uid = 7
 
 
 class VideoRecorder():
     "Video class based on openCV"
 
-    def __init__(self, name="temp_video.avi", fps=60):
+    def __init__(self, name="temp_video.avi", fps=30):
         self.file_name = name
         self.frame_counts = 0
         self.out = cv2.VideoWriter(self.file_name, fourcc, fps, size)  # VideoWriter 객체 생성
@@ -37,9 +37,7 @@ class VideoRecorder():
 
     def record(self):
         global camera
-        while threading.active_count() < 4:
-            pass
-        print("start video " + str(time.time()))
+        print("start")
         while self.open:
             ret, frame = camera.read()
             if ret:
@@ -83,9 +81,6 @@ class AudioRecorder():
 
     def record(self):
         "Audio starts being recorded"
-        while threading.active_count() < 4:
-            pass
-        print("start audio " + str(time.time()))
         self.stream.start_stream()
         while self.open:
             data = self.stream.read(self.frames_per_buffer)
@@ -169,20 +164,18 @@ def stop_AVrecording(filename="test"):
 
         # Merging audio and video signal
         if abs(recorded_fps - 6) >= 0.01:  # If the fps rate was higher/lower than expected, re-encode it to the expected
-            #print("Re-encoding")
-            #cmd = "ffmpeg -r " + str(
-            #    recorded_fps) + " -i temp_video.avi -pix_fmt yuv420p -r 30 temp_video2.avi"
-            #subprocess.call(cmd, shell=True)
-            ## res = os.system(cmd)
-            #print("Muxing")
-            #cmd = "ffmpeg -y -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video2.avi -pix_fmt yuv420p record.mp4"
-            #subprocess.call(cmd, shell=True)
-            ## res = os.system(cmd)
-            cmd = "ffmpeg -r " + str(recorded_fps) + " -i \"temp_video.avi\" -i \"temp_audio.wav\" -y -shortest record.mp4"
+            print("Re-encoding")
+            cmd = "C:/Users/SSAFY/ffmpeg/bin/ffmpeg -r " + str(
+                recorded_fps) + " -i temp_video.avi -pix_fmt yuv420p -r 30 temp_video2.avi"
             subprocess.call(cmd, shell=True)
+            # res = os.system(cmd)
+            print("Muxing")
+            cmd = "C:/Users/SSAFY/ffmpeg/bin/ffmpeg -y -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video2.avi -pix_fmt yuv420p record.mp4"
+            subprocess.call(cmd, shell=True)
+            # res = os.system(cmd)
         else:
             print("Normal recording\nMuxing")
-            cmd = "ffmpeg -y -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video.avi -pix_fmt yuv420p record.mp4"
+            cmd = "C:/Users/SSAFY/ffmpeg/bin/ffmpeg -y -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video.avi -pix_fmt yuv420p record.mp4"
             subprocess.call(cmd, shell=True)
             print("..")
             # 보내고자하는 파일을 'rb'(바이너리 리드)방식 열고
@@ -228,10 +221,9 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    global model, labels, isRecord, token, from_member_uid, to_member_uid
+    global model, labels, isRecord, token, from_member_uid, to_member_uid, isQr
     if msg.topic == "/local/record/":
         try:
-            print(msg.payload.decode("utf-8"))
             temp = bool(int(msg.payload.decode("utf-8")))
 
             if temp == isRecord:
@@ -256,83 +248,100 @@ def on_message(client, userdata, msg):
         token = data['token']
         from_member_uid = data['from']
         to_member_uid = data['to']
+    elif msg.topic == "/local/qr/":
+        temp = bool(int(msg.payload.decode("utf-8")))
+        isQr = temp
 
 
 def opencv_publish():
-    global camera, client, isRecord
+    global camera, client, isRecord, isQr
     idx = 0
-    while True:
-        if isRecord:
-            break
-        ret, image = camera.read()
-        if not ret:
-            print("dont read cam")
-            break
-        # client.publish("/local/opencv/", json.dumps(image, cls=NumpyArrayEncoder), 2)
+    if isQr:
+        while True:
+            ret, image = camera.read()
+            if not ret:
+                print("dont read cam")
+                break
+            # image = cv2.resize(image, None, fx=0.2, fy=0.2, interpolation=cv2.INTER_AREA)
+            qr = cv2.QRCodeDetector()
+            data, box, straight_qrcode = qr.detectAndDecode(image)
+            if data:
+                print('QR코드 데이터: {}'.format(data))
+                client.publish("/local/qrtoken/", json.dumps(data), 2)
+                print("publish qr data")
+    else:
+        while True:
+            if isRecord:
+                break
+            ret, image = camera.read()
+            if not ret:
+                print("dont read cam")
+                break
+            # client.publish("/local/opencv/", json.dumps(image, cls=NumpyArrayEncoder), 2)
 
-        # Show the image in a window
-        # cv2.imshow('Webcam Image', image)
+            # Show the image in a window
+            # cv2.imshow('Webcam Image', image)
 
-        ############################
-        #                          #
-        # To improve performance, optionally mark the image as not writeable to
-        # pass by reference.
-        with mp_face_detection.FaceDetection(
-                model_selection=0, min_detection_confidence=0.5) as face_detection:
+            ############################
+            #                          #
+            # To improve performance, optionally mark the image as not writeable to
+            # pass by reference.
+            with mp_face_detection.FaceDetection(
+                    model_selection=0, min_detection_confidence=0.5) as face_detection:
 
-            image.flags.writeable = False
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            results = face_detection.process(image)
+                image.flags.writeable = False
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                results = face_detection.process(image)
 
-            # Draw the face detection annotations on the image.
-            image.flags.writeable = True
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                # Draw the face detection annotations on the image.
+                image.flags.writeable = True
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-            if results.detections:
-                for detection in results.detections:
-                    # mp_drawing.draw_detection(image, detection)
-                    # bbox_drawing_spec = mp_drawing.DrawingSpec()
-                    # mp_drawing.draw_detection(image, detection)
-                    image_rows, image_cols, _ = image.shape
-                    location = detection.location_data
-                    relative_bounding_box = location.relative_bounding_box
-                    rect_start_point = mp_drawing._normalized_to_pixel_coordinates(
-                        relative_bounding_box.xmin, relative_bounding_box.ymin, image_cols,
-                        image_rows)
-                    rect_end_point = mp_drawing._normalized_to_pixel_coordinates(
-                        relative_bounding_box.xmin + relative_bounding_box.width,
-                        relative_bounding_box.ymin + relative_bounding_box.height, image_cols,
-                        image_rows)
+                if results.detections:
+                    for detection in results.detections:
+                        # mp_drawing.draw_detection(image, detection)
+                        # bbox_drawing_spec = mp_drawing.DrawingSpec()
+                        # mp_drawing.draw_detection(image, detection)
+                        image_rows, image_cols, _ = image.shape
+                        location = detection.location_data
+                        relative_bounding_box = location.relative_bounding_box
+                        rect_start_point = mp_drawing._normalized_to_pixel_coordinates(
+                            relative_bounding_box.xmin, relative_bounding_box.ymin, image_cols,
+                            image_rows)
+                        rect_end_point = mp_drawing._normalized_to_pixel_coordinates(
+                            relative_bounding_box.xmin + relative_bounding_box.width,
+                            relative_bounding_box.ymin + relative_bounding_box.height, image_cols,
+                            image_rows)
 
-                    if rect_start_point is None or rect_end_point is None:
-                        image = np.zeros((224, 224, 3), np.uint8)
-                        break
-                    if None in rect_start_point or None in rect_end_point:
-                        image = np.zeros((224, 224, 3), np.uint8)
-                        break
+                        if rect_start_point is None or rect_end_point is None:
+                            image = np.zeros((224, 224, 3), np.uint8)
+                            break
+                        if None in rect_start_point or None in rect_end_point:
+                            image = np.zeros((224, 224, 3), np.uint8)
+                            break
 
-                    image = image[rect_start_point[1]:rect_end_point[1], rect_start_point[0]:rect_end_point[0]]
-                    image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
-            else:
-                image = np.zeros((224, 224, 3), np.uint8)
-            # Flip the image horizontally for a selfie-view display.
-        # cv2.imshow("dd", image)
-        ############################
-        data = {
-            "image": image
-        }
-        client.publish("/local/opencv/", json.dumps(data, cls=NumpyArrayEncoder), 2)  # TODO: 해제
-        print("publish opencv data " + str(idx))
-        idx += 1
-        cv2.waitKey(1500)  # MQTT 성능에 따라 유도리 있게 설정
+                        image = image[rect_start_point[1]:rect_end_point[1], rect_start_point[0]:rect_end_point[0]]
+                        image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
+                else:
+                    image = np.zeros((224, 224, 3), np.uint8)
+                # Flip the image horizontally for a selfie-view display.
+            # cv2.imshow("dd", image)
+            ############################
+            data = {
+                "image": image
+            }
+            client.publish("/local/opencv/", json.dumps(data, cls=NumpyArrayEncoder), 2)  # TODO: 해제
+            print("publish opencv data " + str(idx))
+            idx += 1
+            cv2.waitKey(150)  # MQTT 성능에 따라 유도리 있게 설정
 
 
 print("1")
-camera = cv2.VideoCapture(1)
+camera = cv2.VideoCapture(0)
 print("2")
 fourcc = cv2.VideoWriter_fourcc(*"MJPG")  # 인코딩 포맷 문자
-camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # 1280
-camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # 720
+camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)  # 1280
+camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)  # 720
 print("3")
 width = camera.get(cv2.CAP_PROP_FRAME_WIDTH)
 height = camera.get(cv2.CAP_PROP_FRAME_HEIGHT)
