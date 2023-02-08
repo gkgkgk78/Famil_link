@@ -40,7 +40,10 @@ public class MovieController {
     @ApiOperation(value = "동영상 보내기", notes = "req_data : [image,fromuid,touid]")
     public ResponseEntity<?> addMovie( MovieSenderDTO sender, @RequestPart(value = "mp4", required = true) MultipartFile file) throws Exception {
         movieService.sender(sender, file);
-        return null;
+        Map<String, Object> responseResult = new HashMap<>();
+        responseResult.put("result", true);
+        responseResult.put("msg", "동영상 보내기 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
     @GetMapping("/{movie_uid}")
