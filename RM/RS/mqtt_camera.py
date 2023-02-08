@@ -216,6 +216,7 @@ def on_connect(client, userdata, flags, rc):
         t1.start()
         client.subscribe("/local/record/", 2)
         client.subscribe("/local/token/", 2)
+        client.subscribe("/local/qr/", 2)
     else:
         print("Bad connection Returned code=", rc)
 
@@ -341,7 +342,7 @@ def opencv_publish():
 
 
 print("1")
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(0 + cv2.CAP_DSHOW)
 print("2")
 fourcc = cv2.VideoWriter_fourcc(*"MJPG")  # 인코딩 포맷 문자
 camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)  # 1280
