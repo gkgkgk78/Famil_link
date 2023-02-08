@@ -50,15 +50,15 @@ const TextToSpeech = () => {
             console.log(err)
         })
       }
-    },[text]);
+    },[text])
 
-    const [ment, setment]  = useState('오늘은 여기까지');
+
     return ( 
         <div>
             <button
             onClick={setTextAndRead}
             >
-               {ment}
+               안녕하세요
             </button>
         </div>
      );

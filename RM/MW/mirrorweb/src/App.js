@@ -4,11 +4,10 @@ import MQTT from './components/MQTT';
 
 import Clock from './components/Clock';
 import Weather from './components/Weather';
-import Caption from './components/Caption';
 import STT from './components/STT';
 
 import Main from './pages/Main';
-import QR from './pages/QR';
+import LoginMirror from './pages/loginMirror';
 import PlayVideo from './pages/PlayVideo';
 import Record from './pages/Record';
 
@@ -26,7 +25,8 @@ function App() {
   // App.js에서 제스쳐나 음성 신호 등이 들어오면 영상 녹화 화면으로 이동한다.
 
   const style = {
-    height : '1100px'
+    paddingTop : '200px',
+    height : '720px'
   }
   return (
     <div className="App">
@@ -38,12 +38,12 @@ function App() {
         p: 3
       }}>
         <Clock />
-        <Weather />
+        <Weather />  
       </Box>
-      <section style = {style}>
+      <section style={style}>
       <Routes>
         <Route path="/" element= { <Main />} />
-        <Route path="/qr" element = {<QR />} />
+        <Route path="/loginmirror" element= { <LoginMirror />} />
         <Route path="/playvideo" element={ <PlayVideo /> } />
         <Route path="/record" element={<Record/>} />
       </Routes>
