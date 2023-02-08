@@ -66,7 +66,6 @@ public class MemberController {
         //멤버 정보는 존재를 했지만 찾아온 멤버 정보가 지금 로그인한 가족 계정에 속하는지 아닌지를 판단을 해야함
         //즉, 판단한 얼굴 정보 <=> 로그인한 token이 찾은 얼굴에 속하는지 판단
         Member member = memberservice.findMemberByUserUid(imageDTO.getUid()).get();//uid로 추출한 멤버
-
         Account account = (Account) authentication.getPrincipal();
         if (account.getUid() != member.getUser_uid())
             throw new BaseException(ErrorMessage.NOT_MATCH_FAMILY);
@@ -99,7 +98,7 @@ public class MemberController {
 
     @ApiOperation(value = "Member Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody Long uid, HttpServletRequest request) throws Exception {
+    public ResponseEntity<?> refreshToken(@RequestParam Long uid, HttpServletRequest request) throws Exception {
         HttpStatus status = HttpStatus.ACCEPTED;
         String token = request.getHeader("refresh-token");
         String result = memberservice.refreshToken(uid, token);

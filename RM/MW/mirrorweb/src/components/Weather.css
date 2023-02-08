@@ -1,7 +1,18 @@
-.appContainer {
-  padding: 2rem;
+.temp {
+  font-family: "kangwongyoyukmodulight";
+  font-size: 1.2rem;
 }
 
-.errorMessage {
-  color: red;
+.weatherimg {
+  font-weight: 50;
+}
+
+.city {
+  font-family: "kangwongyoyukmodulight";
+  font-size: 1.2rem;
+}
+
+.weather {
+  justify-items: center;
+  text-align: center;
 }

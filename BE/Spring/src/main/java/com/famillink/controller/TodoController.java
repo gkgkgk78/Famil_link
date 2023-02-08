@@ -39,7 +39,7 @@ public class TodoController {
 
     @PostMapping("")
     @ApiOperation(value = "가족 todo생성", notes = "req_data : [token, 내용]")
-    public ResponseEntity<?> AddTodo(Authentication authentication, @RequestPart String content) throws Exception {
+    public ResponseEntity<?> AddTodo(Authentication authentication, @RequestParam String content) throws Exception {
         Account auth = (Account) authentication.getPrincipal();
         Long tt = auth.getUid();
         todoService.createtodo(tt, content);
@@ -52,7 +52,7 @@ public class TodoController {
 
 
     @GetMapping("")
-    @ApiOperation(value = "가족 todo불러오기", notes = "req_data : [token, flask 파일]")
+    @ApiOperation(value = "가족 todo불러오기", notes = "req_data : [token]")
     public ResponseEntity<?> GetTodo(Authentication authentication) throws Exception {
         Account auth = (Account) authentication.getPrincipal();
         Long tt = auth.getUid();
@@ -66,7 +66,7 @@ public class TodoController {
 
 
     @DeleteMapping("/{uid}")
-    @ApiOperation(value = "가족 todo삭제하기", notes = "req_data : [token]")
+    @ApiOperation(value = "가족 todo삭제하기", notes = "req_data : [todo uid]")
     public ResponseEntity<?> DeleteTodo(@PathVariable Long uid) throws Exception {
         todoService.deletetodo(uid);
         Map<String, Object> responseResult = new HashMap<>();
@@ -77,7 +77,7 @@ public class TodoController {
 
 
     @PutMapping("/{uid}")
-    @ApiOperation(value = "가족 todo완료처리", notes = "req_data : [token,가족 uid]")
+    @ApiOperation(value = "가족 todo완료처리", notes = "req_data : [token,todo uid]")
     public ResponseEntity<?> CompleteTodo(@PathVariable Long uid) throws Exception {
         todoService.updatetodo(uid);
         Map<String, Object> responseResult = new HashMap<>();

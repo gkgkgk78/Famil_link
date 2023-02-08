@@ -25,6 +25,8 @@ public class Todo {
 
     String content;//내용
 
+    int status;
+
 
     @ApiModelProperty(hidden = true)
     protected String sdate;//쓴날짜
@@ -32,5 +34,12 @@ public class Todo {
     public Todo(Long account_uid, String content) {
         this.account_uid = account_uid;
         this.content = content;
+    }
+//`uid`,`content`,`sdate`,`status`
+    public Todo(Long uid, String content, String sdate,int status) {
+        this.uid = uid;
+        this.content = content;
+        this.status = status;
+        this.sdate = sdate;
     }
 }

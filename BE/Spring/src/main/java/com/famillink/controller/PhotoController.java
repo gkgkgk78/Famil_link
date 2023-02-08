@@ -29,7 +29,7 @@ public class PhotoController {
 
     @PostMapping("")
     @ApiOperation(value = "개인 멤버 사진 보내기", notes = "req_data : [token, img file, 보내는 사람 uid]")
-    public ResponseEntity<?> addPhoto(@RequestBody PhotoSenderDTO sender, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+    public ResponseEntity<?> addPhoto( PhotoSenderDTO sender, @RequestPart(value = "img", required = true) MultipartFile file) throws Exception {
         photoService.sender(sender, file);
         Map<String, Object> responseResult = new HashMap<>();
         responseResult.put("result", true);

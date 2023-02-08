@@ -26,7 +26,7 @@ public class FlaskController {
 
     @PostMapping("/learn_model")
     @ApiOperation(value = "flask로 학습된 model 보내기", notes = "req data:[token]")
-    public ResponseEntity<?> addModel(@RequestBody Long uid) throws Exception {
+    public ResponseEntity<?> addModel(@RequestParam Long uid) throws Exception {
         toFlask.send(uid, "model");
         Map<String, Object> responseResult = new HashMap<>();
         responseResult.put("result", true);
@@ -35,7 +35,7 @@ public class FlaskController {
 
     @PostMapping("/learn_label")
     @ApiOperation(value = "flask로 학습된 label 보내기", notes = "req data:[token]")
-    public ResponseEntity<?> addLabel(@RequestBody Long uid) throws Exception {
+    public ResponseEntity<?> addLabel(@RequestParam Long uid) throws Exception {
         toFlask.send(uid, "label");
         Map<String, Object> responseResult = new HashMap<>();
         responseResult.put("result", true);
@@ -45,7 +45,7 @@ public class FlaskController {
 
     @PostMapping("/model")
     @ApiOperation(value = "Flask 모델 저장 ", notes = "req_data : [token, flask 파일]")
-    public ResponseEntity<?> addModel(@RequestBody Long uid, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+    public ResponseEntity<?> addModel(@RequestParam Long uid, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
 
         flaskService.send_model(uid, file);
         return null;
@@ -53,7 +53,7 @@ public class FlaskController {
 
     @GetMapping("/model")
     @ApiOperation(value = "Flask의 Model 불러오기", notes = "req_data : [token]")
-    public ResponseEntity<?> returnModel(@RequestBody Long uid) throws Exception {
+    public ResponseEntity<?> returnModel(@RequestParam Long uid) throws Exception {
 
         InputStreamResource resource = flaskService.read_model(uid);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=model.h5").body(resource);
@@ -62,7 +62,7 @@ public class FlaskController {
 
     @PostMapping("/label")
     @ApiOperation(value = "Flask Label 저장 ", notes = "req_data : [token, label 파일]")
-    public ResponseEntity<?> addLabel(@RequestBody Long uid, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
+    public ResponseEntity<?> addLabel(@RequestParam Long uid, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
 
         flaskService.send_label(uid, file);
         Map<String, Object> responseResult = new HashMap<>();
@@ -73,7 +73,7 @@ public class FlaskController {
 
     @GetMapping("/label")
     @ApiOperation(value = "Flask의 Label 불러오기", notes = "req_data : [token]")
-    public ResponseEntity<?> returnLabel(@RequestBody Long uid) throws Exception {
+    public ResponseEntity<?> returnLabel(@RequestParam Long uid) throws Exception {
 
         InputStreamResource resource = flaskService.read_label(uid);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=labels.txt").body(resource);
