@@ -43,8 +43,6 @@ function App() {
       <section style = {style}>
       <Routes>
         <Route path="/" element= { <Main />} />
-        <Route path="/loginmirror" element= { <LoginMirror />} />
-        <Route path="/facevalid" element={ <FaceValid /> } />
         <Route path="/playvideo" element={ <PlayVideo /> } />
         <Route path="/record" element={<Record/>} />
       </Routes>
