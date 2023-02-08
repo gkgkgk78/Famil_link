@@ -261,6 +261,8 @@ def opencv_publish():
         if isQr:
             while True:
                 ret, image = camera.read()
+                if not isQr:
+                    break
                 if not ret:
                     print("dont read cam")
                     break
@@ -275,6 +277,8 @@ def opencv_publish():
         else:
             while True:
                 if isRecord:
+                    break
+                if isQr:
                     break
                 ret, image = camera.read()
                 if not ret:
