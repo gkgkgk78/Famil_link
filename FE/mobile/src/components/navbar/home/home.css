@@ -1,7 +1,21 @@
 /* .home  */
+.home {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.intro {
+    max-width: 540px;
+    text-align: center;
+    z-index: 1;
+}
 
 .home__img {
     width: 100px;
     height: 100px;
     border-radius: 100%;
+    margin-bottom: 1.5rem;
 }

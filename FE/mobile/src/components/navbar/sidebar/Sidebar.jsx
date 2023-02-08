@@ -2,8 +2,19 @@ import React from "react";
 import "./sidebar.css"
 import Logo from "../../images/다운로드.jpg"
 import SimpleLineIcon from 'react-simple-line-icons';
+import Button from '../../common/Button'
+import styled from 'styled-components'
 
-const Sidebar = () => {
+const loginstatus = {
+    login: "로그아웃",
+    logout: "로그인"
+}
+const ButtonWithMarginTop = styled(Button)`
+  margin-top: 1rem;
+`;
+
+const Sidebar = ({type}) => {
+    const text = loginstatus[type];
     return (
         <>
         <aside className="aside">
@@ -42,6 +53,11 @@ const Sidebar = () => {
                             <a href="#blog" className="nav__link">
                             <SimpleLineIcon name="note" />
                             </a>
+                        </li>
+                        <li className="nav__item">
+                            <ButtonWithMarginTop orange fullWidth>
+                                {text}
+                            </ButtonWithMarginTop>
                         </li>
                     </ul>
                 </div>

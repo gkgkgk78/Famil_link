@@ -9,6 +9,9 @@ import createRequestSaga, {
 } from "../lib/createRequestSaga";
 // 모든 rest api 가져오기
 import * as authAPI from "../lib/api/auth";
+import axios from 'axios'
+
+const API_URL = "http://localhost:3000";
 
 // 회원인증 onChange, onSubmit 관련
 const CHANGE_FIELD = "auth/CHANGE_FIELD";
@@ -44,9 +47,9 @@ export const login = createAction(LOGIN, ({ email, pw }) => ({
   pw,
 }));
 
-export const isLoggIn = createAction(LOGIN, ({logIn}) => ({
-  logIn,
-}) )
+export const getCurrentUser = () => {
+  return JSON.parse(localStorage.getItem("faccesstoken"));
+};
 
 // 회원가입
 export const signup = createAction(
@@ -59,6 +62,14 @@ export const signup = createAction(
     nickname,
   })
 );
+
+export const logout = () => {
+  localStorage.removeItem("user");
+  return axios.post(API_URL + "signout").then((response) => {
+    return response.data;
+  });
+};
+
 
 //사가 생성
 // [회원가입 사가]

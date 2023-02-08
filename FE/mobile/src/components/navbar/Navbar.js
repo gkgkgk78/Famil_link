@@ -15,6 +15,7 @@ const Navbar = () => {
     return (
         <>
         <Sidebar />
+        
         {/* <main className="main">
             <Home />
             <About />

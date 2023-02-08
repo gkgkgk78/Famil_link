@@ -6,37 +6,27 @@ import AuthForm from "../../components/auth/AuthForm";
 import { check } from "../../modules/user";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { familyToken } from "../../modules/token";
+
 // import { SET_TOKEN } from "../../store/Auth";
 // import { setRefreshToken } from "../../storage/Cookie";
 // import { loginUser } from "../../lib/api/users";
 
 const LoginForm = ({ history }) => {
+
+  
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
-  const { form, auth, authError, user, fatoken, } = useSelector(({ auth, user }) => ({
+  const { form, auth, authError, user,  faccesstoken } = useSelector(({ auth, user, token }) => ({
     form: auth.login,
     auth: auth.auth,
     authError: auth.authError,
     user: user.user,
-    fatoken: user.fatoken,
+    faccesstoken: token.familyaccesstoken,
   }));
-
-//   const onValid = async({ email, pw}) => {
-//     setValue("pw","");
-    
-//     const response = await loginUser({ email, pw});
-    
-//   if (response.status) {
-//     setRefreshToken(response.json.refresh_token);
-//     dispatch(SET_TOKEN(response.json.access_token));
-
-//     return navigate("/");
-//   } else {
-//     console.log(response.json);
-//   }
-// }
-//인풋 변경 이벤트 핸들러
+  
+  //인풋 변경 이벤트 핸들러
   const onChange = (e) => {
     const { value, name } = e.target;
     dispatch(
@@ -45,33 +35,36 @@ const LoginForm = ({ history }) => {
         key: name,
         value,
       })
-    );
-  };
-
-  //폼 등록 이벤트 핸들러
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const { email, pw } = form;
-    dispatch(login({ email, pw }));
+      );
+    };
     
-    if (
-      [
-        email,
+    
+    
+    //폼 등록 이벤트 핸들러
+    
+    const onSubmit = (e) => {
+      e.preventDefault();
+      const { email, pw } = form;
+      dispatch(login({ email, pw }));
+      
+      if (
+        [
+          email,
         pw,
       ].includes("")
-    ) {
-      setError("빈 칸을 모두 입력하세요.");
-    }
-
-  //axios 요청
-    axios.post('http://i8a208.p.ssafy.io:3000/account/login', {
-      email: email,
-      pw: pw,
-    }).then((res) => {
-      console.log(res)
-      dispatch(setFamilyAccess(res.data['access-token']))
-      if(res.data['result']) {
+      ) {
+        setError("빈 칸을 모두 입력하세요.");
+      }
+      
+      //axios 요청
+      axios.post('http://i8a208.p.ssafy.io:3000/account/login', {
+        email: email,
+        pw: pw,
+      }).then((res) => {
+        console.log(res)
+        dispatch(familyToken(res.data['access-token']))
+        localStorage.setItem('faccesstoken', JSON.stringify(res.data['access-token']))
+        if(res.data['result']) {
         navigate('/')
       }
     }).catch((err) => {
@@ -79,8 +72,13 @@ const LoginForm = ({ history }) => {
     })
   };
 
-  //컴포넌트가 처음 랜더링될 때 form 을 초기화
+  useEffect(() => {
+    console.log(faccesstoken)
 
+  },[faccesstoken])
+  
+  //컴포넌트가 처음 랜더링될 때 form 을 초기화
+  
   useEffect(() => {
     dispatch(initializeForm("login"));
   }, [dispatch]);
