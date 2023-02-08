@@ -12,6 +12,7 @@ const STOP_RECORDING = "valid/STOP_RECORDING"
 const SET_TOMEMBER = "valid/SET_TOMEMBER"
 const SET_VIDEOS = "valid/SET_VIDEOS"
 const SET_TODOS = "valid/SET_TODOS"
+const SET_CAPTIONS = "valid/SET_CAPTIONS"
 
 
 // 액션 생성 함수
@@ -28,7 +29,7 @@ export const stopRecording = () => ({type: STOP_RECORDING})
 export const setToMember = memberID => ({type: SET_TOMEMBER, memberID}) 
 export const setVideos = videoList => ({type: SET_VIDEOS, videoList})
 export const setTodos = todoList => ({type: SET_TODOS, todoList})
-
+export const setCaptions = captions => ({type: SET_CAPTIONS, captions})
 
 // 초기 상태
 const initialState = {
@@ -45,6 +46,7 @@ const initialState = {
     toMember: null,
     videos: [],
     todos: [],
+    caption:['안녕하세요','오늘 비가 예정되어있습니다','오늘 당신의 생일입니다','오늘도 즐거운 하루 보내세요'],
 }
 
 
@@ -112,6 +114,12 @@ export default function valid(state = initialState, action) {
                 ...state,
                 todos: action.todoList
             }
+        case SET_CAPTIONS:
+            return {
+                ...state,
+                caption: action.caption
+            }
+    
         default :
           return state
     }
