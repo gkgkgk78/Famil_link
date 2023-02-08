@@ -56,7 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/account/mail",
                         "/account/check/**",
                         "/account/find/password",
-                        "/flask/**"
+                        "/flask/**",
+                        "/movie/regist/*"
                 )
                 .permitAll()//모든 인증을 요구를 하지는 않지만
                 .antMatchers("/account/refresh"
@@ -66,12 +67,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/movie/member",
                         "/photo/**",
                         "/todo/**"
-                ).access("hasRole('ROLE_ACCOUNT')")
 
-                .antMatchers("/movie"
-                        ,"/movie/video-list"
-                        ,"/schedule/**"
-                        ,"/member/refresh"
+                        ).access("hasRole('ROLE_ACCOUNT')")
+
+                .antMatchers(
+                        "/schedule/**"
+                        , "/member/refresh"
+                        , "/movie/*"
                 ).access("hasRole('ROLE_MEMBER')")
                 //hasRole("USER")라고 저장을 하였지만 “ROLE_USER”로 UsernamePasswordAuthenticationToken객체에 값을 담아야 한다.
                 .and()

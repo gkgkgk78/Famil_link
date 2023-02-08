@@ -102,7 +102,7 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(path);
     }
 
-    @DeleteMapping("/{fileName}")
+    @DeleteMapping("/regist/{fileName}")
     @ApiOperation(value = "멤버 등록 영상 삭제", notes = "관리자가 파일을 삭제하는 컨트롤러 입니다")
     public ResponseEntity<?> deleteRegistVideo(@PathVariable String fileName) throws Exception {
 
