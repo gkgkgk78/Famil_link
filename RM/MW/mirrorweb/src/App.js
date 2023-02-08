@@ -5,7 +5,7 @@ import MQTT from './components/MQTT';
 import Clock from './components/Clock';
 import Weather from './components/Weather';
 import Caption from './components/Caption';
-import Todo from './components/Todo';
+import STT from './components/STT';
 
 import Main from './pages/Main';
 import QR from './pages/QR';
@@ -43,6 +43,7 @@ function App() {
       <section style = {style}>
       <Routes>
         <Route path="/" element= { <Main />} />
+        <Route path="/qr" element = {<QR />} />
         <Route path="/playvideo" element={ <PlayVideo /> } />
         <Route path="/record" element={<Record/>} />
       </Routes>
