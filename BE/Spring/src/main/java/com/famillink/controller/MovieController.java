@@ -2,6 +2,7 @@ package com.famillink.controller;
 
 import com.famillink.model.domain.param.MovieDTO;
 import com.famillink.model.domain.param.MovieSenderDTO;
+import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.FileService;
 import com.famillink.model.service.MovieService;
@@ -90,14 +91,14 @@ public class MovieController {
 
     @PostMapping(value = "/member", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation(value = "멤버 등록 영상 저장", notes = "이 컨트롤러는 멤버 등록 영상을 저장합니다.")
-    public ResponseEntity<?> registMember(@RequestPart("name") String name ,@RequestPart("file") MultipartFile file,Authentication authentication) throws IOException {
+    public ResponseEntity<?> registMember(@RequestPart("name") String name ,@RequestPart("file") MultipartFile file, Authentication authentication) throws IOException {
 
-        //Account account = (Account) authentication.getPrincipal();
+        Account account = (Account) authentication.getPrincipal();
 
         //test
-        String path = fileService.saveRegistVideo(file, name, 6L);
+        // String path = fileService.saveRegistVideo(file, name, 6L);
 
-        //String path = fileService.saveRegistVideo(file, name, account.getUid());
+        String path = fileService.saveRegistVideo(file, name, account.getUid());
 
         return ResponseEntity.status(HttpStatus.OK).body(path);
     }

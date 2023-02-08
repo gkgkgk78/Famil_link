@@ -23,8 +23,8 @@ public interface ScheduleService {
     List<Schedule> findScheduleListForMonthTop5(Long account_uid);
 
     //일정 수정
-    void modifySchedule(Long uid, Long memberUid, Schedule schedule);
+    void modifySchedule(Long uid, Schedule schedule);
 
     //일정 삭제
-    void removeSchedule(Long uid, Long memberUid);
+    void removeSchedule(Long uid, Long account_uid);
 }
