@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { isLoggIn } from '../modules/auth';
 import { useDispatch } from "react-redux";
+import Home from '../components/navbar/home/Home'
 
 const Main = () => {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     // const dispatch = useDispatch();
     // const [logIn, setLogIn] = useState(false);
     
@@ -15,7 +16,7 @@ const Main = () => {
     
     return (
         <div>
-            {/* {logIn ? '메인페이지' : navigate("/login")} */}
+            {/* {isLogin ? (isMember ? <Home /> : navigate('/addmember')) : navigate('/login')} */}
             <p> ㅎㅇㅎㅇ</p>
         </div>
     )

@@ -16,6 +16,7 @@ const API_URL = "http://localhost:3000";
 // 회원인증 onChange, onSubmit 관련
 const CHANGE_FIELD = "auth/CHANGE_FIELD";
 const INITIALIZE_FORM = "auth/INITIALIZE_FORM";
+const LOG_OUT = 'token/LOG_OUT'
 
 
 // 회원가입 관련 saga
@@ -28,7 +29,9 @@ const [SIGNUP, SIGNUP_SUCCESS, SIGNUP_FAILURE] =
 const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] =
   createRequestActionTypes("auth/LOGIN_FAILURE");
 
-// onChange
+  
+  
+  // onChange
 export const changeField = createAction(
   CHANGE_FIELD,
   ({ form, key, value }) => ({
@@ -36,22 +39,23 @@ export const changeField = createAction(
     key, // username, password, passwordconfirm
     value, //실제 바꾸려는 값
   })
-);
-
-// Form 초기 상태
-export const initializeForm = createAction(INITIALIZE_FORM, (form) => form); //register / login
-
-//로그인
-export const login = createAction(LOGIN, ({ email, pw }) => ({
-  email,
-  pw,
-}));
-
-export const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("faccesstoken"));
-};
-
-// 회원가입
+  );
+  
+  // Form 초기 상태
+  export const initializeForm = createAction(INITIALIZE_FORM, (form) => form); //register / login
+  
+  //로그인
+  export const login = createAction(LOGIN, ({ email, pw }) => ({
+    email,
+    pw,
+  }));
+  
+  export const getCurrentUser = () => {
+    return JSON.parse(localStorage.getItem("faccesstoken"));
+  };
+  
+  export const familyLogout = createAction(LOG_OUT, lgot => lgot);
+  // 회원가입
 export const signup = createAction(
   SIGNUP,
   ({ email, pw, address, phone, nickname }) => ({
@@ -62,13 +66,6 @@ export const signup = createAction(
     nickname,
   })
 );
-
-export const logout = () => {
-  localStorage.removeItem("user");
-  return axios.post(API_URL + "signout").then((response) => {
-    return response.data;
-  });
-};
 
 
 //사가 생성
@@ -106,6 +103,7 @@ const initialState = {
   auth: null,
   authError: null,
   logIn: false,
+  logout: false,
 };
 
 const auth = handleActions(
@@ -141,6 +139,10 @@ const auth = handleActions(
       ...state,
       authError: error,
     }),
+    [LOG_OUT]: (state, {payload: lgot}) => ({
+      ...state,
+      logout: true,
+  }),
   },
   initialState
 );

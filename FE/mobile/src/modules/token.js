@@ -7,7 +7,8 @@ const initialState = {
 
 const SET_FAMILY_ACCESS = 'token/SET_FAMILY_ACCESS'
 
-export const familyToken = createAction(SET_FAMILY_ACCESS, fatkn => fatkn);
+
+export const familyToken = createAction(SET_FAMILY_ACCESS, fatkn => fatkn); 
 
 
 export default handleActions(

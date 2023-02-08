@@ -4,17 +4,33 @@ import Logo from "../../images/다운로드.jpg"
 import SimpleLineIcon from 'react-simple-line-icons';
 import Button from '../../common/Button'
 import styled from 'styled-components'
+import { useNavigate } from "react-router-dom";
 
-const loginstatus = {
-    login: "로그아웃",
-    logout: "로그인"
-}
-const ButtonWithMarginTop = styled(Button)`
-  margin-top: 1rem;
-`;
+// const ButtonWithMarginTop = styled(Button)`
+//   margin-top: 1rem;
+// `;
 
 const Sidebar = ({type}) => {
-    const text = loginstatus[type];
+    const navigate=useNavigate()
+    // const token = localStorage.getItem("faccesstoken")
+    // const loginstatus = {
+    //     { token? "로그아웃" : "로그인"}
+    // }
+    // const text = loginstatus[type];
+    // const onLogin = () => {
+    //     navigate('/login')
+    // }
+    const onLogout = () => {
+        localStorage.removeItem('faccesstoken')
+        navigate('/login')
+    }
+
+    // const onlog = {
+    //     {token ? onLogout : onLogin }
+    // }
+
+    // const onlogg = onlog[type]
+
     return (
         <>
         <aside className="aside">
@@ -55,9 +71,9 @@ const Sidebar = ({type}) => {
                             </a>
                         </li>
                         <li className="nav__item">
-                            <ButtonWithMarginTop orange fullWidth>
-                                {text}
-                            </ButtonWithMarginTop>
+                            <Button gray fullWidth onClick={onLogout}>
+                                로그 아웃
+                            </Button>
                         </li>
                     </ul>
                 </div>

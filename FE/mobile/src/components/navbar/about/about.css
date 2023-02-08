@@ -1,0 +1,7 @@
+@media screen and (max-width: 1024px) {
+    .about__container {
+        grid-template-columns: 720px;
+        justify-content: center;
+        row-gap: 1.875rem;
+    }
+}

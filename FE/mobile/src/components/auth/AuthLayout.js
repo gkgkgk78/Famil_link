@@ -1,23 +1,13 @@
-// import React, {useEffect} from "react";
-// import { useNavigate, useLocation, Outlet } from "react-router-dom";
-// import Cookies from "js-cookie";
-// // import { auth } from '../../modules/login'
+import React, { Component } from "react";
+import { useNavigate } from "react-router-dom";
 
-// const AuthLayout = () => {
-//     const navigate = useNavigate();
-//     const { pathname } = useLocation();
 
-//     useEffect(() => {
-//         if (!Cookies.get("id")) {
-//             navigate('/', {state: pathname});
-//         }
-//     }, []);
+const AuthLayout = ({ authenticated, component:Component}) => {
+    const navigate = useNavigate();
+    console.log(authenticated)
 
-//     return (
-//         <div>
-//             <Outlet />
-//         </div>
-//     );
-// };
-
-// export default AuthLayout;
+    return(
+        authenticated? Component : navigate('/login')
+    )
+}
+export default AuthLayout
