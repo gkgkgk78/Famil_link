@@ -2,25 +2,24 @@ package com.famillink.model.service;
 
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
+import com.famillink.model.domain.param.MovieDTO;
 import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.MemberMapper;
 import com.famillink.model.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.List;
 
 
 @Service
@@ -31,13 +30,11 @@ public class MovieServiceImpl implements MovieService {
     private final FileService fileService;
     private final MovieMapper movieMapper;
     private final MemberMapper memberMapper;
-
     private final MemberService mservice;
 
     @Override
     @Transactional
     public void sender(MovieSenderDTO sender, MultipartFile file) throws Exception {
-
 
         //현재는 sender에 있는 보내고자 하는 얘들이 같은
         Member m;
@@ -52,24 +49,36 @@ public class MovieServiceImpl implements MovieService {
 
         m = memberMapper.findUserByUid(sender.getFrom_member_uid()).get();
         //가족 uid로 폴더에 저장을 해줌
-        String get = fileService.store(file, m.getUser_uid());
+        String get = fileService.store(file, m.getUser_uid().toString());
         movieMapper.sendMovie(sender, get);
 
     }
 
     @Override
-    public StreamingResponseBody download(Long movie_uid, HttpHeaders httpHeaders) throws Exception {
+    public StreamingResponseBody download(Long movie_uid, HttpHeaders httpHeaders, Authentication authentication) throws Exception {
 
         try {
-            //Movie table에서 보낸자와 받은 자가 같은 가족인지 판단을 해서 처리를 함
+            //movie에서 받은 사람이 자기 자신에게 온 영상인지를 파악을 해야함
+            //가져온 무비를 기반으로 
+            MovieSenderDTO movie = movieMapper.getMovie(movie_uid);
+            Long get = movie.getTo_member_uid();//받은 사람의 uid와 로그인 해서 받은 사람의 uid를 비교를 해야함
+
+            Member auth = (Member) authentication.getPrincipal();
+
+            if (!get.equals(auth.getUid()))
+                throw new BaseException(ErrorMessage.NOT_GET_FILE);
+            //여기까지 해서 받은 사용자에게 온 영상인지를 파악을 했음
+
             MovieSenderDTO sender = movieMapper.getMovie(movie_uid);
             if (!mservice.findTogether(sender))//계정 정보가 일치 하지 않을시에 처리 하고자 하는 상황
             {
                 throw new BaseException(ErrorMessage.NOT_MATCH_ACCOUNT_INFO);
             }
+
+
         } catch (Exception e) {
             //System.out.println(e);
-            throw new BaseException(ErrorMessage.NOT_EXIST_ROUTE);
+            //throw new BaseException(ErrorMessage.NOT_EXIST_ROUTE);
         }
         String filename = movieMapper.getMoviePath(movie_uid);
         filename = "./" + filename;
@@ -89,11 +98,21 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void setRead(Long movie_uid) throws Exception {
 
-        try {
-            movieMapper.setMovie(movie_uid);
-        } catch (Exception e) {
+        int now = movieMapper.getOneMovie(movie_uid);
+        if (now != 1) {
             throw new BaseException(ErrorMessage.NOT_READ_FILE);
+        } else {
+            movieMapper.setMovie(movie_uid);
         }
+
+    }
+
+    @Override
+    public List<MovieDTO> showMovieList(Long member_to) throws Exception {
+
+        List<MovieDTO> list = movieMapper.findMovieByMemberTo(member_to);
+
+        return list;
     }
 
 

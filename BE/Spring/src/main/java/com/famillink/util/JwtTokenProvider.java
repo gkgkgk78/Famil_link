@@ -33,14 +33,12 @@ import java.util.Map;
 public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
     private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
-
-
     //1.토큰을 생성하기 위해서는 secretkey가 필요하므로 값을 정의를 합니다, @value의 값은 application.properties파일에서 정의 가능합니다.
-    //
+
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.token-validity-in-minutes}00")
+    @Value("${jwt.token-validity-in-minutes}0000000")
     private long tokenValidMinutes;
 
     @Value("${jwt.refresh-validity-in-minutes}")
@@ -61,7 +59,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(Long.toString(uid));//jwt의 토큰의 내용에 값을 넣기 위해 claims객체를 생성을 합니다.,
         // setsubject 메서드를 통하여 sub속성에 값을 추가하고자 할시에 User의 uid를 사용합니다
         claims.put("roles", roles);//해당 부분은 해당 토큰을 사용하는 사용자의 권한을 확인 할수 있는 role값을 추가한 부분입니다.
-        claims.put("level","account");
+        claims.put("level", "account");
         Date now = new Date();
 
         return Jwts.builder()//Jwts.builder를통해서 토큰을 생성합니다.
@@ -72,13 +70,14 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+
+
     public String create1(Long uid, List<String> roles, long expire) {
         Claims claims = Jwts.claims().setSubject(Long.toString(uid));//jwt의 토큰의 내용에 값을 넣기 위해 claims객체를 생성을 합니다.,
         // setsubject 메서드를 통하여 sub속성에 값을 추가하고자 할시에 User의 uid를 사용합니다
         claims.put("roles", roles);//해당 부분은 해당 토큰을 사용하는 사용자의 권한을 확인 할수 있는 role값을 추가한 부분입니다.
-        claims.put("level","member");
+        claims.put("level", "member");
         Date now = new Date();
-
         return Jwts.builder()//Jwts.builder를통해서 토큰을 생성합니다.
                 .setClaims(claims)
                 .setIssuedAt(now)
@@ -86,6 +85,7 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, (secretKey + memberMapper.getSalt(uid)).getBytes()) // 암호화
                 .compact();
     }
+
 
     // JWT 토큰 생성
     public String createToken(Long uid, List<String> roles) {
@@ -110,9 +110,16 @@ public class JwtTokenProvider {
     //usernamePasswordAuthenticationToken을 사용하여 Authentication을 구현 하였습니다.
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
-
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
+
+    public Authentication getAuthentication1(String token) {
+        String h1 = this.getUserId1((token));
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername("-" + this.getUserId1(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
 
     // 유저 이름 추출
     //토큰 기반으로 회원 정보를 추출하는 메서드 입니다.
@@ -131,7 +138,6 @@ public class JwtTokenProvider {
                 .getBody()
                 .getSubject();
     }
-
 
 
     // Request header에 Authorization 의 값에서 token 꺼내옴
@@ -169,7 +175,6 @@ public class JwtTokenProvider {
     public boolean validateToken1(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey((secretKey + memberMapper.getSalt(getUid(token))).getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token);
-
             return !claims.getBody().getExpiration().before(new Date());
         } catch (SecurityException | MalformedJwtException | IllegalArgumentException exception) {
             logger.info("잘못된 Jwt 토큰입니다");
@@ -178,15 +183,14 @@ public class JwtTokenProvider {
         } catch (UnsupportedJwtException exception) {
             logger.info("지원하지 않는 Jwt 토큰입니다");
         }
-
         return false;
     }
+
 
     private Long getUid(String token) throws RuntimeException {
         try {
             if (token.chars().filter(c -> c == '.').count() != 2)
                 throw new BaseException(ErrorMessage.ACCESS_TOKEN_INVALID);
-
             Map<?, ?> map;
             map = new ObjectMapper().readValue(Base64.getDecoder().decode(token.split("\\.")[1]), Map.class);
             if (map.get("sub") == null)
@@ -199,4 +203,6 @@ public class JwtTokenProvider {
             throw new BaseException(ErrorMessage.UNDEFINED_EXCEPTION);
         }
     }
+
+
 }

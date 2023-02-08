@@ -9,6 +9,7 @@ import rootReducer from './modules';
 
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
+import rootReducer from './modules';
 
 // router
 import { BrowserRouter } from 'react-router-dom';

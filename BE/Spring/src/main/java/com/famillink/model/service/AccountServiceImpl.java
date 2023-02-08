@@ -53,6 +53,12 @@ public class AccountServiceImpl implements AccountService {
         String route="./"+s1;
         accountMapper.setModelPath(acc.getEmail(),s1,acc.getUid());
 
+        //추가적으로 가족 계정의 model_path를 넣어주고자함
+
+        s1= String.valueOf(Paths.get("upfiles","Photo",acc.getUid().toString() ));
+        route="./"+s1;
+        accountMapper.setPhotoPath(acc.getEmail(),s1);
+
         return accountMapper.findUserByEmail(account.getEmail()).get();
     }
 
@@ -72,6 +78,8 @@ public class AccountServiceImpl implements AccountService {
 
         String accessToken = jwtTokenProvider.createToken(account.getUid(), Collections.singletonList(account.getRole()));
         String refreshToken = jwtTokenProvider.createRefresh(account.getUid(), Collections.singletonList(account.getRole()));
+
+        account.setRefresh_token(refreshToken);
         accountMapper.setRefreshToken(account);
 
 
@@ -126,7 +134,10 @@ public class AccountServiceImpl implements AccountService {
         //TODO; 참조 주소 변경
 
         String token = jwtTokenProvider.create(account.getUid(), Collections.singletonList(account.getRole()), 1000 * 60 * 30);
-        emailHandler.sendMail(account.getEmail(), "Famillink 이메일 인증입니다", "<h1>Famillink 이메일 인증 회원가입 입니다.</h1><a href='http://i8a208.p.ssafy.io:3000/check?token=" + token + "'>여기를 눌러 인증해주세요.</a>", true);
+        emailHandler.sendMail(account.getEmail(), "Famillink 이메일 인증입니다", "<h1>Famillink 이메일 인증 회원가입 입니다.</h1><a href='http://i8a208.p.ssafy.io:3000/account/check/" + token + "'>여기를 눌러 인증해주세요.</a>", true);
+
+
+
     }
 
     @Override

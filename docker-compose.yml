@@ -1,0 +1,48 @@
+version: "3"
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: famil_link
+      MYSQL_ROOT_PASSWORD: ss1235789
+    volumes:
+      - /mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - famil_link
+
+  springboot:
+    shm_size: '30gb'
+    build: ./BE/Spring
+    image: springboot-deploy
+    container_name: springboot-deploy
+    #    restart: always
+    volumes:
+      - ./backend:/serv/springboot
+    networks:
+      - famil_link
+    ports:
+      - 3000:9999
+    depends_on:
+      - mysql
+
+  flask:
+    shm_size: '30gb'
+    build: ./BE/Flask
+    image: flask-deploy
+    container_name: flask-deploy
+    #    restart: always
+    volumes:
+      - ./backend:/serv/flask
+    networks:
+      - famil_link
+    ports:
+      - 5000:5000
+    depends_on:
+      - springboot
+
+networks:
+  famil_link:
+    driver: bridge

@@ -1,6 +1,5 @@
 package com.famillink.model.domain.user;
 
-import com.famillink.annotation.ValidationGroups;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +16,11 @@ public class Member implements UserDetails {
 //    @ApiModelProperty(hidden = true)
     protected Long uid;
 
-    protected String user_uid;
+    protected Long user_uid;
+
+    public void setUser_uid(Long user_uid) {
+        this.user_uid = user_uid;
+    }
 
     protected String name;
 
@@ -89,7 +92,7 @@ public class Member implements UserDetails {
         this.nickname = nickname;
     }
 
-    public Member(Long uid, String user_uid, String name, String nickname) {
+    public Member(Long uid, Long user_uid, String name, String nickname) {
         this.uid = uid;
         this.user_uid = user_uid;
         this.name = name;

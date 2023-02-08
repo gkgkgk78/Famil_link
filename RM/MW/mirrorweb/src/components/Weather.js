@@ -10,82 +10,82 @@ function Weather() {
     const [temp, setTemp] = useState('5');
     // 날씨별로 react-icons 지정
     const [weatherIcon, setWeatherIcon] = useState([
-            { 
+            {
                 icon: '01d',
-                img: <WiDaySunny size={30} color="white" /> 
+                img: <WiDaySunny size={30} color="white" />
             },
             {
                 icon: '01n',
-                img: <WiNightClear size={30} color="white" /> 
+                img: <WiNightClear size={30} color="white" />
             },
             {
                 icon: '02d',
-                img: <WiDayCloudy size={30} color="white" /> 
+                img: <WiDayCloudy size={30} color="white" />
             },
             {
                 icon: '02n',
-                img: <WiNightAltCloudy size={30} color="white" /> 
+                img: <WiNightAltCloudy size={30} color="white" />
             },
             {
                 icon: '03d',
-                img: <WiCloud size={30} color="white" /> 
+                img: <WiCloud size={30} color="white" />
             },
             {
                 icon: '03n',
-                img: <WiCloud size={30} color="white" /> 
+                img: <WiCloud size={30} color="white" />
             },
             {
                 icon: '04d',
-                img: <WiCloudy size={30} color="white" /> 
+                img: <WiCloudy size={30} color="white" />
             },
             {
                 icon: '04n',
-                img: <WiCloudy size={30} color="white" /> 
+                img: <WiCloudy size={30} color="white" />
             },
             {
                 icon: '09d',
-                img: <WiRain size={30} color="white" /> 
+                img: <WiRain size={30} color="white" />
             },
             {
                 icon: '09n',
-                img: <WiRain size={30} color="white" /> 
+                img: <WiRain size={30} color="white" />
             },
             {
                 icon: '10d',
-                img: <WiDayRain size={30} color="white" /> 
+                img: <WiDayRain size={30} color="white" />
             },
             {
                 icon: '10n',
-                img: <WiNightAltRain size={30} color="white" /> 
+                img: <WiNightAltRain size={30} color="white" />
             },
             {
                 icon: '11d',
-                img: <WiThunderstorm size={30} color="white" /> 
+                img: <WiThunderstorm size={30} color="white" />
             },
             {
                 icon: '11n',
-                img: <WiThunderstorm size={30} color="white" /> 
+                img: <WiThunderstorm size={30} color="white" />
             },
             {
                 icon: '13d',
-                img: <WiSnowflakeCold size={30} color="white" /> 
+                img: <WiSnowflakeCold size={30} color="white" />
             },
             {
                 icon: '13n',
-                img: <WiSnowflakeCold size={30} color="white" /> 
+                img: <WiSnowflakeCold size={30} color="white" />
             },
             {
                 icon: '50d',
-                img: <WiFog size={30} color="white" /> 
+                img: <WiFog size={30} color="white" />
             },
             {
                 icon: '50n',
-                img: <WiFog size={30} color="white" /> 
+                img: <WiFog size={30} color="white" />
             },
     ]);
     const [findWeather, setFindWeather] = useState(<WiDaySunny size={30} color="white" />)
     const [weatherStatus, setWeatherStatus] = useState('');
-    
+
     // 현재 위치를 찾는다면 onGeoOK 함수 실행
     function onGeoOk(position) {
     const lat = position.coords.latitude;
@@ -103,15 +103,12 @@ function Weather() {
         const findIndexNum = weatherIcon.findIndex(element => element.icon === weatherStatus)
         setFindWeather(weatherIcon[findIndexNum].img)
     }
-    )
-}
 
     // 현재 위치를 찾을 수 없다면 alert
     function onGeoError() {
-        alert("Can't find you. No weather for you.");
+    alert("Can't find you. No weather for you.");
     }
 
-    // 현재 위치를 조회하는 함수, 실행되면 onGeoOK 함수 실행, 실패하면 onGeoError 함수 실행
     navigator.geolocation.getCurrentPosition(onGeoOk, onGeoError)
 
         return (

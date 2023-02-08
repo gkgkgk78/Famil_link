@@ -146,7 +146,7 @@ public class FlaskFileServiceImpl implements FlaskFileService {
 
     @Override
     public Path load(String filename) {
-        // TODO Auto-generated method stub
+
         return Paths.get(moviePath).resolve(filename);
     }
 

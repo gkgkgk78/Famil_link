@@ -53,7 +53,6 @@ public class SwaggerConfiguration {
     private ApiKey apiKey() {
         return new ApiKey("Authorization", "Authorization", "header");
     }
-
     private SecurityContext securityContext() {
         return springfox
                 .documentation

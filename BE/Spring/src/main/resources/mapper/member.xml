@@ -7,12 +7,28 @@
 
     <select id="findUserByUid" parameterType="long" resultType="Member">
         SELECT `uid`,
+               `user_uid`,
                `name`,
                `nickname`,
-               `user_uid`
+               `role`,
+               `refresh_token`
         FROM member
         WHERE `uid` = #{uid}
     </select>
+
+
+    <select id="findUserByNametoAll" parameterType="hashMap" resultType="Member">
+        SELECT `uid`,
+               `user_uid`,
+               `name`,
+               `nickname`,
+               `role`,
+               `refresh_token`
+        FROM member
+        WHERE `user_uid` = #{user_uid}
+          and `name` = #{name}
+    </select>
+
 
     <select id="findUserByName" parameterType="string" resultType="long">
         SELECT `uid`
@@ -26,15 +42,16 @@
                `name`,
                `nickname`,
                `user_uid`
-        FROM account a JOIN member m
-            ON a.uid = m.user_uid
+        FROM account a
+                 JOIN member m
+                      ON a.uid = m.user_uid
         WHERE #{email} = a.email
     </select>
 
 
     <insert id="signup" parameterType="Member">
         INSERT INTO member (`name`,`nickname`,`user_uid`)
-        VALUES (#{name},  #{nickname},#{user_uid})
+        VALUES (#{name}, #{nickname},#{user_uid})
         <selectKey resultType="long" keyProperty="uid" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -66,10 +83,6 @@
         SET `pw` = #{pw}
         WHERE `email` = #{email};
     </update>
-
-
-
-
 
 
 </mapper>

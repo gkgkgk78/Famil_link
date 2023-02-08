@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class FamilLinkApplication {
 
     public static void main(String[] args) {
+        // docker-compose changed test
         SpringApplication.run(FamilLinkApplication.class, args);
 
     }

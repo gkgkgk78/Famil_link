@@ -22,6 +22,7 @@ public class FileServiceImpl implements FileService {
     @Value("upfiles")
     private String moviePath;
 
+
     @Override
     public void init() {
         try {
@@ -58,6 +59,7 @@ public class FileServiceImpl implements FileService {
                     }
                 }
 
+
                 Path target = (Path) Paths.get("family", user, u1.toString() + file.getOriginalFilename());
                 Files.copy(inputStream, root.resolve(target), StandardCopyOption.REPLACE_EXISTING);
                 return root.resolve(target).toString();
@@ -84,6 +86,76 @@ public class FileServiceImpl implements FileService {
             throw new BaseException(ErrorMessage.NOT_READ_FILE);
         }
     }
+
+    @Override
+    public void deleteFile(String fileName) throws Exception {
+
+        Path root = Paths.get(moviePath);
+
+
+        File upload = root.resolve("faceRegist").toFile();
+
+        File target = new File(upload, fileName);
+
+        //삭제할 파일이 없는 경우
+        if(!target.exists())
+            throw new BaseException(ErrorMessage.NOT_FOUND_FILE);
+
+        //파일 삭제
+        boolean result = target.delete();
+
+
+        File thumbnail = new File(target.getParent(),"s_"+target.getName());
+        //getParent() - 현재 File 객체가 나태내는 파일의 디렉토리의 부모 디렉토리의 이름 을 String으로 리턴해준다.
+        result = thumbnail.delete();
+
+    }
+
+    @Override
+    public String saveRegistVideo(MultipartFile files,String name, Long account_uid) throws IOException {
+        if (files.isEmpty()) {
+            throw new BaseException(ErrorMessage.NOT_FOUND_FILE);
+        }
+
+        //String uploadPath = servletContext.getRealPath("/file");
+
+        //test
+        //File upload = new File("C:\\registFace");
+
+        Path root = Paths.get(moviePath);
+
+        if (!Files.exists(root)) {
+            init();
+        }
+
+
+        //test
+        //File upload = root.resolve(Paths.get("C:\\", "face")).toFile();
+
+        String accountUid = String.valueOf(account_uid);
+
+        File upload = root.resolve("faceRegist").toFile();
+
+        if (!upload.exists()) upload.mkdir();
+
+        String fileName = accountUid + "_" + name + "_" + files.getOriginalFilename();
+
+        File target = new File(upload, fileName);
+
+        InputStream inputStream = files.getInputStream();
+
+        if (!files.isEmpty()) {
+	        // 파일 저장
+            Path path = (Path) Paths.get("faceRegist", fileName);
+            Files.copy(inputStream, root.resolve(path), StandardCopyOption.REPLACE_EXISTING);
+
+        }
+
+        return target.toString();
+
+    }
+
+
 
 
 }
