@@ -10,6 +10,7 @@ const Main = () => {
           <div className='calendardiv'>
             <Calendar />  
           </div>
+          <Caption></Caption>
           <div className='tododiv'>
             <Todo />
           </div>
