@@ -50,7 +50,7 @@ function MQTT() {
   // 브로커에 연결되면
   client.on('connect', () => {
     // 연결 되면 토픽을 구독
-    client.subscribe(["/local/face/result/", "local/account/login"], function (err) {
+    client.subscribe(["/local/face/result/", "/local/qrtoken/"], function (err) {
       if (err) {
         console.log(err)
       }
@@ -91,10 +91,24 @@ function MQTT() {
         } 
       }
       // 토픽이 로그인관련 이면
-    } else if (topic === "/local/qr/") {
-      console.log(JSON.parse(message))
+    } else if (topic === "/local/qrtoken/") {
+      client.publish("/local/qr/","0")
       let msg = JSON.parse(message)
-      saveFAToken(msg["access-token"])
+      axios({
+        method:"get",
+        url:"http://i8a208.p.ssafy.io:3000/account/auth",
+        headers:{
+          "Authorization": `Bearer ${msg}`
+        }
+      })
+      .then((res) => {
+        if (res.data["result"]===true) {
+          saveFAToken(msg)
+        }
+      })
+      .catch((err) => {
+        client.publish("/local/qr/","1")
+      })
     }
   })
 

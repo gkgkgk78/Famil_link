@@ -48,7 +48,6 @@ function App() {
         <Route path="/record" element={<Record/>} />
       </Routes>
       </section>
-      <footer> <Caption></Caption> </footer>
 
     </div>
   );
