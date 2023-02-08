@@ -60,8 +60,8 @@ public class ToFlaskImpl implements ToFlask {
         //http://localhost:5555/
         Request request = new Request.Builder()
                 .header("title", account.getUid().toString())
-                .url("http://localhost:5000/hihi")
- //               .url("http://flask-deploy:5000/hihi")
+ //               .url("http://localhost:5000/hihi")
+                .url("http://flask-deploy:5000/hihi")
                 .post(requestBody)
                 .build();
 
