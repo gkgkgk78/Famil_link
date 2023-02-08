@@ -11,6 +11,9 @@ public class ValidationGroups {
 
     public interface login extends Default {};
 
+    public interface member_login extends Default {};
+    public interface member_signup extends Default {};
+
     public interface find_password extends Default {};
 
     public interface mail extends Default {};
@@ -18,5 +21,8 @@ public class ValidationGroups {
     public interface date extends Default {};
 
     public interface regist extends Default {};
+
+
+
 
 }

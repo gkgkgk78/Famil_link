@@ -1,5 +1,6 @@
 package com.famillink.controller;
 
+import com.famillink.annotation.ValidationGroups;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.ImageDTO;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,10 +52,9 @@ public class MemberController {
     }
 
 
-    //웹용 로그인
     @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [image file,uid]")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody ImageDTO imageDTO, final Authentication authentication) throws Exception {
+    public ResponseEntity<?> login(@RequestBody @Validated(ValidationGroups.member_login.class) ImageDTO imageDTO, final Authentication authentication) throws Exception {
 
 
         //안면인식으로 추출한 멤버

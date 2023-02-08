@@ -30,7 +30,7 @@ public class ScheduleController {
 
     @ApiOperation(value = "이번달 전체 일정 조회", notes = "이번달 전체 일정을 조회합니다")
     @GetMapping("/list")
-    public ResponseEntity<?> getFromTodayToMonthSchedule(Authentication authentication){
+    public ResponseEntity<?> getFromTodayToMonthSchedule(Authentication authentication) {
 
         Member member = (Member) authentication.getPrincipal();
 
@@ -42,9 +42,11 @@ public class ScheduleController {
         List<Schedule> scheduleList = scheduleService.findScheduleListForMonth(account_uid);
 
 
-
         if (scheduleList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body("등록된 일정이 없습니다");
+            return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
+                            put("msg", "등록된 일정이 없습니다");
+                    }}
+            );
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
@@ -54,7 +56,7 @@ public class ScheduleController {
 
     @ApiOperation(value = "일정 5개 조회", notes = "이번달 전체 일정 중 최근 5개의 일정 조회")
     @GetMapping("/list/five-list")
-    public ResponseEntity<?> getMonthSchedule(Authentication authentication){
+    public ResponseEntity<?> getMonthSchedule(Authentication authentication) {
 
         Member member = (Member) authentication.getPrincipal();
 
@@ -66,9 +68,11 @@ public class ScheduleController {
         List<Schedule> scheduleList = scheduleService.findScheduleListForMonthTop5(account_uid);
 
 
-
         if (scheduleList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body("등록된 일정이 없습니다");
+            return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
+                    put("msg", "등록된 일정이 없습니다");
+                }}
+            );
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>() {{
@@ -110,7 +114,9 @@ public class ScheduleController {
         //변경 사항이 없는데 요청이 올 경우
         Schedule compareSchedule = scheduleService.findSchedule(uid);
         if (schedule.getContent().equals(compareSchedule.getContent()) && schedule.getDate().toString().equals(compareSchedule.getDate().toString())) {
-            return ResponseEntity.status(HttpStatus.OK).body("수정 사항이 없습니다");
+            return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String, Object>(){{
+                put("msg", "수정 사항이 없습니다");
+            }});
         }
         //test
 //        Long memberUid = 7L;

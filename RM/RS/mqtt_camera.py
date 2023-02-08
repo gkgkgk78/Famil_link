@@ -216,6 +216,7 @@ def on_connect(client, userdata, flags, rc):
         t1.start()
         client.subscribe("/local/record/", 2)
         client.subscribe("/local/token/", 2)
+        client.subscribe("/local/qr/", 2)
     else:
         print("Bad connection Returned code=", rc)
 
@@ -256,88 +257,92 @@ def on_message(client, userdata, msg):
 def opencv_publish():
     global camera, client, isRecord, isQr
     idx = 0
-    if isQr:
-        while True:
-            ret, image = camera.read()
-            if not ret:
-                print("dont read cam")
-                break
-            # image = cv2.resize(image, None, fx=0.2, fy=0.2, interpolation=cv2.INTER_AREA)
-            qr = cv2.QRCodeDetector()
-            data, box, straight_qrcode = qr.detectAndDecode(image)
-            if data:
-                print('QR코드 데이터: {}'.format(data))
-                client.publish("/local/qrtoken/", json.dumps(data), 2)
-                print("publish qr data")
-    else:
-        while True:
-            if isRecord:
-                break
-            ret, image = camera.read()
-            if not ret:
-                print("dont read cam")
-                break
-            # client.publish("/local/opencv/", json.dumps(image, cls=NumpyArrayEncoder), 2)
+    try:
+        if isQr:
+            while True:
+                ret, image = camera.read()
+                if not ret:
+                    print("dont read cam")
+                    break
+                # image = cv2.resize(image, None, fx=0.2, fy=0.2, interpolation=cv2.INTER_AREA)
 
-            # Show the image in a window
-            # cv2.imshow('Webcam Image', image)
+                qr = cv2.QRCodeDetector()
+                data, box, straight_qrcode = qr.detectAndDecode(image)
+                if data:
+                    print('QR코드 데이터: {}'.format(data))
+                    client.publish("/local/qrtoken/", json.dumps(data), 2)
+                    print("publish qr data")
+        else:
+            while True:
+                if isRecord:
+                    break
+                ret, image = camera.read()
+                if not ret:
+                    print("dont read cam")
+                    break
+                # client.publish("/local/opencv/", json.dumps(image, cls=NumpyArrayEncoder), 2)
 
-            ############################
-            #                          #
-            # To improve performance, optionally mark the image as not writeable to
-            # pass by reference.
-            with mp_face_detection.FaceDetection(
-                    model_selection=0, min_detection_confidence=0.5) as face_detection:
+                # Show the image in a window
+                # cv2.imshow('Webcam Image', image)
 
-                image.flags.writeable = False
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                results = face_detection.process(image)
+                ############################
+                #                          #
+                # To improve performance, optionally mark the image as not writeable to
+                # pass by reference.
+                with mp_face_detection.FaceDetection(
+                        model_selection=0, min_detection_confidence=0.5) as face_detection:
 
-                # Draw the face detection annotations on the image.
-                image.flags.writeable = True
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                    image.flags.writeable = False
+                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                    results = face_detection.process(image)
 
-                if results.detections:
-                    for detection in results.detections:
-                        # mp_drawing.draw_detection(image, detection)
-                        # bbox_drawing_spec = mp_drawing.DrawingSpec()
-                        # mp_drawing.draw_detection(image, detection)
-                        image_rows, image_cols, _ = image.shape
-                        location = detection.location_data
-                        relative_bounding_box = location.relative_bounding_box
-                        rect_start_point = mp_drawing._normalized_to_pixel_coordinates(
-                            relative_bounding_box.xmin, relative_bounding_box.ymin, image_cols,
-                            image_rows)
-                        rect_end_point = mp_drawing._normalized_to_pixel_coordinates(
-                            relative_bounding_box.xmin + relative_bounding_box.width,
-                            relative_bounding_box.ymin + relative_bounding_box.height, image_cols,
-                            image_rows)
+                    # Draw the face detection annotations on the image.
+                    image.flags.writeable = True
+                    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-                        if rect_start_point is None or rect_end_point is None:
-                            image = np.zeros((224, 224, 3), np.uint8)
-                            break
-                        if None in rect_start_point or None in rect_end_point:
-                            image = np.zeros((224, 224, 3), np.uint8)
-                            break
+                    if results.detections:
+                        for detection in results.detections:
+                            # mp_drawing.draw_detection(image, detection)
+                            # bbox_drawing_spec = mp_drawing.DrawingSpec()
+                            # mp_drawing.draw_detection(image, detection)
+                            image_rows, image_cols, _ = image.shape
+                            location = detection.location_data
+                            relative_bounding_box = location.relative_bounding_box
+                            rect_start_point = mp_drawing._normalized_to_pixel_coordinates(
+                                relative_bounding_box.xmin, relative_bounding_box.ymin, image_cols,
+                                image_rows)
+                            rect_end_point = mp_drawing._normalized_to_pixel_coordinates(
+                                relative_bounding_box.xmin + relative_bounding_box.width,
+                                relative_bounding_box.ymin + relative_bounding_box.height, image_cols,
+                                image_rows)
 
-                        image = image[rect_start_point[1]:rect_end_point[1], rect_start_point[0]:rect_end_point[0]]
-                        image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
-                else:
-                    image = np.zeros((224, 224, 3), np.uint8)
-                # Flip the image horizontally for a selfie-view display.
-            # cv2.imshow("dd", image)
-            ############################
-            data = {
-                "image": image
-            }
-            client.publish("/local/opencv/", json.dumps(data, cls=NumpyArrayEncoder), 2)  # TODO: 해제
-            print("publish opencv data " + str(idx))
-            idx += 1
-            cv2.waitKey(150)  # MQTT 성능에 따라 유도리 있게 설정
+                            if rect_start_point is None or rect_end_point is None:
+                                image = np.zeros((224, 224, 3), np.uint8)
+                                break
+                            if None in rect_start_point or None in rect_end_point:
+                                image = np.zeros((224, 224, 3), np.uint8)
+                                break
+
+                            image = image[rect_start_point[1]:rect_end_point[1], rect_start_point[0]:rect_end_point[0]]
+                            image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
+                    else:
+                        image = np.zeros((224, 224, 3), np.uint8)
+                    # Flip the image horizontally for a selfie-view display.
+                # cv2.imshow("dd", image)
+                ############################
+                data = {
+                    "image": image
+                }
+                client.publish("/local/opencv/", json.dumps(data, cls=NumpyArrayEncoder), 2)  # TODO: 해제
+                print("publish opencv data " + str(idx))
+                idx += 1
+                cv2.waitKey(150)  # MQTT 성능에 따라 유도리 있게 설정
+    except Exception as e:
+        print(e)
 
 
 print("1")
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(0 + cv2.CAP_DSHOW)
 print("2")
 fourcc = cv2.VideoWriter_fourcc(*"MJPG")  # 인코딩 포맷 문자
 camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)  # 1280
