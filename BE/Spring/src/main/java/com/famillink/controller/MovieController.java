@@ -75,7 +75,7 @@ public class MovieController {
 
         Member member = (Member) authentication.getPrincipal();
 
-        Long member_to = member.getUser_uid();
+        Long member_to = member.getUid();
 
         List<MovieDTO> movieList = movieService.showMovieList(member_to);
 
