@@ -11,11 +11,14 @@ import java.util.Map;
 
 import com.famillink.model.domain.user.Account;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FaceDetectionImpl implements FaceDetection {
+    @Value("${famillink.flask.domain}")
+    private String flask_ip;
     public String getMemberUidByFace(List<List<List<Integer>>> params, Authentication authentication) throws Exception {
         Account account = (Account) authentication.getPrincipal();
         //쭉 변환 하는 과정입니다
@@ -29,7 +32,7 @@ public class FaceDetectionImpl implements FaceDetection {
 
 
         //post보내는 부분
-         String host_url = "http://flask-deploy:5000";
+         String host_url = "http://" + flask_ip + ":5000";
  //       String host_url = "http://localhost:5000";
         HttpURLConnection conn = null;
         URL url = new URL(host_url);
