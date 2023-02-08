@@ -1,21 +1,22 @@
 import React, {useEffect, useRef, useState} from 'react';
 import mqtt from "precompiled-mqtt";
 import axios from "axios"
-import { setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setToMember, setValid, setVideos, startRecording, stopRecording, setFamilyAccessToken } from '../modules/valid';
+import { setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setToMember, setValid, setVideos, startRecording, stopRecording, } from '../modules/valid';
 import {useSelector, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 
 
 function MQTT() {
   // redux에서 state 불러오기
-  const { familyAccessToken, memberAccessToken, me, validation, toMember , recording, storedVideos } = useSelector(state => ({
+  const { familyAccessToken, memberAccessToken, me, validation, toMember , recording, storedVideos, } = useSelector(state => ({
     familyAccessToken: state.valid.familyAccessToken,
     memberAccessToken: state.valid.memberAccessToken,
     me : state.valid.me,
     validation : state.valid.validation,
     toMember : state.valid.toMember,
     recording : state.valid.isRecording,
-    storedVideos : state.valid.videos
+    storedVideos : state.valid.videos,
+
   }))
   // redux에서 action 가져오기
   const dispatch = useDispatch();
@@ -28,7 +29,6 @@ function MQTT() {
   const saveMemberToken = (membertoken) => dispatch(setMemberAccessToken(membertoken))
   const saveMemberRefreshToken = (memreftoken) => dispatch(setMemberRefreshToken(memreftoken))
   const saveToMember = (tomember) => dispatch(setToMember(tomember))
-  const saveFAToken = fatoken => dispatch(setFamilyAccessToken(fatoken))
 
   const Navigate = useNavigate()
 
@@ -46,11 +46,10 @@ function MQTT() {
   const memberMounted = useRef(false);
   const testNumber = useRef(0);
 
-
   // 브로커에 연결되면
   client.on('connect', () => {
     // 연결 되면 토픽을 구독
-    client.subscribe(["/local/face/result/", "/local/qrtoken/"], function (err) {
+    client.subscribe(["/local/face/result/"], function (err) {
       if (err) {
         console.log(err)
       }
@@ -60,55 +59,34 @@ function MQTT() {
   // 메세지가 오면
   client.on('message', async function (topic, message) {
     // 만약 내가 설정되지 않은 상태라면
-    if (topic === "/local/face/result/") {
-      if (!me) {
-        let name = JSON.parse(message).name
-        // 토픽이 안면 인식 토픽이라면
-        if (topic === "/local/face/result/") {
-          // 리스트에 이름을 계속 담다가
-          if (name !== "NONE"){
-            setList( function(preState) {
-              return [...preState, name]
-            })
-            // 20개 이상 담기면
-            if (userList.length >= 20) {
-              // 10개로 자름
-              setList(function(preState) {
-               return preState.slice(0,10)
-              })   
-            }
-            // 만약 모든 원소가 같으면
-            if ((userList.filter(user => user !== userList[0])).length ===0) {
-              // 가져온 이미지를 변수에 담는다.
-              let imageArray = JSON.parse(message).image
-              if (imageArray.length > 0) {
-                setImage(() => {
-                  return imageArray
-                })
-              }
+    if (!me) {
+      let name = JSON.parse(message).name
+      // 토픽이 안면 인식 토픽이라면
+      if (topic === "/local/face/result/") {
+        // 리스트에 이름을 계속 담다가
+        if (name !== "NONE"){
+          setList( function(preState) {
+            return [...preState, name]
+          })
+          // 15개 이상 담기면
+          if (userList.length >= 15) {
+            // 10개로 자름
+            setList(function(preState) {
+             return preState.slice(0,10)
+            })   
+          }
+          // 만약 모든 원소가 같으면
+          if ((userList.filter(user => user !== userList[0])).length ===0) {
+            // 가져온 이미지를 변수에 담는다.
+            let imageArray = JSON.parse(message).image
+            if (imageArray.length > 0) {
+              setImage(() => {
+                return imageArray
+              })
             }
           }
-        } 
-      }
-      // 토픽이 로그인관련 이면
-    } else if (topic === "/local/qrtoken/") {
-      client.publish("/local/qr/","0")
-      let msg = JSON.parse(message)
-      axios({
-        method:"get",
-        url:"http://i8a208.p.ssafy.io:3000/account/auth",
-        headers:{
-          "Authorization": `Bearer ${msg}`
         }
-      })
-      .then((res) => {
-        if (res.data["result"]===true) {
-          saveFAToken(msg)
-        }
-      })
-      .catch((err) => {
-        client.publish("/local/qr/","1")
-      })
+      } 
     }
   })
 
