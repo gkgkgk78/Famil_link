@@ -48,8 +48,8 @@ def on_message(client, userdata, msg):
         pick = np.argmax(probabilities)
         percent = probabilities[0][pick]
         name = labels[pick].strip().split(' ')[1]
-        # print(name)
-        if percent > 0.90:
+        print(name, percent)
+        if percent > 0.75:
             data = {
                 "name": name,
                 "percent": str(percent),
