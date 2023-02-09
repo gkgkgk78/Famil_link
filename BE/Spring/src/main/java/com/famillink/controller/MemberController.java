@@ -50,6 +50,9 @@ public class MemberController {
         Account auth = (Account) authentication.getPrincipal();
         Long tt = auth.getUid();
 
+
+
+
         //회원가입을 할시에 자신이 찍은 사진을 바탕으로 회원가입이 되는 여부를 판단을 할수 있음
         Member savedUser = memberservice.signup(name, nickname, tt);
         PhotoSenderDTO sender=new PhotoSenderDTO(auth.getUid(),name);
