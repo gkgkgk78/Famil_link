@@ -47,13 +47,14 @@ function MQTT() {
   const recordMounted = useRef(false);
   const testMounted = useRef(false);
   const memberMounted = useRef(false);
+  const familyMounted = useRef(false);
   const testNumber = useRef(0);
 
 
   // 브로커에 연결되면
   client.on('connect', () => {
     // 연결 되면 토픽을 구독
-    client.subscribe(["/local/face/result/", "/local/qrtoken/"], function (err) {
+    client.subscribe([ "/local/qrtoken/"], function (err) {
       if (err) {
         console.log(err)
       }
@@ -64,40 +65,42 @@ function MQTT() {
   client.on('message', async function (topic, message) {
     // 만약 내가 설정되지 않은 상태라면
     if (topic === "/local/face/result/") {
-      if (!me) {
-        let name = JSON.parse(message).name
-        // 토픽이 안면 인식 토픽이라면
-        if (topic === "/local/face/result/") {
-          // 리스트에 이름을 계속 담다가
-          if (name !== "NONE"){
-            setList( function(preState) {
-              return [...preState, name]
-            })
-            // 20개 이상 담기면
-            if (userList.length >= 30) {
-              // 10개로 자름
-              setList(function(preState) {
-               return preState.slice(0,20)
+      if (memInfo) {
+        if (!me) {
+          let name = JSON.parse(message).name
+          // 토픽이 안면 인식 토픽이라면
+          if (topic === "/local/face/result/") {
+            // 리스트에 이름을 계속 담다가
+            if (name !== "NONE"){
+              setList( function(preState) {
+                return [...preState, name]
               })
-            }
-            // 만약 모든 원소가 같으면
-            if ((userList.filter(user => user !== userList[0])).length ===0) {
-              // 가져온 이미지를 변수에 담는다.
-              let imageArray = JSON.parse(message).image
-              if (imageArray.length > 0) {
-                setImage(() => {
-                  return imageArray
+              // 20개 이상 담기면
+              if (userList.length >= 30) {
+                // 10개로 자름
+                setList(function(preState) {
+                 return preState.slice(0,20)
                 })
-                if (!nameValid.current) {
-                  nameValid.current=true
-                  setName(() => {
-                    return name
+              }
+              // 만약 모든 원소가 같으면
+              if ((userList.filter(user => user !== userList[0])).length ===0) {
+                // 가져온 이미지를 변수에 담는다.
+                let imageArray = JSON.parse(message).image
+                if (imageArray.length > 0) {
+                  setImage(() => {
+                    return imageArray
                   })
+                  if (!nameValid.current) {
+                    nameValid.current=true
+                    setName(() => {
+                      return name
+                    })
+                  }
                 }
               }
             }
-          }
-        } 
+          } 
+        }
       }
       // 토픽이 로그인관련 이면
     } else if (topic === "/local/qrtoken/") {
@@ -245,7 +248,48 @@ function MQTT() {
       }
     }
     },[recording])
+
+  useEffect(() => {
+    if (!familyMounted.current) {
+      familyMounted.current=true
+    } else {
+      console.log(familyAccessToken)
+      axios({
+        method: "get",
+        url: `http://i8a208.p.ssafy.io:3000/account/member-list`,
+        headers: {
+          "Authorization": `Bearer ${familyAccessToken}`
+        }
+      })
+      .then ((res) => {
+        console.log(res)
+        /* if (res.result === true) {
+          const emptyObject = {}
+          for (let member of res.list) {
+            emptyObject.memeber["name"] = member["uid"]
+          }
+          changeStoreMeberInfo(emptyObject)
+
+        } */
+        const emptyObject = {}
+          for (let member of res.result) {
+            emptyObject.memeber["name"] = member["uid"]
+          }
+          changeStoreMeberInfo(emptyObject)
+  
+      })
+      .catch ((err) => {
+        console.log(err)
+      })
+    }
+  },[familyAccessToken])
+
+  useEffect(() => {
+    console.log(memInfo)
+  },[memInfo])
 }
+
+
 
 
 
