@@ -99,6 +99,7 @@ public class AccountController {
 
         Map<String, Object> response = new HashMap<>();
 
+        response.put("result", true);
         response.put("list", members);
         response.put("msg", "멤버리스트입니다");
 
