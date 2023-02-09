@@ -7,6 +7,7 @@ import com.famillink.model.domain.param.ImageDTO;
 import com.famillink.model.domain.param.PhotoSenderDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.domain.user.Member_Login;
 import com.famillink.model.mapper.MemberMapper;
 import com.famillink.model.service.FaceDetection;
 import com.famillink.model.service.MemberService;
@@ -41,10 +42,10 @@ public class MemberController {
 
     private final PhotoService photoService;
 
-    @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname]")
+    @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname,account_token]")
     @PostMapping("/signup")
 
-    public ResponseEntity<?> signup(@RequestParam String name,@RequestParam String nickname,@RequestPart(value = "img", required = true) MultipartFile file, final Authentication authentication) throws Exception {
+    public ResponseEntity<?> signup(Member_Login member, @RequestPart(value = "img", required = true) MultipartFile file, final Authentication authentication) throws Exception {
 
 
         Account auth = (Account) authentication.getPrincipal();
@@ -54,8 +55,8 @@ public class MemberController {
 
 
         //회원가입을 할시에 자신이 찍은 사진을 바탕으로 회원가입이 되는 여부를 판단을 할수 있음
-        Member savedUser = memberservice.signup(name, nickname, tt);
-        PhotoSenderDTO sender=new PhotoSenderDTO(auth.getUid(),name);
+        Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
+        PhotoSenderDTO sender=new PhotoSenderDTO(auth.getUid(),member.getName());
         photoService.sender(sender, file);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
