@@ -15,10 +15,7 @@ const PlayVideo = () => {
         videoList : state.valid.videos,
         memacctoken: state.valid.memberAccessToken
     }))
-    
-    useEffect(() => {
-        console.log(videoList)
-    },[])
+
 
     useEffect(() => {
         axios({
@@ -32,6 +29,19 @@ const PlayVideo = () => {
         .then((res) => {
             const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] } ));
             setVideoData(url)
+            axios({
+                method: "PUT",
+                url: `http://i8a208.p.ssafy.io:3000/movie${videoList[nowplaying]}`,
+                headers: {
+                    'Authorization': `Bearer ${memacctoken}`
+                }
+            })
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
         })
         .catch(e => {
             console.log(`error === ${e}`)

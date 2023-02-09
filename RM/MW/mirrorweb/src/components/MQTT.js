@@ -47,6 +47,7 @@ function MQTT() {
   const recordMounted = useRef(false);
   const testMounted = useRef(false);
   const memberMounted = useRef(false);
+  const familyMounted = useRef(false);
   const testNumber = useRef(0);
 
 
@@ -64,46 +65,44 @@ function MQTT() {
   client.on('message', async function (topic, message) {
     // 만약 내가 설정되지 않은 상태라면
     if (topic === "/local/face/result/") {
-      if (!me) {
-        let name = JSON.parse(message).name
-        // 토픽이 안면 인식 토픽이라면
-        if (topic === "/local/face/result/") {
-          // 리스트에 이름을 계속 담다가
-          if (name !== "NONE"){
-            setList( function(preState) {
-              return [...preState, name]
-            })
-            // 20개 이상 담기면
-            if (userList.length >= 30) {
-              // 10개로 자름
-              setList(function(preState) {
-               return preState.slice(0,20)
+      if (memInfo) {
+        if (!me) {
+          let name = JSON.parse(message).name
+          // 토픽이 안면 인식 토픽이라면
+          if (topic === "/local/face/result/") {
+            // 리스트에 이름을 계속 담다가
+            if (name !== "NONE"){
+              setList( function(preState) {
+                return [...preState, name]
               })
-            }
-            // 만약 모든 원소가 같으면
-            if ((userList.filter(user => user !== userList[0])).length ===0) {
-              // 가져온 이미지를 변수에 담는다.
-              let imageArray = JSON.parse(message).image
-              if (imageArray.length > 0) {
-                setImage(() => {
-                  return imageArray
+              // 20개 이상 담기면
+              if (userList.length >= 30) {
+                // 10개로 자름
+                setList(function(preState) {
+                 return preState.slice(10)
                 })
-                if (!nameValid.current) {
-                  nameValid.current=true
+              } 
+              // 만약 모든 원소가 같으면
+              if ((userList.filter(user => user !== userList[0])).length ===0) {
+                // 가져온 이미지를 변수에 담는다.
+                let imageArray = JSON.parse(message).image
+                if (imageArray.length > 0) {
+                  setImage(() => {
+                    return imageArray
+                  })
                   setName(() => {
                     return name
                   })
+                  }
                 }
               }
             }
-          }
-        } 
-      }
+          } 
+        }
+      } else if (topic === "/local/qrtoken/") {
+        client.publish("/local/qr/","0")
+        let msg = JSON.parse(message)
       // 토픽이 로그인관련 이면
-    } else if (topic === "/local/qrtoken/") {
-      client.publish("/local/qr/","0")
-      let msg = JSON.parse(message)
-
       axios({
         method:"get",
         url:"http://i8a208.p.ssafy.io:3000/account/auth",
@@ -119,8 +118,10 @@ function MQTT() {
       .catch((err) => {
         client.publish("/local/qr/","1")
       })
+    } 
+
     }
-  })
+  )
 
   // 이미지 데이터가 변경되었으면
   useEffect(() => {
@@ -132,7 +133,7 @@ function MQTT() {
       if (testNumber.current === 0) {
         setImage(imageData)
         changeStoreValid()
-        testNumber.current +=1
+
       }
     }
   }, [imageData])
@@ -149,9 +150,12 @@ function MQTT() {
           }
         }) */
         // 이미지를 JSON으로 변환
-        const image = JSON.stringify(imageData)
         // axios 요청
-        
+        const jsonInfo = 
+        {
+          "json": imageData,
+          "uid": memInfo[nameData]
+        }
         axios({
           method: "post",
           url: "http://i8a208.p.ssafy.io:3000/member/login",
@@ -159,10 +163,7 @@ function MQTT() {
             "Content-type": "Application/json",
             "Authorization": `Bearer ${familyAccessToken}`
           },
-          data: {
-            "json": image,
-            "uid": memInfo[nameData]
-          }
+          data: JSON.stringify(jsonInfo)
         })
         // 응답이 오면
         .then((res) => {
@@ -200,14 +201,15 @@ function MQTT() {
       })
       .then ((res) => {
         console.log(res)
-        const objectList = res.data["movie-list"]
-        let emptyList = []
-        for (let movie of objectList) {
-           emptyList.push(movie["uid"])
-          }
-        setVideoList(emptyList)
-        Navigate("/playvideo")
-
+        if (res.data["movie-list"]){
+          const objectList = res.data["movie-list"]
+          let emptyList = []
+          for (let movie of objectList) {
+             emptyList.push(movie["uid"])
+            }
+          setVideoList(emptyList)
+          Navigate("/playvideo")
+        }
 
       })
       .catch ((err) => {
@@ -245,7 +247,48 @@ function MQTT() {
       }
     }
     },[recording])
+
+  useEffect(() => {
+    if (!familyMounted.current) {
+      familyMounted.current=true
+    } else {
+      console.log(familyAccessToken)
+      axios({
+        method: "get",
+        url: `http://i8a208.p.ssafy.io:3000/account/member-list`,
+        headers: {
+          "Authorization": `Bearer ${familyAccessToken}`
+        }
+      })
+      .then ((res) => {
+        console.log(res)
+        /* if (res.result === true) {
+          const emptyObject = {}
+          for (let member of res.list) {
+            emptyObject.memeber.name = member.uid
+          } 
+          changeStoreMeberInfo(emptyObject)
+        */
+        
+        const emptyObject = {}
+          for (let member of res.data) {
+            emptyObject[member.name] = member.uid
+          }
+        changeStoreMeberInfo(emptyObject)
+        
+      })
+      .catch ((err) => {
+        console.log(err)
+      })
+    }
+  },[familyAccessToken])
+
+  useEffect(() => {
+    console.log(memInfo)
+  },[memInfo])
 }
+
+
 
 
 
