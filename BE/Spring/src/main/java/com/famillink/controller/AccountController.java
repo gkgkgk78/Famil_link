@@ -97,7 +97,12 @@ public class AccountController {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(members);
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("list", members);
+        response.put("msg", "멤버리스트입니다");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 

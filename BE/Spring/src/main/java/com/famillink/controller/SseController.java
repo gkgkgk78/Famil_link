@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/sse")
 public class SseController {
 
     private final SseService sseService;
@@ -22,15 +23,18 @@ public class SseController {
     @ApiOperation(value = "알림 구독", notes = "알림을 구독한다.")
     @GetMapping(value = "/subscribe", produces = "text/event-stream")
     @ResponseStatus(HttpStatus.OK)
-    public SseEmitter subscribe(Authentication authentication, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId){
+    public SseEmitter subscribe(){
 
-        Member member = (Member) authentication.getPrincipal();
+        //Authentication authentication, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId
 
-        return sseService.subscribe(member.getUid(), lastEventId);
+        //Member member = (Member) authentication.getPrincipal();
+
+        //member.getUid(), lastEventId
+        return sseService.subscribe(1L, "");
     }
 
     @ApiOperation(value = "알림 구독 해제", notes = "알림을 구독을 해제한다.")
-    @GetMapping(value = "/subscribe", produces = "text/event-stream")
+    @GetMapping(value = "/logout", produces = "text/event-stream")
     @ResponseStatus(HttpStatus.OK)
     public void logout(Long member_uid){
 
