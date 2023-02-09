@@ -26,7 +26,6 @@ const STT = () => {
         continuous: true,
         useLegacyResults: false,
         crossBrowser: true,
-        timeout: 60000,
         useOnlyGoogleCloud: true,
         googleApiKey: API_KEY,
         googleCloudRecognitionConfig: {
@@ -49,6 +48,7 @@ const STT = () => {
         } else{
             if (results.length>=1){
               let text = results[results.length-1].transcript
+              console.log(text)
                 // 현재 녹화 페이지가 아니면
                 if (location.pathname !== "/record") {
                     // 녹화라는 음성이 인식되었을 때

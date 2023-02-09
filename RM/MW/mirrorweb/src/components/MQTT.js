@@ -54,7 +54,7 @@ function MQTT() {
   // 브로커에 연결되면
   client.on('connect', () => {
     // 연결 되면 토픽을 구독
-    client.subscribe([ "/local/qrtoken/"], function (err) {
+    client.subscribe(["/local/face/result/", "/local/qrtoken/"], function (err) {
       if (err) {
         console.log(err)
       }
@@ -152,9 +152,12 @@ function MQTT() {
           }
         }) */
         // 이미지를 JSON으로 변환
-        const image = JSON.stringify(imageData)
         // axios 요청
-        
+        const jsonInfo = 
+        {
+          "json": imageData,
+          "uid": memInfo[nameData]
+        }
         axios({
           method: "post",
           url: "http://i8a208.p.ssafy.io:3000/member/login",
@@ -162,10 +165,7 @@ function MQTT() {
             "Content-type": "Application/json",
             "Authorization": `Bearer ${familyAccessToken}`
           },
-          data: {
-            "json": image,
-            "uid": memInfo[nameData]
-          }
+          data: JSON.stringify(jsonInfo)
         })
         // 응답이 오면
         .then((res) => {
@@ -266,17 +266,17 @@ function MQTT() {
         /* if (res.result === true) {
           const emptyObject = {}
           for (let member of res.list) {
-            emptyObject.memeber["name"] = member["uid"]
-          }
+            emptyObject.memeber.name = member.uid
+          } 
           changeStoreMeberInfo(emptyObject)
-
-        } */
+        */
+        
         const emptyObject = {}
-          for (let member of res.result) {
-            emptyObject.memeber["name"] = member["uid"]
+          for (let member of res.data) {
+            emptyObject[member.name] = member.uid
           }
-          changeStoreMeberInfo(emptyObject)
-  
+        changeStoreMeberInfo(emptyObject)
+        
       })
       .catch ((err) => {
         console.log(err)

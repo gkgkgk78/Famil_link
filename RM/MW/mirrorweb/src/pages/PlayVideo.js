@@ -15,10 +15,7 @@ const PlayVideo = () => {
         videoList : state.valid.videos,
         memacctoken: state.valid.memberAccessToken
     }))
-    
-    useEffect(() => {
-        console.log(videoList)
-    },[])
+
 
     useEffect(() => {
         axios({
