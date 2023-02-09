@@ -8,6 +8,7 @@ import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.ImageDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.domain.user.Member_Login;
 import com.famillink.model.mapper.AccountMapper;
 import com.famillink.util.JwtTokenProvider;
 import lombok.Data;
@@ -168,8 +169,8 @@ class AllInfoProjectApplicationTests {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);//보낸 가족 정보와 일치하는 유저 정보가 없음을 의미를 함
         }
 
-        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\temp\\model.h5").toPath()));
-        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File("C:\\Users\\SSAFY\\Documents\\PROJECT\\BE\\Flask\\temp\\labels.txt").toPath()));
+        MultipartFile model = new MockMultipartFile("keras_model.h5", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\model.h5").toPath()));
+        MultipartFile label = new MockMultipartFile("labels.txt", Files.newInputStream(new File("C:\\Users\\SSAFY\\Desktop\\S08P12A208\\BE\\Flask\\temp\\labels.txt").toPath()));
 
         flaskController.addModel(account.getUid(), model);
         flaskController.addLabel(account.getUid(), label);
@@ -210,7 +211,14 @@ class AllInfoProjectApplicationTests {
             Authentication authentication = doFilter(token, "qwer/member/signup");
             assert authentication != null;
 
-            ResponseEntity<?> temp = memberController.signup(member_name, member_nickname, authentication);
+
+            //    public ResponseEntity<?> signup(Member_Login member, @RequestPart(value = "img", required = true) MultipartFile file, final Authentication authentication) throws Exception {
+
+
+            Member_Login memberLogin=new Member_Login(member_name,member_nickname);
+            MultipartFile label = new MockMultipartFile("pic.png", Files.newInputStream(new File("C:\\Users\\SSAFY\\Downloads\\pic.png").toPath()));
+
+            ResponseEntity<?> temp = memberController.signup( memberLogin, label, authentication);
             assert temp.getStatusCode().value() == 200;
         } catch (Exception e) {
             throw e;
@@ -392,4 +400,8 @@ class AllInfoProjectApplicationTests {
     private static final String account_address = "경기도 고양시 덕양구 성사동";
     private static final String member_name = "최진우";
     private static final String member_nickname = "CJW";
+
+
+
+
 }
