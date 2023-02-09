@@ -20,7 +20,7 @@ services:
     container_name: springboot-deploy
     #    restart: always
     volumes:
-      - /backend:/serv/springboot
+      - /backend:/upfiles
     networks:
       - famil_link
     ports:
@@ -35,7 +35,7 @@ services:
     container_name: flask-deploy
     #    restart: always
     volumes:
-      - /backend:/serv/flask
+      - /backend:/upfiles
     networks:
       - famil_link
     ports:
