@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeField, initializeForm, login, familyLogout } from "../../modules/auth";
-import { setFamilyAccess, setFamilyRefresh } from '../../modules/user'
 import AuthForm from "../../components/auth/AuthForm";
 import { check } from "../../modules/user";
 import { useNavigate } from "react-router-dom";
@@ -65,7 +64,7 @@ const LoginForm = ({ history }) => {
         dispatch(familyToken(res.data['access-token']))
         localStorage.setItem('faccesstoken', JSON.stringify(res.data['access-token']))
         if(res.data['result']) {
-        navigate('/home')
+        navigate('/')
       }
     }).catch((err) => {
       console.log(err)
