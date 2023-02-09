@@ -18,7 +18,6 @@ public class EmitterServiceImpl implements EmitterService{
 
     @Override
     public SseEmitter save(String emitterId, SseEmitter sseEmitter) {
-        System.out.println("여기 도착하긴 해..?");
         emitters.put(emitterId, sseEmitter);
         return sseEmitter;
     }
@@ -35,9 +34,8 @@ public class EmitterServiceImpl implements EmitterService{
                 .filter(entry -> entry.getKey().startsWith(member_to))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        /**
-         * Collectors의 toMap() 메서드를 사용하여 Stream을 Map인스턴스로 수집
-         */
+        //Collectors의 toMap() 메서드를 사용하여 Stream을 Map인스턴스로 수집
+
     }
 
     @Override
