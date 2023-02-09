@@ -6,7 +6,6 @@ import "./components/navbar/navbar.css"
 import SignUpSuccess from "./pages/SignUpSuccess";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar"; 
-import Home from "./components/navbar/home/Home"
 import AuthLayout from "./components/auth/AuthLayout";
 import FamilyMember from './pages/FamilyMember'
 import FamilyMemberRegister from "./pages/FamilyMemberRegister";

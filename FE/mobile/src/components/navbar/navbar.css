@@ -113,7 +113,7 @@ img {
 
 .section__title::before {
   content: "";
-  background: url(../images/다운로드.jpg);
+  /* background: url(../images/다운로드.jpg); */
   height: 2.25rem;
   width: 2.25rem;
   position: absolute;

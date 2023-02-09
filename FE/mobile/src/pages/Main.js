@@ -21,20 +21,22 @@ const Main = () => {
 
     axios.get('http://i8a208.p.ssafy.io:3000/account/member-list', {
         headers : {
-            "Authorization": `Bearer ${fatkn}`
+            "Authorization": "Bearer "+fatkn.replaceAll('"', '')
         }
     }).then((res) => {
-        console.log(res)
-        setIsMember(res.result)
+        setIsMember(true)
     }).catch((err) => {
-        console.log(err)
+        console.log(err.response.request.response)
+        if(err.response.status=== 400) {
+            setIsMember(false)
+        } 
     })
 
     
     return (
         <div>
             
-        {/* {isMember ? navigate('/FamilyMember') : navigate('/FamilyMemberRegister')} */}
+        {isMember ? navigate('/FamilyMember') : navigate('/FamilyMemberRegister')}
         <main className="main">
         <Home />
         <About />
