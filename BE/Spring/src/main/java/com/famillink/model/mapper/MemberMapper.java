@@ -28,7 +28,7 @@ public interface MemberMapper {
     Boolean findTogether(Long uid1, Long uid2) throws Exception;
 
 
-    Optional<Member> findUserByNametoAll(Map map);
+    Optional<Member> findUserByNametoAll(Map<String,Object> map);
 
 
 }

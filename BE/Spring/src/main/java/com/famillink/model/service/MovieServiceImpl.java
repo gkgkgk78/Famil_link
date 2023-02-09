@@ -32,6 +32,9 @@ public class MovieServiceImpl implements MovieService {
     private final MemberMapper memberMapper;
     private final MemberService mservice;
 
+    private final SseService sseService;
+
+
     @Override
     @Transactional
     public void sender(MovieSenderDTO sender, MultipartFile file) throws Exception {
@@ -50,7 +53,17 @@ public class MovieServiceImpl implements MovieService {
         m = memberMapper.findUserByUid(sender.getFrom_member_uid()).get();
         //가족 uid로 폴더에 저장을 해줌
         String get = fileService.store(file, m.getUser_uid().toString());
+
+        //TODO: 이벤트 리스너
+        notifyStoreInfo(sender.getTo_member_uid());
+
         movieMapper.sendMovie(sender, get);
+
+    }
+
+    private void notifyStoreInfo(Long member_to) {
+
+        sseService.send(member_to, "new video", "http://i8a208.p.ssafy.io:3000/movie");
 
     }
 

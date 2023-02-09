@@ -40,12 +40,11 @@ const Caption = () => {
         .then((response) => {
           let audioSource = new Audio("data:audio/wav;base64," + response.data.audioContent)
           audioSource.play()
-          console.log(requestBody.input)
         })
-
         .catch((err) => {
             console.log(err)
         })
+
         const changeText = setInterval(()=>{
             setText(text => ({
                 ...text,

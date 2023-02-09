@@ -36,7 +36,7 @@ public class MovieController {
 
     private final FileService fileService;
 
-    @PostMapping("/")
+    @PostMapping()
     @ApiOperation(value = "동영상 보내기", notes = "req_data : [image,fromuid,touid]")
     public ResponseEntity<?> addMovie( MovieSenderDTO sender, @RequestPart(value = "mp4", required = true) MultipartFile file) throws Exception {
         movieService.sender(sender, file);
@@ -75,7 +75,7 @@ public class MovieController {
 
         Member member = (Member) authentication.getPrincipal();
 
-        Long member_to = member.getUser_uid();
+        Long member_to = member.getUid();
 
         List<MovieDTO> movieList = movieService.showMovieList(member_to);
 
