@@ -11,6 +11,8 @@ public class PhotoSenderDTO {
     // 저장하고자 하는 멤버의 이름을 나타냄
     private String name;
 
-
-
+    public PhotoSenderDTO(Long from_account_uid, String name) {
+        this.from_account_uid = from_account_uid;
+        this.name = name;
+    }
 }
