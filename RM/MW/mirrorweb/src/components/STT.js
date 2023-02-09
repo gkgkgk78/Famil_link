@@ -37,10 +37,11 @@ const STT = () => {
     const Navigate = useNavigate();
     const location = useLocation();
     
-    
-    setTimeout(() => {
-        startSpeechToText()
-    }, 50)
+    useEffect(() => {
+      setTimeout(() => {
+          startSpeechToText()
+      }, 50)
+    },[])
 
     useEffect(() => {
         if (!mounted.current) {
