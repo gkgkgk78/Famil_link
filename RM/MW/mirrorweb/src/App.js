@@ -7,7 +7,7 @@ import Weather from './components/Weather';
 import STT from './components/STT';
 
 import Main from './pages/Main';
-import LoginMirror from './pages/loginMirror';
+import QR from './pages/QR';
 import PlayVideo from './pages/PlayVideo';
 import Record from './pages/Record';
 
@@ -43,7 +43,7 @@ function App() {
       <section style={style}>
       <Routes>
         <Route path="/" element= { <Main />} />
-        <Route path="/loginmirror" element= { <LoginMirror />} />
+        <Route path="/qr" element={ <QR />} />
         <Route path="/playvideo" element={ <PlayVideo /> } />
         <Route path="/record" element={<Record/>} />
       </Routes>
