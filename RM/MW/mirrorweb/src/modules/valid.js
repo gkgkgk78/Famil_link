@@ -37,16 +37,14 @@ export const setSchedule = schedule => ({type: SET_SCHEDULE, schedule})
 
 // 초기 상태
 const initialState = {
-    me: 123,
-    familyAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2Iiwicm9sZXMiOlsiUk9MRV9BQ0NPVU5UIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTk5NDQ3MSwiZXhwIjoxMDAxNjc1OTk0NDcxfQ.eTyUeOcvPIfWQ_64SLXIdMpanXodX1BdaAEPFRW0TJc",
-    familyRefreshToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NTY2NDUwOCwiZXhwIjoxNjg1NjY0NTA4fQ.9lRH2t0orgsy3IaLUrOi08Ysz1Ke6-RRNMNWwcTvJaI",
-    memberAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZXMiOlsiUk9MRV9NRU1CRVIiXSwibGV2ZWwiOiJtZW1iZXIiLCJpYXQiOjE2NzU5OTQ3OTcsImV4cCI6MTAwMTY3NTk5NDc5N30.nCCSg_cI5YNGQbYABRZNLCR5W499Lg4yAMQwbTGuBq8",
+    me: null,
+    familyAccessToken: "",
+    familyRefreshToken: "",
+    memberAccessToken: "",
     memberRefreshToken: "",
     validation: false,
     isRecording: false,
-    memberInfo: {
-        "최진우": 4
-    },
+    memberInfo: null,
     toMember: null,
     videos: [],
     todos: [],

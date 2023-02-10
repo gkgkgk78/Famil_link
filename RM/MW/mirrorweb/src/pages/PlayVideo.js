@@ -3,37 +3,54 @@ import { useSelector } from "react-redux";
 import ReactPlayer from "react-player";
 import axios from "axios";
 
+
 import { useNavigate } from "react-router-dom";
 
 
 const PlayVideo = () => {
 
+    const [nowplaying, setVideo] = useState(0)
     const navigate = useNavigate();
-    const {videoList, token} = useSelector(state => ({
+    const {videoList, memacctoken} = useSelector(state => ({
         videoList : state.valid.videos,
         memacctoken: state.valid.memberAccessToken
     }))
-    
-    useEffect(() => {
-        console.log(videoList)
-    },[])
 
-/*     const localAxios = () => {
+
+    useEffect(() => {
         axios({
-            url: "http://i8a208.p.ssafy.io:3000/movie/3",
+            method:'GET',
+            url:`http://i8a208.p.ssafy.io:3000/movie/${videoList[nowplaying]}`,
+            responseType:'blob',
             headers: {
-                "Authorization" : `Bearer ${token}`
-            }
+                'Authorization': `Bearer ${memacctoken}`
+            },
         })
         .then((res) => {
-            console.log(res)
+            const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] } ));
+            setVideoData(url)
+            axios({
+                method: "PUT",
+                url: `http://i8a208.p.ssafy.io:3000/movie${videoList[nowplaying]}`,
+                headers: {
+                    'Authorization': `Bearer ${memacctoken}`
+                }
+            })
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
         })
-        .catch((err) => {
-            console.log(err)
+        .catch(e => {
+            console.log(`error === ${e}`)
         })
-    } */
 
-    const [nowplaying, setVideo] = useState(0)
+    },[nowplaying])
+
+    const [videoData, setVideoData] = useState(null)
+    
     const urlList = videoList.map(function(el) {
         return `http://i8a208.p.ssafy.io:3000/movie/${el}`
     })
@@ -54,7 +71,7 @@ const PlayVideo = () => {
     return (
         <div> 
           <ReactPlayer
-            url = {urlList[nowplaying]}
+            url = {videoData}
             muted={false}
             playing={true}
             controls

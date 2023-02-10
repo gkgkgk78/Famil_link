@@ -1,6 +1,7 @@
 package com.famillink.controller;
 
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.service.EmitterService;
 import com.famillink.model.service.SseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -12,18 +13,36 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/sse")
 public class SseController {
 
     private final SseService sseService;
 
+    private final EmitterService emitterService;
+
     @ApiOperation(value = "알림 구독", notes = "알림을 구독한다.")
     @GetMapping(value = "/subscribe", produces = "text/event-stream")
     @ResponseStatus(HttpStatus.OK)
-    public SseEmitter subscribe(Authentication authentication, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId){
+    public SseEmitter subscribe(){
 
-        Member member = (Member) authentication.getPrincipal();
+        //Authentication authentication, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId
 
-        return sseService.subscribe(member.getUid(), lastEventId);
+        //Member member = (Member) authentication.getPrincipal();
+
+        //member.getUid(), lastEventId
+        return sseService.subscribe(1L, "");
+    }
+
+    @ApiOperation(value = "알림 구독 해제", notes = "알림을 구독을 해제한다.")
+    @GetMapping(value = "/logout", produces = "text/event-stream")
+    @ResponseStatus(HttpStatus.OK)
+    public void logout(Long member_uid){
+
+        String member_id = sseService.makeTimeIncludeUid(member_uid);
+
+        emitterService.deleteAllEmitterStartWithMemberUid(member_id);
+        emitterService.deleteAllEventCacheStartWithId(member_id);
+
     }
 
 

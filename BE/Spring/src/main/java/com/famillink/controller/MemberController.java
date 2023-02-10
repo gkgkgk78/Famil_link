@@ -4,11 +4,14 @@ import com.famillink.annotation.ValidationGroups;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.ImageDTO;
+import com.famillink.model.domain.param.PhotoSenderDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
+import com.famillink.model.domain.user.Member_Login;
 import com.famillink.model.mapper.MemberMapper;
 import com.famillink.model.service.FaceDetection;
 import com.famillink.model.service.MemberService;
+import com.famillink.model.service.PhotoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -36,20 +40,27 @@ public class MemberController {
     private final MemberMapper mapper;
 
 
-    @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname]")
-    @PostMapping("/signup/{name}/{nickname}")
+    private final PhotoService photoService;
 
-    public ResponseEntity<?> signup(@PathVariable String name, @PathVariable String nickname, final Authentication authentication) throws Exception {
+    @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname,account_token]")
+    @PostMapping("/signup")
+
+    public ResponseEntity<?> signup(Member_Login member, @RequestPart(value = "img", required = true) MultipartFile file, final Authentication authentication) throws Exception {
 
 
         Account auth = (Account) authentication.getPrincipal();
         Long tt = auth.getUid();
 
+
+
+
         //회원가입을 할시에 자신이 찍은 사진을 바탕으로 회원가입이 되는 여부를 판단을 할수 있음
-        Member savedUser = memberservice.signup(name, nickname, tt);
+        Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
+        PhotoSenderDTO sender=new PhotoSenderDTO(auth.getUid(),member.getName());
+        photoService.sender(sender, file);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
-            put("msg", "멤버 가입 성공");
+            put("msg", "멤버 가입과 사진등록 성공");
         }}, HttpStatus.OK);
 
 
