@@ -14,7 +14,6 @@ import Record from './pages/Record';
 
 import { Box } from '@mui/system';
 import { Route, Routes } from 'react-router-dom';
-import { useEffect } from 'react';
 
 function App() {
   
@@ -26,7 +25,7 @@ function App() {
 
   const style = {
     paddingTop : '200px',
-    height : '720px'
+    height : '900px'
   }
   return (
     <div className="App">
