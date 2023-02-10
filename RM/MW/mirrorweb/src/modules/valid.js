@@ -13,6 +13,8 @@ const SET_TOMEMBER = "valid/SET_TOMEMBER"
 const SET_VIDEOS = "valid/SET_VIDEOS"
 const SET_TODOS = "valid/SET_TODOS"
 const SET_CAPTIONS = "valid/SET_CAPTIONS"
+const SET_WEATHER = "valid/SET_WEATHER"
+const SET_SCHEDULE = "valid/SET_SCHEDULE"
 
 
 // 액션 생성 함수
@@ -30,6 +32,8 @@ export const setToMember = memberID => ({type: SET_TOMEMBER, memberID})
 export const setVideos = videoList => ({type: SET_VIDEOS, videoList})
 export const setTodos = todoList => ({type: SET_TODOS, todoList})
 export const setCaptions = captions => ({type: SET_CAPTIONS, captions})
+export const setWeather = weather => ({type: SET_WEATHER, weather})
+export const setSchedule = schedule => ({type: SET_SCHEDULE, schedule})
 
 // 초기 상태
 const initialState = {
@@ -44,9 +48,10 @@ const initialState = {
     toMember: null,
     videos: [],
     todos: [],
-    caption:['안녕하세요','오늘 비가 예정되어있습니다','오늘 당신의 생일입니다','오늘도 즐거운 하루 보내세요'],
+    schedules: 789,
+    weather: 456,
+    caption:['안녕하세요','오늘 비가 예정되어있습니다','오늘 구름이 예정되어있습니다','오늘 님의 생일입니다','오늘 님의 시험입니다','영상편지를 남기시겠습니까?','오늘도 즐거운 하루 보내세요'],
 }
-
 
 // 리듀서
 export default function valid(state = initialState, action) {
@@ -117,8 +122,17 @@ export default function valid(state = initialState, action) {
                 ...state,
                 caption: action.caption
             }
-    
+        case SET_WEATHER:
+            return {
+                ...state,
+                weather: action.weather
+            }
+        case SET_SCHEDULE:
+            return {
+                ...state,
+                schedules: action.schedule
+            }
         default :
-          return state
+            return state
     }
 }
