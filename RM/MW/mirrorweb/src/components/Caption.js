@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { useSelector } from 'react-redux';
 import "./Caption.css"
 import axios from "axios"
@@ -20,13 +20,16 @@ const Caption = () => {
     // API_KEY는 JSON 파일에
     const API_KEY = secrets.google_speech_api_key
     const ttsURL = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${API_KEY}`
+    
+    const mounted = useRef(false);
 
     useEffect(() => {
-      if (weather === 456 || schedules === 789){
-        setChange(!isChangeWeather);
+      if (!mounted.current) {
+        mounted.current = true;
         return;
-      }
-        
+      } 
+        if(!schedules) return;
+        if(!weather) return;
         let idx =0;
         const textScript = [];
         textScript.push(`오늘의 날씨는 ${weather}입니다`)
@@ -66,7 +69,7 @@ const Caption = () => {
 
             if (idx===textLength) clearInterval(changeText);
         },3000)
-    },[isChangeWeather])
+    },[weather, schedules])
 
     useEffect(() => {
 
