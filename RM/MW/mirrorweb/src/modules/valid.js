@@ -38,9 +38,9 @@ export const setSchedule = schedule => ({type: SET_SCHEDULE, schedule})
 // 초기 상태
 const initialState = {
     me: null,
-    familyAccessToken: "",
+    familyAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2Iiwicm9sZXMiOlsiUk9MRV9BQ0NPVU5UIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NjAxMDY5OSwiZXhwIjoxMDAxNjc2MDEwNjk5fQ.z8atBtSThkmH16ywHmSgxmCIt1NqIuPwNTG1VZQCgI8",
     familyRefreshToken: "",
-    memberAccessToken: "",
+    memberAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZXMiOlsiUk9MRV9NRU1CRVIiXSwibGV2ZWwiOiJtZW1iZXIiLCJpYXQiOjE2NzYwMTA3NDUsImV4cCI6MTAwMTY3NjAxMDc0NX0.nx2SVtRsFowYYT7xy-uR6RWDT_xHizONsdORXmCCKSs",
     memberRefreshToken: "",
     validation: false,
     isRecording: false,
@@ -48,8 +48,8 @@ const initialState = {
     toMember: null,
     videos: [],
     todos: [],
-    schedules: 789,
-    weather: 456,
+    schedules: false,
+    weather: false,
     caption:['안녕하세요','오늘 비가 예정되어있습니다','오늘 구름이 예정되어있습니다','오늘 님의 생일입니다','오늘 님의 시험입니다','영상편지를 남기시겠습니까?','오늘도 즐거운 하루 보내세요'],
 }
 
