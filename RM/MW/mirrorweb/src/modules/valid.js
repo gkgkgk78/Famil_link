@@ -15,6 +15,7 @@ const SET_TODOS = "valid/SET_TODOS"
 const SET_CAPTIONS = "valid/SET_CAPTIONS"
 const SET_WEATHER = "valid/SET_WEATHER"
 const SET_SCHEDULE = "valid/SET_SCHEDULE"
+const SET_MYNAME = "valid/SET_MYNAME"
 
 
 // 액션 생성 함수
@@ -25,6 +26,7 @@ export const setMemberRefreshToken = (memberrefreshtoken) => ({type:SET_FAMILYRE
 
 export const setValid = (bool) => ({type:CHANGE_VALID, bool})
 export const setMe = data => ({type:SET_ME, data})
+export const setMyname = data => ({type:SET_MYNAME, data})
 export const setInfo = info => ({type: SET_INFO, info})
 export const startRecording = () => ({type: START_RECORDING})
 export const stopRecording = () => ({type: STOP_RECORDING})
@@ -37,10 +39,12 @@ export const setSchedule = schedule => ({type: SET_SCHEDULE, schedule})
 
 // 초기 상태
 const initialState = {
+    // 
     me: null,
-    familyAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2Iiwicm9sZXMiOlsiUk9MRV9BQ0NPVU5UIl0sImxldmVsIjoiYWNjb3VudCIsImlhdCI6MTY3NjAxMDY5OSwiZXhwIjoxMDAxNjc2MDEwNjk5fQ.z8atBtSThkmH16ywHmSgxmCIt1NqIuPwNTG1VZQCgI8",
+    myname: null,
+    familyAccessToken: "",
     familyRefreshToken: "",
-    memberAccessToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZXMiOlsiUk9MRV9NRU1CRVIiXSwibGV2ZWwiOiJtZW1iZXIiLCJpYXQiOjE2NzYwMTA3NDUsImV4cCI6MTAwMTY3NjAxMDc0NX0.nx2SVtRsFowYYT7xy-uR6RWDT_xHizONsdORXmCCKSs",
+    memberAccessToken: "",
     memberRefreshToken: "",
     validation: false,
     isRecording: false,
@@ -85,6 +89,11 @@ export default function valid(state = initialState, action) {
             return {
                 ...state,
                 me: action.data
+            }
+        case SET_MYNAME:
+            return {
+                ...state,
+                myname: action.data
             }
         case SET_INFO:
             return {
