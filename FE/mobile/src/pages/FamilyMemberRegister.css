@@ -20,14 +20,13 @@ member-registration{
   width: 310px;
   height: 627px;
   padding: 15px;
-  margin-top: 40px;
+  margin: auto;
   border-radius: 25px;
   display: flex;
   justify-content: center;
-  justify-content: center;
   flex-direction: column;
   align-items: center;
-  box-shadow: 15px 10px 25px 0px  #ffd8a8;
+  box-shadow: 10px 8px 15px 0px  #ffd8a8;
   background: #fff;
   /* background-image: url('https://github.com/OlgaKoplik/CodePen/blob/master/leaf2.png?raw=true'), url('https://github.com/OlgaKoplik/CodePen/blob/master/leaf.png?raw=true'); */
   background-repeat: no-repeat, no-repeat;
@@ -58,7 +57,7 @@ form{
   }
 input[type="file"] {
   display: none;
-}
+} 
 
 .custom-file-upload {
   border-radius: 50%;
@@ -86,7 +85,7 @@ input[type="file"] {
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  color: #63d3a6;
+  color: #ff922b;
   width: 200px;
   height: 200px;
   border-radius: 50%;
@@ -114,6 +113,7 @@ input{
   padding: 5px 5px 5px 10px;
   font-size: 18px;
   transition: 0.2s;
+  margin-bottom: 10px;
 }
 input:focus{
   outline: none;
@@ -122,7 +122,7 @@ input:focus{
 input::placeholder{
   color: #bebebe;
 }
-.name{ 
+.membername{ 
   text-align: center;
   text-transform: uppercase;
   font-weight: 700;
@@ -166,7 +166,7 @@ button:hover{
   left: 0;
   color: #fff;
   width: 180px;
-  box-shadow: 0px 0px 20px 0px  #ffa94d;
+  box-shadow: 0px 0px 10px 0px  #ffa94d;
 }
 button:focus{
   outline: none;

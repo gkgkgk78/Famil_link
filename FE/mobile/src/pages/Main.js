@@ -19,24 +19,24 @@ const Main = () => {
     const [isMember, setIsMember] = useState();
     const fatkn = localStorage.getItem('faccesstoken')
 
-    axios.get('http://i8a208.p.ssafy.io:3000/account/member-list', {
-        headers : {
-            "Authorization": "Bearer "+fatkn.replaceAll('"', '')
-        }
-    }).then((res) => {
-        setIsMember(true)
-    }).catch((err) => {
-        console.log(err.response.request.response)
-        if(err.response.status=== 400) {
-            setIsMember(false)
-        } 
-    })
+    // axios.get('http://i8a208.p.ssafy.io:3000/account/member-list', {
+    //     headers : {
+    //         "Authorization": "Bearer "+fatkn.replaceAll('"', '')
+    //     }
+    // }).then((res) => {
+    //     setIsMember(true)
+    // }).catch((err) => {
+    //     console.log(err.response.request.response)
+    //     if(err.response.status=== 400) {
+    //         setIsMember(false)
+    //     } 
+    // })
 
     
     return (
         <div>
             
-        {isMember ? navigate('/FamilyMember') : navigate('/FamilyMemberRegister')}
+        {/* {isMember ? navigate('/FamilyMember') : navigate('/FamilyMemberRegister')} */}
         <main className="main">
         <Home />
         <About />

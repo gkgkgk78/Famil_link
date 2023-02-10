@@ -1,75 +1,95 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import './FamilyMemberRegister.css'
+import './FamilyMemberRegister.css' 
 
 const FamilyMemberRegister = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    nickname: "",
-    imgfile:"",
-  });
-  const [selectedImage, setSelectedImage] = useState(null);
-  const { name, nickname, imgfile } = formData;
 
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const [membername, setMemberName] = useState();
+  const [nickname, setNickname] = useState();
+  const [image, setImage] = useState('')
+  const [imageurl, setImageURL] = useState("")
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const imageInput = useRef();
+  const onCickImageUpload = () => {
+    imageInput.current.click();
+  };
 
-    const fatkn = localStorage.getItem('faccesstoken')
+  const handleName = (event) => {
+    event.preventDefault();
+    setMemberName(event.target.value);
+  }
 
+  const handleNickname = (event) => {
+    event.preventDefault();
+    setNickname(event.target.value);
+  }
+                 
+  function handleImage(e) {
+    setImage(e.target.files[0])
+    
+  }
+  function handleApi() {
+    const formData = new FormData()
+    formData.append('image', image )
+    axios.post('http://i8a208.p.ssafy.io:3000/member/signup', formData).then((res) => {
+    })
+  }
 
-    axios.post(`http://i8a208.p.ssafy.io:3000/member/signup/${name}/${nickname}/`, {
-        headers: {
-            "Authorization": "Bearer "+fatkn.replaceAll('"', '')
-        }
-        }).then((res) => {
-            console.log(res)
-        }).cathch((err) => {
-            console.log(err)
-        });
-}   
+  function deleteFileImage() {
+    setImage("")
+  };
+  
+  useEffect(() => {
+    if (image) {
+      const imageURL = URL.createObjectURL(image)
+      setImageURL(imageURL)
+    }
+  },[image])
 
   return (
     <div className="member-registration">
+      <form className="card"> 
       <h2>가족 멤버 등록</h2>
-      {selectedImage && (
-        <div>
-        <img alt="not found" id="imgfile" width={"250px"} src={URL.createObjectURL(selectedImage)} />
+      {image ? (
+        <label htmlFor="photo-upload" className="custom-file-upload" onClick={onCickImageUpload}>
+        <div className="img-wrap img-upload">
+        <img alt="not found" id="photo-upload" width={"250px"} src={imageurl} />
         <br />
-        <button onClick={()=>setSelectedImage(null)}>Remove</button>
+        <button onClick={deleteFileImage}>Remove</button>
         </div>
-      )}
-    <form className="card" onSubmit={onSubmit}>
-        <div className="form-group">
-        <input type="file" name="imgfile" onChange={(event) => {
-            console.log(event.target.files[0]);
-            setSelectedImage(event.target.files[0]);
-        }}/>
+        <input type="file" id="photo-upload" ref={imageInput} onChange={handleImage} />
+      </label>
+        ):(
+      <label htmlFor="photo-upload" className="custom-file-upload" onClick={onCickImageUpload}>
+        <div className="img-wrap img-upload">
+          <img onerror="this.src='https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true'" id="photo-upload" alt="" width={"250px"} src={imageurl} />
         </div>
-        <div className="form-group">
-          <input
-          id="name" 
-            type="text"
-            name="name"
-            placeholder="이름"
-            value={name}
-            onChange={onChange}
-          />
+        <input type="file" id="photo-upload" ref={imageInput} onChange={handleImage} />
+      </label>
+        )}
+      <div className="field">
+      <input
+          id="membername" 
+          type="text"
+          name="membername"
+          placeholder="이름"
+          value={membername}
+          onChange={handleName}
+        />
         </div>
-        <div className="form-group">
-          <input
-            id="nickname"
-            placeholder="별명"
-            name="nickname"
-            value={nickname}
-            onChange={onChange}
-          />
-        </div>
-        <button type="submit" className="save">Save</button>
+      <div className="field">
+        <input
+          id="nickname"
+          placeholder="별명"
+          name="nickname"
+          value={nickname}
+          onChange={handleNickname}
+        />
+      </div>
+      <button onClick={handleApi} className="save">Submit</button>
       </form>
+
     </div>
   );
-}
-export default FamilyMemberRegister 
+};
+export default FamilyMemberRegister
