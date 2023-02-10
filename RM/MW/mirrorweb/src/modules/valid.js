@@ -21,7 +21,7 @@ export const setFamilyRefreshToken = (familyrefreshtoken) => ({type:SET_FAMILYRE
 export const setMemberAccessToken = (membertoken) => ({type:SET_MEMBERACCESSTOKEN, membertoken})
 export const setMemberRefreshToken = (memberrefreshtoken) => ({type:SET_FAMILYREFRSCHTOKEN, memberrefreshtoken})
 
-export const setValid = () => ({type:CHANGE_VALID})
+export const setValid = (bool) => ({type:CHANGE_VALID, bool})
 export const setMe = data => ({type:SET_ME, data})
 export const setInfo = info => ({type: SET_INFO, info})
 export const startRecording = () => ({type: START_RECORDING})
@@ -74,7 +74,7 @@ export default function valid(state = initialState, action) {
         case CHANGE_VALID:
             return {
                 ...state,
-                validation: true
+                validation: action.bool
             }
         case SET_ME:
             return {
