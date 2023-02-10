@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -43,18 +44,15 @@ public class MemberController {
     private final PhotoService photoService;
 
     @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname,account_token]")
-    @PostMapping("/signup")
-
-    public ResponseEntity<?> signup(Member_Login member, @RequestPart(value = "img", required = true) MultipartFile file, final Authentication authentication) throws Exception {
+    //@PostMapping("/signup")
+    @PostMapping(value = "/signup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> signup(@ModelAttribute  Member_Login member, @RequestPart(value = "img", required = true) MultipartFile file, final Authentication authentication) throws Exception {
 
 
         Account auth = (Account) authentication.getPrincipal();
         Long tt = auth.getUid();
 
 
-
-
-        //회원가입을 할시에 자신이 찍은 사진을 바탕으로 회원가입이 되는 여부를 판단을 할수 있음
         Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
         PhotoSenderDTO sender=new PhotoSenderDTO(auth.getUid(),member.getName());
         photoService.sender(sender, file);
