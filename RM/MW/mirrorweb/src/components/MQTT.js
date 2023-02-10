@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import mqtt from "precompiled-mqtt";
 import axios from "axios"
-import { setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setToMember, setValid, setVideos, startRecording, stopRecording, setFamilyAccessToken, setTodos } from '../modules/valid';
+import { setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setToMember, setValid, setVideos, startRecording, stopRecording, setFamilyAccessToken, setTodos, setMyname } from '../modules/valid';
 import {useSelector, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 
@@ -30,6 +30,7 @@ function MQTT() {
   const saveMemberRefreshToken = (memreftoken) => dispatch(setMemberRefreshToken(memreftoken))
   const saveToMember = (tomember) => dispatch(setToMember(tomember))
   const saveFAToken = fatoken => dispatch(setFamilyAccessToken(fatoken))
+  const saveMyname = data => dispatch(setMyname(data))
 
 
   const Navigate = useNavigate()
@@ -131,6 +132,7 @@ function MQTT() {
             })
             .then ((res) => {
               saveMe(res.data["uid"])
+              saveMyname(res.data["name"])
               saveMemberToken(res.data["access-token"])
               saveMemberRefreshToken(res.data["refresh-token"])
               console.log("로그인 됨")
@@ -231,6 +233,7 @@ function MQTT() {
         if (res.data.result === true){
           const emptyObject = {}
             for (let member of res.data.list) {
+              
               emptyObject[member.name] = member.uid
             }
           changeStoreMeberInfo(emptyObject)
