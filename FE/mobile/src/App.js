@@ -10,6 +10,7 @@ import Home from "./components/navbar/home/Home"
 import AuthLayout from "./components/auth/AuthLayout";
 import FamilyMember from './pages/FamilyMember'
 import FamilyMemberRegister from "./pages/FamilyMemberRegister";
+import Todo from "./pages/Todo";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/SignUpSuccess" element={<SignUpSuccess />} />
         <Route path="/FamilyMember" element={<FamilyMember />} />
         <Route path="/FamilyMemberRegister" element={<FamilyMemberRegister />}/>
+        <Route path="/todo" element={<Todo />}/>
       </Routes>
       <Navbar />
     </div>
