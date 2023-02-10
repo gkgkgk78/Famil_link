@@ -71,9 +71,7 @@ const Record = () => {
 
     return ( 
         <div>
-            <p>00:{timer < 10 ? `0${timer}` : 10<=timer<=30 ? `${timer}` : "30"}</p>
-            <button onClick={startRecord}>임시 시작버튼</button>
-            <button onClick={stopRecord}>임시 중단버튼</button>
+            <p>00:{timer <= 9 ? `0${timer}` : 10<=timer<=29 ? `${timer}` : "30"}</p>
         </div>
      );
 }
