@@ -1,10 +1,15 @@
-import './Weather.css'
-import React from 'react';
-import { WiDaySunny, WiSnowflakeCold, WiThunderstorm, WiDayRain, WiNightAltRain, WiNightClear, WiRain, WiNightAltCloudy, WiDayCloudy, WiCloud, WiCloudy, WiFog } from "weather-icons-react"
-import { useState } from 'react';
-import secrets from "./secrets.json"
+import React, { useState } from 'react';
+import {useSelector, useDispatch } from "react-redux";
+import './Weather.css';
+import { WiDaySunny, WiSnowflakeCold, WiThunderstorm, WiDayRain, WiNightAltRain, WiNightClear, WiRain, WiNightAltCloudy, WiDayCloudy, WiCloud, WiCloudy, WiFog } from "weather-icons-react";
+import { setWeather } from '../modules/valid';
+import secrets from "./secrets.json";
 
 function Weather() {
+    
+    const dispatch = useDispatch();
+    const onsetWeather = (e) => dispatch(setWeather(e))
+   
     const API_KEY = secrets.weather_api_key;
     const [city, setCity] = useState('Seoul');
     const [temp, setTemp] = useState('5');
@@ -83,28 +88,37 @@ function Weather() {
                 img: <WiFog size={30} color="white" /> 
             },
     ]);
+
     const [findWeather, setFindWeather] = useState(<WiDaySunny size={30} color="white" />)
     const [weatherStatus, setWeatherStatus] = useState('');
     
-    // 현재 위치를 찾는다면 onGeoOK 함수 실행
+    // 현재 위치를 찾는다면 onGeoOK 함수 실행    
     function onGeoOk(position) {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`;
-    fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-        // 온도는 반올림한다.
-        setTemp(Math.round(data.main.temp));
-        // 와이파이 기준 현재 동 표시, 기본값은 서울이다.
-        setCity(data.name);
-        // 날씨 아이콘 숫자를 보고 적절한 react-icons findWeather에 가져온다.
-        setWeatherStatus(data.weather[0].icon)
-        const findIndexNum = weatherIcon.findIndex(element => element.icon === weatherStatus)
-        setFindWeather(weatherIcon[findIndexNum].img)
+
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`;
+                
+        fetch(url)
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+ 
+            onsetWeather(data.weather[0].description);
+            // 온도는 반올림한다.
+            setTemp(Math.round(data.main.temp));
+            // 와이파이 기준 현재 동 표시, 기본값은 서울이다.
+            setCity(data.name);
+            // 날씨 아이콘 숫자를 보고 적절한 react-icons findWeather에 가져온다.
+            setWeatherStatus(data.weather[0].icon)
+            const findIndexNum = weatherIcon.findIndex(element => element.icon === weatherStatus)
+            setFindWeather(weatherIcon[findIndexNum].img)
+        })            
+        .catch((err) => {
+            console.log(err)
+        })
     }
-    )
-}
 
     // 현재 위치를 찾을 수 없다면 alert
     function onGeoError() {
@@ -114,14 +128,13 @@ function Weather() {
     // 현재 위치를 조회하는 함수, 실행되면 onGeoOK 함수 실행, 실패하면 onGeoError 함수 실행
     navigator.geolocation.getCurrentPosition(onGeoOk, onGeoError)
 
-        return (
-            <div className='weather'>
-                <div className='city'>{city}</div>
+    return (
+        <div className='weather'>
+            <div className='city'>{city}</div>
             <div className='weatherimg'>{findWeather}</div>
             <div className='temp'>{temp}º C</div>
-            </div>
-        )
+        </div>
+    )    
 }
         
-
 export default React.memo(Weather);

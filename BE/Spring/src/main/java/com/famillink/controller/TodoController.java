@@ -28,7 +28,7 @@ public class TodoController {
 
     @PostMapping("")
     @ApiOperation(value = "가족 todo생성", notes = "req_data : [token, 내용]")
-    public ResponseEntity<?> AddTodo(Authentication authentication, @RequestParam String content) throws Exception {
+    public ResponseEntity<?> AddTodo(Authentication authentication, @RequestBody String content) throws Exception {
         Account auth = (Account) authentication.getPrincipal();
         Long tt = auth.getUid();
         todoService.createtodo(tt, content);

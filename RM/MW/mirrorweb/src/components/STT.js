@@ -25,13 +25,6 @@ const STT = () => {
       } = useSpeechToText({
         continuous: true,
         useLegacyResults: false,
-        crossBrowser: true,
-        useOnlyGoogleCloud: true,
-        googleApiKey: API_KEY,
-        googleCloudRecognitionConfig: {
-            languageCode: 'ko-KR',
-            model:"latest_short"
-          }
       });
 
     const Navigate = useNavigate();
@@ -44,6 +37,7 @@ const STT = () => {
     },[])
 
     useEffect(() => {
+      
         if (!mounted.current) {
             mounted.current = true;
         } else{
@@ -51,18 +45,21 @@ const STT = () => {
               let text = results[results.length-1].transcript
               console.log(text)
                 // 현재 녹화 페이지가 아니면
-                if (location.pathname !== "/record") {
-                    // 녹화라는 음성이 인식되었을 때
-                    if (text.includes("녹화") || text.includes("노콰"))   {
-                         // 녹화 페이지로 이동 
-                          Navigate("/record")
-                      }
+                if (from) {
+                  if (location.pathname !== "/record") {
+                      // 녹화라는 음성이 인식되었을 때
+                      if (text.includes("녹화") || text.includes("노콰"))   {
+                           // 녹화 페이지로 이동 
+                            Navigate("/record")
+                        }
+                }
                 // 현재 녹화 페이지이면
                   } else if (location.pathname === "/record") {
                     if (to===null) {
                       if (memberInf) {
                         // 음성 인식한 텍스트가 멤버 중에 있으면
                         if (Object.keys(memberInf).includes(text)) {
+                          console.log("해당 멤버가 존재합니다.")
                           // 받는 멤버를 저장한다.
                           changeToMember(memberInf[text])
                         } else {
@@ -79,8 +76,6 @@ const STT = () => {
             }
         }
       },[results])
-
-      if (error) return <p>Web Speech API is not available in this browser 🤷‍</p>;
 
     }
 

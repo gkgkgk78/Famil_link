@@ -13,6 +13,9 @@ const SET_TOMEMBER = "valid/SET_TOMEMBER"
 const SET_VIDEOS = "valid/SET_VIDEOS"
 const SET_TODOS = "valid/SET_TODOS"
 const SET_CAPTIONS = "valid/SET_CAPTIONS"
+const SET_WEATHER = "valid/SET_WEATHER"
+const SET_SCHEDULE = "valid/SET_SCHEDULE"
+const SET_MYNAME = "valid/SET_MYNAME"
 
 
 // 액션 생성 함수
@@ -21,8 +24,9 @@ export const setFamilyRefreshToken = (familyrefreshtoken) => ({type:SET_FAMILYRE
 export const setMemberAccessToken = (membertoken) => ({type:SET_MEMBERACCESSTOKEN, membertoken})
 export const setMemberRefreshToken = (memberrefreshtoken) => ({type:SET_FAMILYREFRSCHTOKEN, memberrefreshtoken})
 
-export const setValid = () => ({type:CHANGE_VALID})
+export const setValid = (bool) => ({type:CHANGE_VALID, bool})
 export const setMe = data => ({type:SET_ME, data})
+export const setMyname = data => ({type:SET_MYNAME, data})
 export const setInfo = info => ({type: SET_INFO, info})
 export const startRecording = () => ({type: START_RECORDING})
 export const stopRecording = () => ({type: STOP_RECORDING})
@@ -30,10 +34,14 @@ export const setToMember = memberID => ({type: SET_TOMEMBER, memberID})
 export const setVideos = videoList => ({type: SET_VIDEOS, videoList})
 export const setTodos = todoList => ({type: SET_TODOS, todoList})
 export const setCaptions = captions => ({type: SET_CAPTIONS, captions})
+export const setWeather = weather => ({type: SET_WEATHER, weather})
+export const setSchedule = schedule => ({type: SET_SCHEDULE, schedule})
 
 // 초기 상태
 const initialState = {
+    // 
     me: null,
+    myname: null,
     familyAccessToken: "",
     familyRefreshToken: "",
     memberAccessToken: "",
@@ -44,9 +52,10 @@ const initialState = {
     toMember: null,
     videos: [],
     todos: [],
-    caption:['안녕하세요','오늘 비가 예정되어있습니다','오늘 당신의 생일입니다','오늘도 즐거운 하루 보내세요'],
+    schedules: false,
+    weather: false,
+    caption:['안녕하세요','오늘 비가 예정되어있습니다','오늘 구름이 예정되어있습니다','오늘 님의 생일입니다','오늘 님의 시험입니다','영상편지를 남기시겠습니까?','오늘도 즐거운 하루 보내세요'],
 }
-
 
 // 리듀서
 export default function valid(state = initialState, action) {
@@ -74,12 +83,17 @@ export default function valid(state = initialState, action) {
         case CHANGE_VALID:
             return {
                 ...state,
-                validation: true
+                validation: action.bool
             }
         case SET_ME:
             return {
                 ...state,
                 me: action.data
+            }
+        case SET_MYNAME:
+            return {
+                ...state,
+                myname: action.data
             }
         case SET_INFO:
             return {
@@ -117,8 +131,17 @@ export default function valid(state = initialState, action) {
                 ...state,
                 caption: action.caption
             }
-    
+        case SET_WEATHER:
+            return {
+                ...state,
+                weather: action.weather
+            }
+        case SET_SCHEDULE:
+            return {
+                ...state,
+                schedules: action.schedule
+            }
         default :
-          return state
+            return state
     }
 }

@@ -5,7 +5,13 @@ import mediapipe as mp
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 
-camera = cv2.VideoCapture(1)
+camera = cv2.VideoCapture(0 + cv2.CAP_DSHOW)
+camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # 1280
+camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # 720
+width = camera.get(cv2.CAP_PROP_FRAME_WIDTH)
+height = camera.get(cv2.CAP_PROP_FRAME_HEIGHT)
+size = (int(width), int(height))  # 프레임 크기
+print("size : " + str(size))
 idx = 0
 while True:
     ret, image = camera.read()
@@ -64,4 +70,5 @@ while True:
     cv2.imwrite("image" + str(idx) + ".jpg", image)
     idx += 1
     # print("publish opencv data")
-    cv2.waitKey(10)  # MQTT 성능에 따라 유도리 있게 설정
+    cv2.waitKey(1)  # MQTT 성능에 따라 유도리 있게 설정
+
