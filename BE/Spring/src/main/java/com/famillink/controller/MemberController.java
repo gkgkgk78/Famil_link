@@ -126,6 +126,37 @@ public class MemberController {
 
     }
 
+    @ApiOperation(value = "개인멤버 로그인(얼굴인증 불필요)", notes = "req_data : [name, user_uid]")
+    @PostMapping("/login/access")
+    public ResponseEntity<?> loginAccess(@RequestBody String member_name, Long user_uid) throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("user_uid", user_uid);
+        map.put("name", member_name);
+        Optional<Member> temp = mapper.findUserByNametoAll(map);
+        Member m1 = null;
+        if (temp.isPresent()) {
+            m1 = temp.get();
+        } else {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);//보낸 가족 정보와 일치하는 유저 정보가 없음을 의미를 함
+        }
+
+        Long member_uid = m1.getUid();
+
+        //임시로 uid8로 넣은후 인증 되는지 확인(download시)
+        Map<String, Object> token = memberservice.login(member_uid);
+
+        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+            put("result", true);
+            put("msg", "로그인을 성공하였습니다.");
+            put("access-token", token.get("access-token"));
+            put("refresh-token", token.get("refresh-token"));
+            put("uid", token.get("uid"));
+            put("name", token.get("name"));
+        }}, HttpStatus.OK);
+
+    }
+
     @ApiOperation(value = "Member Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestParam Long uid, HttpServletRequest request) throws Exception {
