@@ -6,7 +6,7 @@ import palette from "../../lib/styles/palette";
 import styled from "styled-components";
 import { makeStyles } from '@material-ui/core/styles';
 import { StyledEngineProvider } from '@mui/material/styles';
-import { getBoardKindList } from "./service/ApiService";
+import { addTodoList } from "./service/ApiService";
 
 const useStyles = makeStyles({
   root: {
@@ -66,7 +66,7 @@ const TodoInput = () => {
 
     const classes = useStyles();
 
-    const [field, setField] = useState("");
+    const [field, setField] = useState('');
 
     //텍스트 변경 반영 이벤트
     const displayText = (e) => {
@@ -81,7 +81,7 @@ const TodoInput = () => {
     //add 이벤트
     const onBtnClick = (e) => {
       const content = field;
-      getBoardKindList({content: content}, ({data})=>{
+      addTodoList(content, (date)=>{
 
       },
       (error)=>{
@@ -154,43 +154,34 @@ const TodoInput = () => {
     }
 
     return (
-      <StyledEngineProvider injectFirst>
-        <section className = "todo container" id ="todoInput">
-            <Grid container spacing={2}>
-                <Grid item xs={1}></Grid>
-                <Grid item xs={10}>
-                    <Card elevation={7} sx={{borderRadius: '16px', textAlign: 'center', padding: '20px'}}>
-                        <CardContent>
-                            <span className={classes.changeFont2}>recommend</span>
-                            {repeatTodo(fixTodo)}
-                        </CardContent>
+            <Grid item xs={10}>
+                <Card elevation={7} sx={{borderRadius: '16px', textAlign: 'center', padding: '20px'}}>
+                    <CardContent>
+                        <span className={classes.changeFont2}>recommend</span>
+                        {repeatTodo(fixTodo)}
+                    </CardContent>
 
-                        <form noValidate onSubmit={onBtnClick}>
-                        <CardContent>
-                            <TextField 
-                            sx={{width: '80%', color: palette.orange[8]}} 
-                            label="Todo" className={classes.root}
-                            id="content"
-                            name="content"
-                            required
-                            onChange={displayText}
-                            onKeyPress={enterKeyEventHandler}
-                            value={field}/>
-                        </CardContent>
-                        <CardActions sx={{float: "right"}}>
-                            <Button sx={{color: palette.orange[8]}} onClick={onClick}>Remove</Button>
-                            <Button sx={{color: palette.orange[8]}} onClick={onBtnClick}>Add</Button>
-                        </CardActions>
-                        </form>
-                        
-                    </Card>
-                </Grid>
-                <Grid item xs={12}><br/></Grid>
-                <Grid item xs={12}>dddddddddddddddd</Grid>
+                    <form noValidate onSubmit={onBtnClick}>
+                    <CardContent>
+                        <TextField 
+                        sx={{width: '80%', color: palette.orange[8]}} 
+                        label="Todo" className={classes.root}
+                        id="content"
+                        name="content"
+                        required
+                        onChange={displayText}
+                        onKeyPress={enterKeyEventHandler}
+                        value={field}/>
+                    </CardContent>
+                    <CardActions sx={{float: "right"}}>
+                        <Button sx={{color: palette.orange[8]}} onClick={onClick}>Remove</Button>
+                        <Button sx={{color: palette.orange[8]}} onClick={onBtnClick}>Add</Button>
+                    </CardActions>
+                    </form>
+
+                </Card>
             </Grid>
-        </section>
-      </StyledEngineProvider>
-    )
+          )
 }
 
 export default TodoInput;
