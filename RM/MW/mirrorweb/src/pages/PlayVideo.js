@@ -31,7 +31,7 @@ const PlayVideo = () => {
             setVideoData(url)
             axios({
                 method: "PUT",
-                url: `http://i8a208.p.ssafy.io:3000/movie${videoList[nowplaying]}`,
+                url: `http://i8a208.p.ssafy.io:3000/movie/${videoList[nowplaying]}`,
                 headers: {
                     'Authorization': `Bearer ${memacctoken}`
                 }
