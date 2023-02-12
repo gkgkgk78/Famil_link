@@ -6,7 +6,6 @@ import Button from "../../common/Button";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-
 const Sidebar = ({ type }) => {
   const navigate = useNavigate();
 
@@ -16,16 +15,14 @@ const Sidebar = ({ type }) => {
     setShowSidebar(!showSidebar);
   };
 
-
   const onLogout = () => {
     localStorage.removeItem("faccesstoken");
     navigate("/login");
   };
 
-
   return (
     <>
-      <aside className={`aside ${showSidebar ? "show" : ""}`}>
+      <aside className={showSidebar ? "aside show-menu" : "aside"}>
         <a href="/" className="nav__logo">
           <img src={Logo} alt="" />
         </a>
@@ -76,7 +73,10 @@ const Sidebar = ({ type }) => {
         </div>
       </aside>
 
-      <div className="nav__toggle" onClick={toggleSidebar}>
+      <div
+        className={showSidebar ? "nav__toggle nav__toggle-open" : "nav__toggle"}
+        onClick={() => setShowSidebar(!showSidebar)}
+      >
         <SimpleLineIcon name="menu" />
       </div>
     </>
