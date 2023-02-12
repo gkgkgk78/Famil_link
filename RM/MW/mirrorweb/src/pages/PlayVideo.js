@@ -1,26 +1,36 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import ReactPlayer from "react-player";
 import axios from "axios";
 
 
 import { useNavigate } from "react-router-dom";
+import { setSSEcondition, setVideos } from "../modules/valid";
 
 
 const PlayVideo = () => {
-
-    const [nowplaying, setVideo] = useState(0)
+    
     const navigate = useNavigate();
-    const {videoList, memacctoken} = useSelector(state => ({
+    const {videoList, memacctoken, me, ssecondition} = useSelector(state => ({
         videoList : state.valid.videos,
-        memacctoken: state.valid.memberAccessToken
+        memacctoken: state.valid.memberAccessToken,
+        me : state.valid.me,
+        ssecondition : state.valid.ssecondition
     }))
 
+    const [nowplaying, setVideo] = useState(0)
+    const [nowVideoList, setNowVideoList] = useState(videoList)
+
+    const dispatch = useDispatch();
+    const changeSSE = (bool) => dispatch(setSSEcondition(bool))
+    const updateVideoList = (newList) => dispatch(setVideos(newList))
+
+    const sseMounted = useRef(false)
 
     useEffect(() => {
         axios({
             method:'GET',
-            url:`http://i8a208.p.ssafy.io:3000/movie/${videoList[nowplaying]}`,
+            url:`http://i8a208.p.ssafy.io:3000/movie/${nowVideoList[nowplaying]}`,
             responseType:'blob',
             headers: {
                 'Authorization': `Bearer ${memacctoken}`
@@ -49,22 +59,60 @@ const PlayVideo = () => {
 
     },[nowplaying])
 
-    const [videoData, setVideoData] = useState(null)
-    
-    const urlList = videoList.map(function(el) {
-        return `http://i8a208.p.ssafy.io:3000/movie/${el}`
-    })
+    useEffect(() => {
+        if (!sseMounted.current) {
+            sseMounted.current = true
+        } else {
+            if (ssecondition === true) {
+                axios({
+                    method: "get",
+                    url: `http://i8a208.p.ssafy.io:3000/movie/video-list`,
+                    headers: {
+                      "Authorization": `Bearer ${memberAccessToken}`
+                    }
+                  })
+                  .then ((res) => {
+                    if (res.data["movie-list"]){
+                      const objectList = res.data["movie-list"]
+                      let emptyList = []
+                      for (let movie of objectList) {
+                         emptyList.push(movie["uid"])
+                        }
+                      updateVideoList(emptyList)
+                      setNowVideoList(emptyList)
+                    }
+                    changeSSE(false)
+                  })
+                  .catch ((err) => {
+                    console.log("동영상이 없어")
+                    console.log(err)
+                  })
+            }
+        }
+        
+    },[ssecondition])
 
-    const nextVideo = (video, nowplaying) => {
-        if (nowplaying === video.length -1) {
-            console.log("2초 뒤에 메인 페이지로 넘어갑니다.")
+    const [videoData, setVideoData] = useState(null)
+
+
+    const nextVideo = (nowVideoList, nowplaying) => {
+        if (nowplaying === nowVideoList.length -1) {
+            console.log("재생이 끝나서 2초 뒤에 메인 페이지로 넘어갑니다.")
             setTimeout(() => {
               navigate("/")
             }, 2000)
         } else {
-            setVideo(() => {
-                return nowplaying +1
-          })
+            if (me) {
+                setVideo(() => {
+                    return nowplaying +1
+              })
+            } else {
+                console.log("멤버 로그아웃. 2초 뒤 메인 페이지로 넘어갑니다.")
+                setTimeout(() => {
+                  navigate("/")
+                }, 2000)
+            }
+
         }
     }
 
@@ -76,7 +124,7 @@ const PlayVideo = () => {
             playing={true}
             controls
             progressInterval={1000}
-            onEnded = {(() => nextVideo(urlList, nowplaying))}
+            onEnded = {(() => nextVideo(nowVideoList, nowplaying))}
           />
         </div>
         
