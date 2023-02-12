@@ -2,31 +2,55 @@ import './App.css';
 import {useState} from "react";
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import axios from "axios";
+import {useSelector, useDispatch } from "react-redux";
+import { setSSEcondition } from '../modules/valid';
 
 
 const BASE_URL = "http://http://i8a208.p.ssafy.io:3000/sse"
 
 function SSE() {
-    const [count, setCount] = useState(null);
+    const { memactoken, ssecondition} = useSelector(state => ({
+      memactoken : state.valid.memberAccessToken,
+      ssecondition : state.valid.ssecondition
+    }))
 
-    const handleConnect = () =>{
-        const sse = new EventSourcePolyfill(`${BASE_URL}/send`);
+    const dispatch = useDispatch()
+    const changeSSE = (bool) => dispatch(setSSEcondition(bool))
 
-        sse.addEventListener('send', (e) => {
-            const { data: receivedConnectData } = e;
+    useEffect(() => {
+      if (memactoken) {
+        const ssesubscribe = async () => {
+          
+          
+          
+          eventSource.onmessage = () => {
+            if (ssecondition === false) {
+              changeSSE(true)
+            }
+          }
+        }
 
-            console.log('connect event data: ',receivedConnectData);
-        });
+        ssesubscribe();
+        } else {
+          let eventSource = new EventSourcePolyfill(`${BASE_URL}/subscribe`,
+          {
+            headers: {
+              "Authorization": `Bearer ${memactoken}`
+            },
+            withCredentials: true
+          });
+          
+          eventSource.close()
+        }
+    }, [memactoken])
 
-    }
+        
 
+        
 
-  return (
-    <div className="App">
-        <button onClick={handleConnect}>connect 요청</button>
-        <div>{count}</div>
-    </div>
-  );
 }
+
+
+
 
 export default SSE;
