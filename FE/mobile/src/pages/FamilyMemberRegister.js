@@ -46,23 +46,24 @@ const FamilyMemberRegister = () => {
     }
   },[image])
 
+
   return (
     <div className="member-registration">
       <form className="card"> 
       <h2>가족 멤버 등록</h2>
       {image ? (
-        <label htmlFor="photo-upload" className="custom-file-upload" onClick={onCickImageUpload}>
-        <div className="img-wrap img-upload">
-        <img alt="not found" id="photo-upload" width={"250px"} src={imageurl} />
-        <br />
-        <button onClick={deleteFileImage}>Remove</button>
-        </div>
-        <input type="file" id="photo-upload" ref={imageInput} onChange={handleImage} />
-      </label>
+       <label htmlFor="photo-upload" className="custom-file-upload" onClick={onCickImageUpload}>
+       <div className="img-wrap img-upload">
+       <img alt="not found" id="photo-upload" width={"250px"} src={imageurl} />
+       <input type="file" id="photo-upload" ref={imageInput} onChange={handleImage} />
+       <br />
+       <button onClick={deleteFileImage}>Remove</button>
+       </div>
+     </label>
         ):(
       <label htmlFor="photo-upload" className="custom-file-upload" onClick={onCickImageUpload}>
         <div className="img-wrap img-upload">
-          <img onerror="this.src='https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true'" id="photo-upload" alt="" width={"250px"} src={imageurl} />
+          <img src="https://via.placeholder.com/250x250" id="photo-upload" alt="" width={"250px"} />
         </div>
         <input type="file" id="photo-upload" ref={imageInput} onChange={handleImage} />
       </label>

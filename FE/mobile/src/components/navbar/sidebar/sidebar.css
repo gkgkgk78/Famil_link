@@ -13,6 +13,10 @@
     z-index: 10;
 }
 
+.aside.show {
+    transform: translateX(0);
+}
+
 .nav__list {
     display: flex;
     flex-direction: column;

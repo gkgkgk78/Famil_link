@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./sidebar.css";
 import Logo from "../../images/다운로드.jpg";
 import SimpleLineIcon from "react-simple-line-icons";
@@ -6,34 +6,26 @@ import Button from "../../common/Button";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-// const ButtonWithMarginTop = styled(Button)`
-//   margin-top: 1rem;
-// `;
 
 const Sidebar = ({ type }) => {
   const navigate = useNavigate();
-  // const token = localStorage.getItem("faccesstoken")
-  // const loginstatus = {
-  //     { token? "로그아웃" : "로그인"}
-  // }
-  // const text = loginstatus[type];
-  // const onLogin = () => {
-  //     navigate('/login')
-  // }
+
+  const [showSidebar, setShowSidebar] = useState(false);
+
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
+
+
   const onLogout = () => {
     localStorage.removeItem("faccesstoken");
     navigate("/login");
   };
 
-  // const onlog = {
-  //     {token ? onLogout : onLogin }
-  // }
-
-  // const onlogg = onlog[type]
 
   return (
     <>
-      <aside className="aside">
+      <aside className={`aside ${showSidebar ? "show" : ""}`}>
         <a href="/" className="nav__logo">
           <img src={Logo} alt="" />
         </a>
@@ -84,7 +76,7 @@ const Sidebar = ({ type }) => {
         </div>
       </aside>
 
-      <div className="nav__toggle">
+      <div className="nav__toggle" onClick={toggleSidebar}>
         <SimpleLineIcon name="menu" />
       </div>
     </>
