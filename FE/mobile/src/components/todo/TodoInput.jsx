@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./todo.css";
 import { Card, CardHeader, CardContent, CardActions, TextField, Typography, Grid, Icon, Button,  } from '@mui/material';
 import { margin } from "@mui/system";
@@ -81,8 +81,8 @@ const TodoInput = () => {
     //add 이벤트
     const onBtnClick = (e) => {
       const content = field;
-      addTodoList(content, (date)=>{
-
+      addTodoList(content, (data)=>{
+        
       },
       (error)=>{
         console.log(error)

@@ -19,7 +19,7 @@ function getTodoList(params, success, fail){
 
 function deleteTodo(param, success, fail){
     api_headers.defaults.headers["Authorization"] = "Bearer " + localStorage.getItem("faccesstoken").replace(/\"/gi, '');
-    api_headers.delete(`/todo`, JSON.stringify(param)).then(success).catch(fail);
+    api_headers.delete(`/todo/`+param, JSON.stringify(param)).then(success).catch(fail);
 }
 
 export {
