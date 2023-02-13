@@ -38,9 +38,9 @@ const TodoListPage = () => {
         })
     }
 
-
-    return (
-    <Grid item xs={10}>
+    let ok;
+    if(items.length>0){
+        ok = (
         <Paper style={{margin: 16}}>
         <List>
             {items.map((item, index) => (
@@ -53,6 +53,13 @@ const TodoListPage = () => {
             ))}
         </List>
         </Paper>
+        )
+    }
+
+
+    return (
+    <Grid item xs={10}>
+        {ok}
     </Grid>
     )
 }
