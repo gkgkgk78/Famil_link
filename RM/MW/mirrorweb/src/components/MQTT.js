@@ -268,8 +268,8 @@ function MQTT() {
 
   const mounted00 = useRef(false);
   const [text, setText] = useState({message : `${caption00[0]} ${name}님`});
-  client.publish("/local/record/", {text} )
-  useEffect(() => {
+
+    useEffect(() => {
       if (!mounted00.current) {
         mounted00.current = true;
         return;
@@ -280,7 +280,6 @@ function MQTT() {
         let idx =0;
         const textScript = [];
         textScript.push(`오늘의 날씨는 ${weather}입니다`)
-        client.publish("/local/record/", {textScript} )
         let today = new Date();
         let month = today.getMonth() +1;
         let date = today.getDate();
@@ -299,15 +298,10 @@ function MQTT() {
           if(schedule.parseDate === today) {
             flag=1;
             textScript.push(`오늘은 ${schedule.content.slice(0,2)}님의 ${schedule.content.slice(3,)}입니다`)
-            client.publish("/local/record/", {textScript} )
           }
         })
-        if(!flag) {
-          textScript.push(`오늘도 좋은 하루 보내세요`)
-          client.publish("/local/record/", {textScript} )}
-
-        else {textScript.push('메시지를 보내시겠습니까?')
-        client.publish("/local/record/", {textScript} )}
+        if(!flag) textScript.push(`오늘도 좋은 하루 보내세요`)
+        else textScript.push('메시지를 보내시겠습니까?')
         
         textScript.push('')
 
@@ -319,6 +313,9 @@ function MQTT() {
                 ...text,
                 message: textScript[idx++]
             }));
+            
+            const jsonData0 = JSON.stringify(text)
+            if (text["message"]) client.publish("/local/tts/", jsonData0)
 
             if (idx===textLength) clearInterval(changeText);
         },3000)
