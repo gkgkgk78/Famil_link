@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -43,18 +44,15 @@ public class MemberController {
     private final PhotoService photoService;
 
     @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname,account_token]")
-    @PostMapping("/signup")
-
-    public ResponseEntity<?> signup(Member_Login member, @RequestPart(value = "img", required = true) MultipartFile file, final Authentication authentication) throws Exception {
+    //@PostMapping("/signup")
+    @PostMapping(value = "/signup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> signup(@ModelAttribute  Member_Login member, @RequestPart(value = "img", required = true) MultipartFile file, final Authentication authentication) throws Exception {
 
 
         Account auth = (Account) authentication.getPrincipal();
         Long tt = auth.getUid();
 
 
-
-
-        //회원가입을 할시에 자신이 찍은 사진을 바탕으로 회원가입이 되는 여부를 판단을 할수 있음
         Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
         PhotoSenderDTO sender=new PhotoSenderDTO(auth.getUid(),member.getName());
         photoService.sender(sender, file);
@@ -125,6 +123,37 @@ public class MemberController {
             put("result", false);
             put("msg", "로그인 시도자와 멤버 정보가 일치하지 않습니다");
         }});
+
+    }
+
+    @ApiOperation(value = "개인멤버 로그인(얼굴인증 불필요)", notes = "req_data : [name, user_uid]")
+    @PostMapping("/login/access")
+    public ResponseEntity<?> loginAccess(@RequestBody String member_name, Long user_uid) throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("user_uid", user_uid);
+        map.put("name", member_name);
+        Optional<Member> temp = mapper.findUserByNametoAll(map);
+        Member m1 = null;
+        if (temp.isPresent()) {
+            m1 = temp.get();
+        } else {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);//보낸 가족 정보와 일치하는 유저 정보가 없음을 의미를 함
+        }
+
+        Long member_uid = m1.getUid();
+
+        //임시로 uid8로 넣은후 인증 되는지 확인(download시)
+        Map<String, Object> token = memberservice.login(member_uid);
+
+        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+            put("result", true);
+            put("msg", "로그인을 성공하였습니다.");
+            put("access-token", token.get("access-token"));
+            put("refresh-token", token.get("refresh-token"));
+            put("uid", token.get("uid"));
+            put("name", token.get("name"));
+        }}, HttpStatus.OK);
 
     }
 

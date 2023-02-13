@@ -1,9 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import mqtt from "precompiled-mqtt";
 import axios from "axios"
-import { setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setToMember, setValid, setVideos, startRecording, stopRecording, setFamilyAccessToken, setTodos, setMyname } from '../modules/valid';
+import { setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setToMember, setValid, setVideos, startRecording, stopRecording, setFamilyAccessToken, setTodos } from '../modules/valid';
 import {useSelector, useDispatch } from "react-redux";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 function MQTT() {
@@ -27,17 +27,15 @@ function MQTT() {
   const changeStoreValid = () => dispatch(setValid())
   const changeStoreMeberInfo = (info) => dispatch(setInfo(info))
   const setVideoList = (videoList) => dispatch(setVideos(videoList))
-  const onRecording = () => dispatch(startRecording())
-  const notRecording = () => dispatch(stopRecording())
   const saveMe = (me) => dispatch(setMe(me)) 
   const saveMemberToken = (membertoken) => dispatch(setMemberAccessToken(membertoken))
   const saveMemberRefreshToken = (memreftoken) => dispatch(setMemberRefreshToken(memreftoken))
   const saveToMember = (tomember) => dispatch(setToMember(tomember))
   const saveFAToken = fatoken => dispatch(setFamilyAccessToken(fatoken))
-  const saveMyname = data => dispatch(setMyname(data))
 
 
   const Navigate = useNavigate()
+  const location = useLocation();
 
   // mqtt 연결 준비
   const URL = "ws://localhost:9001";
@@ -46,16 +44,12 @@ function MQTT() {
   // 사용할 변수 정의
   const [userList, setList] = useState([])
   const [noneList, setNoneList] = useState([]) 
-  const [nameData, setName] = useState(null)
+  const [soundData, setSoundData] = useState("")
   const [imageData, setImage] = useState("")
 
-  const nameValid = useRef(false);
-  const validMounted = useRef(false);
   const recordMounted = useRef(false);
-  const testMounted = useRef(false);
   const memberMounted = useRef(false);
   const familyMounted = useRef(false);
-  const testNumber = useRef(0);
 
   const userAxiosActivated = useRef(0)
 
@@ -64,7 +58,7 @@ function MQTT() {
   useEffect(() => {
     client.on('connect', () => {
       // 연결 되면 토픽을 구독
-      client.subscribe(["/local/face/result/", "/local/qrtoken/"], function (err) {
+      client.subscribe(["/local/face/result/", "/local/qrtoken/", "/local/sound/"], function (err) {
         console.log("구독")      
         if (err) {
           console.log(err)
@@ -79,16 +73,23 @@ function MQTT() {
     client.on('message', async function (topic, message) {
       // 토픽이 안면 인식 토픽이라면
       if (topic === "/local/face/result/") {
-        let jsonMsg = JSON.parse(message)
-        let name = jsonMsg.name
-        let image = jsonMsg.image
-        let userData = [name, image]
-        // 리스트에 이름을 계속 담다가
-          if (name !== "NONE"){
-            setList(oldArray => [...oldArray,userData])
-            setNoneList([])
-          }  else {
-            setNoneList(oldNoneArray => [...oldNoneArray,name])
+        // 녹화중이 아닐 때에는 계속 사람을 인식한다.
+        if (location.pathname !== "/record") {
+          let jsonMsg = JSON.parse(message)
+          let name = jsonMsg.name
+          let image = jsonMsg.image
+          let userData = [name, image]
+          // 리스트에 이름을 계속 담다가
+            if (name !== "NONE"){
+              setList(oldArray => [...oldArray,userData])
+              setNoneList(() => [])
+            }  else {
+              setNoneList(oldNoneArray => [...oldNoneArray,name])
+            }
+          // 녹화 중이면 인식 중단 
+          } else {
+            setList(() => [])
+            setNoneList(() => [])
           }
         } else if (topic === "/local/qrtoken/") {
         client.publish("/local/qr/","0")
@@ -106,21 +107,21 @@ function MQTT() {
             saveFAToken(msg)
           }
         })
-        .catch((err) => {
+        .catch(() => {
           client.publish("/local/qr/","1")
         })
       } else if (topic === "/local/sound/") {
+        setSoundData(JSON.parse(message))
       }
     })
   },[me])
   
-  // 메세지가 오면
   useEffect(() => {
     if (!me) {
-      if (userAxiosActivated.current===0){
+      if (userAxiosActivated.current===5){
         if (userList.length>=5) {
-          console.log("5개 넘었음")
-          if (userList.filter(el => el[0]===userList[0][0]).length === userList.length) {
+          // 길이 5의 배열에서 4개 이상이 0번과 같으면
+          if (userList.filter(el => el[0]===userList[0][0]).length>=4) {
             userAxiosActivated.current = 1
             const cognizedUID = memInfo[userList[0][0]]
             axios({
@@ -136,23 +137,50 @@ function MQTT() {
             })
             .then ((res) => {
               saveMe(res.data["uid"])
-              saveMyname(res.data["name"])
               saveMemberToken(res.data["access-token"])
               saveMemberRefreshToken(res.data["refresh-token"])
-              console.log("로그인 됨")
               setList(() => [])
               setNoneList(() => [])
             })
             .catch((err) => {
               console.log(err)
             })
+          // 길이 4의 배열에서 0번만 다를 때 = 4개는 똑같음
+          } else if (userList.filter(el => el[0]===userList[0][0]).length === 1)  {
+            userAxiosActivated.current = 1
+            const cognizedUID = memInfo[userList[1][0]]
+            axios({
+              method:"post",
+              url:"http://i8a208.p.ssafy.io:3000/member/login",
+              headers:{
+                "Authorization": `Bearer ${familyAccessToken}`
+              },
+              data: {
+                "json":userList[1][1],
+                "uid": cognizedUID
+              }
+            })
+            .then ((res) => {
+              saveMe(res.data["uid"])
+              saveMemberToken(res.data["access-token"])
+              saveMemberRefreshToken(res.data["refresh-token"])
+              setList(() => [])
+              setNoneList(() => [])
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+          // 길이 4의 배열에서 비율이 3:2면 
           } else {
-            setList(() => [] )
+            // 리스트를 비우기
+            setList(() => [])
           }
         }
       }
+    // 이미 로그인 상태면
     } else {
-      if (userList.length>=5) {
+      if (userList.length === 5) {
+        // 리스트 비우기
         setList(() => [])
       }
     }
@@ -174,7 +202,6 @@ function MQTT() {
           }
         })
         .then ((res) => {
-          console.log(res)
           if (res.data["movie-list"]){
             const objectList = res.data["movie-list"]
             let emptyList = []
@@ -223,6 +250,7 @@ function MQTT() {
     }
     },[recording])
 
+  // 가족 계정이 로그인 되었을 때 멤버 리스트 요청 보내기
   useEffect(() => {
     if (!familyMounted.current) {
       familyMounted.current=true
@@ -238,7 +266,6 @@ function MQTT() {
         if (res.data.result === true){
           const emptyObject = {}
             for (let member of res.data.list) {
-              
               emptyObject[member.name] = member.uid
             }
           changeStoreMeberInfo(emptyObject)
@@ -250,9 +277,10 @@ function MQTT() {
     }
   },[familyAccessToken])
 
+  // 로그아웃 처리
   useEffect(() => {
     if (me) {
-      if (noneList.length >=12) {
+      if (noneList.length >=7) {
         setVideoList(() => [])
         saveMe(null)
         saveMemberToken(null)
@@ -260,8 +288,9 @@ function MQTT() {
         changeStoreValid(false)
         setNoneList(() => [])
         console.log("로그아웃")
+        Navigate("/")
         userAxiosActivated.current = 0
-      }
+        }
       }
     
   },[noneList])
@@ -325,7 +354,6 @@ function MQTT() {
     },[weather, schedules, name])
 
 }
-
 
 
 
