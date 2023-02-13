@@ -15,7 +15,7 @@ const Caption = () => {
 
     
     
-    const [text, setText] = useState({message :''});
+    const [text, setText] = useState({message :'123'});
     
     // API_KEY는 JSON 파일에
     const API_KEY = secrets.google_speech_api_key
