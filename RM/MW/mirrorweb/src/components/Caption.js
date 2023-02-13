@@ -13,24 +13,25 @@ const Caption = () => {
         schedules : state.valid.schedules
     }))
 
-    const [text, setText] = useState({message : `${caption00[0]} ${name}님`});
-
-
+    
+    
+    const [text, setText] = useState({message :''});
     
     // API_KEY는 JSON 파일에
     const API_KEY = secrets.google_speech_api_key
     const ttsURL = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${API_KEY}`
     
     const mounted = useRef(false);
-
+    
     useEffect(() => {
       if (!mounted.current) {
         mounted.current = true;
         return;
       } 
-        if(!schedules) return;
-        if(!weather) return;
-        if(!name) return;
+      if(!schedules) return;
+      if(!weather) return;
+      if(!name) return;
+        setText({message : `${caption00[0]} ${name}님`})
         let idx =0;
         const textScript = [];
         textScript.push(`오늘의 날씨는 ${weather}입니다`)
