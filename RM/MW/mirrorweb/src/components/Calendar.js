@@ -16,7 +16,7 @@ function Calendar(){
     }));
 
     useEffect(()=>{
-        if(memberAccessToken) return;
+        if(!memberAccessToken) return;
         axios({
         method: "get",
         url: `http://i8a208.p.ssafy.io:3000/schedule/list/five-list`,
