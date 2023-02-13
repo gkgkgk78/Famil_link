@@ -296,19 +296,20 @@ function MQTT() {
   },[noneList])
 
   const mounted00 = useRef(false);
-  const [text, setText] = useState({message : `${caption00[0]} ${name}님`});
-
-    useEffect(() => {
-      if (!mounted00.current) {
+  // const [text, setText] = useState({msg : `${caption00[0]} ${name}님`});
+  useEffect(() => {
+    if (!mounted00.current) {
         mounted00.current = true;
         return;
-      } 
+      }
         if(!schedules) return;
         if(!weather) return;
         if(!name) return;
+        client.publish("/local/tts/", JSON.stringify({msg:`안녕하세요 ${name}님`}) )
         let idx =0;
         const textScript = [];
         textScript.push(`오늘의 날씨는 ${weather}입니다`)
+        client.publish("/local/tts/", JSON.stringify({msg:textScript[idx++]}) )
         let today = new Date();
         let month = today.getMonth() +1;
         let date = today.getDate();
@@ -320,38 +321,16 @@ function MQTT() {
         };
         let flag = 0;
         schedules.map(schedule => {
-
-          console.log(schedule.parseDate);
-          console.log(today);
-
           if(schedule.parseDate === today) {
             flag=1;
             textScript.push(`오늘은 ${schedule.content.slice(0,2)}님의 ${schedule.content.slice(3,)}입니다`)
+            client.publish("/local/tts/", JSON.stringify({msg:textScript[idx++]}) )
           }
         })
         if(!flag) textScript.push(`오늘도 좋은 하루 보내세요`)
         else textScript.push('메시지를 보내시겠습니까?')
-        
-        textScript.push('')
-
-        let textLength = textScript.length-1;
-
-        const changeText = setInterval(()=>{
-
-            setText(text => ({
-                ...text,
-                message: textScript[idx++]
-            }));
-            
-            const jsonData0 = JSON.stringify(text)
-            if (text["message"]) client.publish("/local/tts/", jsonData0)
-
-            if (idx===textLength) clearInterval(changeText);
-        },3000)
+        client.publish("/local/tts/", JSON.stringify({msg:textScript[idx++]}) )
     },[weather, schedules, name])
-
 }
-
-
 
 export default MQTT;
