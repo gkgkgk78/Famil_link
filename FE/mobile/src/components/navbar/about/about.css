@@ -1,9 +1,6 @@
 .about__container {
   grid-template-columns: 3fr 9fr;
   column-gap: 1.875rem;
-  /* grid-template-columns: 720px; */
-  /* justify-content: center;
-    row-gap: 1.875rem; */
 }
 
 .about__data {
@@ -43,4 +40,67 @@
 
 .about__skills {
   row-gap: 1.25rem;
+}
+
+.skills__titles {
+  display: flex;
+  justify-content: space-between;
+}
+
+.skills__name {
+  font-size: var(--normal-font-size);
+  font-weight: var(--font-medium);
+}
+
+.skiils__number {
+  line-height: 1.2;
+}
+
+.skiils__bar,
+.skills__percentage {
+  height: 7px;
+  border-radius: 0.25rem;
+}
+
+.skiils__bar {
+  background-color: #f1f1f1;
+}
+
+.skills__percentage {
+  display: block;
+}
+
+.development {
+  width: 90%;
+  background-color: rgb(255, 209, 92);
+}
+
+.ui__design {
+  width: 80%;
+  background-color: rgb(255, 76, 96);
+}
+
+.photography {
+  width: 60%;
+  background-color: rgb(108, 108, 299);
+}
+
+.about__box {
+  display: flex;
+  column-gap: 1.5rem;
+}
+
+.about__icon {
+  font-size: var(--h1-font-size);
+  color: #dedeea;
+}
+
+.about__boxes {
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 1.875rem;
+  margin-top: 4.35rem;
+}
+
+.about__title {
+  font-size: 1.875rem;
 }
