@@ -7,6 +7,9 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
+d_model = None
+d_labels = None
+
 
 # CAMERA can be 0 or 1 based on default camera of your computer.
 # camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -103,6 +106,8 @@ def index1():
     file.save(os.path.join("upfiles", request.headers['title'], filename))
     # print(os.path.join("upfiles",request.headers['title'], filename))
 
+    uid = request.headers['title']
+
     return os.path.join("upfiles", request.headers['title'], filename)
 
 
@@ -116,7 +121,6 @@ if __name__ == "__main__":
         filenames = os.listdir(pathz)
         for filename in filenames:
             full_filename = os.path.join(pathz, filename)
-
             d_labels[filename] = []
             d_model[filename] = []
             filenow = os.listdir(full_filename)
