@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 function MQTT() {
   // redux에서 state 불러오기
-  const { familyAccessToken, memberAccessToken, me, toMember , recording, memInfo } = useSelector(state => ({
+  const { familyAccessToken, memberAccessToken, me, caption00, name, weather, schedules,validation, toMember , recording, storedVideos, memInfo } = useSelector(state => ({
     familyAccessToken: state.valid.familyAccessToken,
     memberAccessToken: state.valid.memberAccessToken,
     me : state.valid.me,
@@ -16,7 +16,11 @@ function MQTT() {
     toMember : state.valid.toMember,
     recording : state.valid.isRecording,
     storedVideos : state.valid.videos,
-    memInfo : state.valid.memberInfo
+    memInfo : state.valid.memberInfo,
+    caption00 : state.valid.caption,
+    name : state.valid.myname,
+    weather : state.valid.weather,
+    schedules : state.valid.schedules
   }))
   // redux에서 action 가져오기
   const dispatch = useDispatch();
@@ -300,27 +304,42 @@ function MQTT() {
     
   },[noneList])
 
-  useEffect(()=> {
-    if (soundData) {
-      if (me) {
-        if (location.pathname !== "/record") {
-          if (soundData.includes("녹화") || soundData.includes("노콰")) {
-            Navigate("/record")
-            setSoundData("")
-          }
-        } else if (location.pathname === "/record") {
-          if (toMember === null) {
-            if (Object.keys(memInfo).includes(soundData)) {
-              saveToMember(memInfo[soundData])
-              setSoundData("")
-            }
-          }
+  const mounted00 = useRef(false);
+  // const [text, setText] = useState({msg : `${caption00[0]} ${name}님`});
+  useEffect(() => {
+    if (!mounted00.current) {
+        mounted00.current = true;
+        return;
+      }
+        if(!schedules) return;
+        if(!weather) return;
+        if(!name) return;
+        client.publish("/local/tts/", JSON.stringify({msg:`안녕하세요 ${name}님`}) )
+        let idx =0;
+        const textScript = [];
+        textScript.push(`오늘의 날씨는 ${weather}입니다`)
+        client.publish("/local/tts/", JSON.stringify({msg:textScript[idx++]}) )
+        let today = new Date();
+        let month = today.getMonth() +1;
+        let date = today.getDate();
+        if(month<10) {
+          today = `0${month}월 ${date}일`
         }
-      } 
-    }
-  },[soundData])
+        else{
+          today = `${month}월 ${date}일`
+        };
+        let flag = 0;
+        schedules.map(schedule => {
+          if(schedule.parseDate === today) {
+            flag=1;
+            textScript.push(`오늘은 ${schedule.content.slice(0,2)}님의 ${schedule.content.slice(3,)}입니다`)
+            client.publish("/local/tts/", JSON.stringify({msg:textScript[idx++]}) )
+          }
+        })
+        if(!flag) textScript.push(`오늘도 좋은 하루 보내세요`)
+        else textScript.push('메시지를 보내시겠습니까?')
+        client.publish("/local/tts/", JSON.stringify({msg:textScript[idx++]}) )
+    },[weather, schedules, name])
 }
-
-
 
 export default MQTT;

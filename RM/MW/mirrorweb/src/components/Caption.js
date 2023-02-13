@@ -72,36 +72,36 @@ const Caption = () => {
         },3000)
     },[weather, schedules, name])
 
-    useEffect(() => {
+    // useEffect(() => {
 
-           const requestBody = {
-              "audioConfig": {
-                  "audioEncoding": "LINEAR16",
-                  "effectsProfileId": [
-                    "small-bluetooth-speaker-class-device"
-                  ],
-                  "pitch": 1.4,
-                  "speakingRate": 1.1
-                },
-                "input": {
-                  "text": text.message
-                },
-                "voice": {
-                  "languageCode": "ko-KR",
-                  "name": "ko-KR-Wavenet-A"
-                }
-            }
-          axios.post(ttsURL, requestBody)
+    //        const requestBody = {
+    //           "audioConfig": {
+    //               "audioEncoding": "LINEAR16",
+    //               "effectsProfileId": [
+    //                 "small-bluetooth-speaker-class-device"
+    //               ],
+    //               "pitch": 1.4,
+    //               "speakingRate": 1.1
+    //             },
+    //             "input": {
+    //               "text": text.message
+    //             },
+    //             "voice": {
+    //               "languageCode": "ko-KR",
+    //               "name": "ko-KR-Wavenet-A"
+    //             }
+    //         }
+    //       axios.post(ttsURL, requestBody)
   
-          .then((response) => {
-            let audioSource = new Audio("data:audio/wav;base64," + response.data.audioContent)
-            audioSource.play()
-          })
+    //       .then((response) => {
+    //         let audioSource = new Audio("data:audio/wav;base64," + response.data.audioContent)
+    //         audioSource.play()
+    //       })
   
-          .catch((err) => {
-              console.log(err)
-          })
-        },[text])
+    //       .catch((err) => {
+    //           console.log(err)
+    //       })
+    //     },[text])
 
     return (
         <div style={{height:'40px'}}>{text.message}</div>

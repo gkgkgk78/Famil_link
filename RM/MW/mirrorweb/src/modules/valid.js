@@ -72,7 +72,7 @@ const initialState = {
     todos: [],
     schedules: false,
     weather: false,
-    caption:['안녕하세요','오늘 비가 예정되어있습니다','오늘 구름이 예정되어있습니다','오늘 님의 생일입니다','오늘 님의 시험입니다','영상편지를 남기시겠습니까?','오늘도 즐거운 하루 보내세요'],
+    caption:['안녕하세요'],
 }
 
 // 리듀서
