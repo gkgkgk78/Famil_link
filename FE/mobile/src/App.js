@@ -9,6 +9,7 @@ import AuthLayout from "./components/auth/AuthLayout";
 import FamilyMember from "./pages/FamilyMember";
 import FamilyMemberRegister from "./pages/FamilyMemberRegister";
 import Record from "./pages/Record";
+import Calendars from "./pages/Calendars";
 
 function App() {
   const token = localStorage.getItem("faccesstoken");
@@ -29,6 +30,7 @@ function App() {
           element={<FamilyMemberRegister />}
         />
         <Route path="/Record" element={<Record />} />
+        <Route path="/Calendars" element={<Calendars/>} />
       </Routes>
     </div>
   );
