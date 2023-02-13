@@ -296,7 +296,7 @@ function MQTT() {
   },[noneList])
 
   const mounted00 = useRef(false);
-  
+
   useEffect(() => {
     if (!mounted00.current) {
         mounted00.current = true;
@@ -304,7 +304,7 @@ function MQTT() {
       }
         if(!schedules) return;
         if(!weather) return;
-        if(!myname) return;
+        // if(!myname) return;
         client.publish("/local/tts/", JSON.stringify({msg:`안녕하세요 ${myname}님`}) )
         let idx =0;
         const textScript = [];
@@ -330,7 +330,8 @@ function MQTT() {
         if(!flag) textScript.push(`오늘도 좋은 하루 보내세요`)
         else textScript.push('메시지를 보내시겠습니까?')
         client.publish("/local/tts/", JSON.stringify({msg:textScript[idx++]}) )
-    },[weather, schedules, myname])
+    // },[weather, schedules, myname])
+    },[weather, schedules])
 }
 
 export default MQTT;
