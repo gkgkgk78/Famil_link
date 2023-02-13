@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 function MQTT() {
   // redux에서 state 불러오기
-  const { familyAccessToken, memberAccessToken, me, caption00, name, weather, schedules,validation, toMember , recording, storedVideos, memInfo } = useSelector(state => ({
+  const { familyAccessToken, memberAccessToken, me, caption00, myname, weather, schedules,validation, toMember , recording, storedVideos, memInfo } = useSelector(state => ({
     familyAccessToken: state.valid.familyAccessToken,
     memberAccessToken: state.valid.memberAccessToken,
     me : state.valid.me,
@@ -18,7 +18,7 @@ function MQTT() {
     storedVideos : state.valid.videos,
     memInfo : state.valid.memberInfo,
     caption00 : state.valid.caption,
-    name : state.valid.myname,
+    myname : state.valid.myname,
     weather : state.valid.weather,
     schedules : state.valid.schedules
   }))
@@ -296,7 +296,7 @@ function MQTT() {
   },[noneList])
 
   const mounted00 = useRef(false);
-  // const [text, setText] = useState({msg : `${caption00[0]} ${name}님`});
+  
   useEffect(() => {
     if (!mounted00.current) {
         mounted00.current = true;
@@ -304,8 +304,8 @@ function MQTT() {
       }
         if(!schedules) return;
         if(!weather) return;
-        if(!name) return;
-        client.publish("/local/tts/", JSON.stringify({msg:`안녕하세요 ${name}님`}) )
+        if(!myname) return;
+        client.publish("/local/tts/", JSON.stringify({msg:`안녕하세요 ${myname}님`}) )
         let idx =0;
         const textScript = [];
         textScript.push(`오늘의 날씨는 ${weather}입니다`)
@@ -330,7 +330,7 @@ function MQTT() {
         if(!flag) textScript.push(`오늘도 좋은 하루 보내세요`)
         else textScript.push('메시지를 보내시겠습니까?')
         client.publish("/local/tts/", JSON.stringify({msg:textScript[idx++]}) )
-    },[weather, schedules, name])
+    },[weather, schedules, myname])
 }
 
 export default MQTT;
