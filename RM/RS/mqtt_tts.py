@@ -18,8 +18,8 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     try:
         if msg.topic == "/local/tts/":
-            data = msg.payload.decode("utf-8")
-            speak(data)
+            data = json.loads(msg.payload.decode("utf-8"))
+            speak(data["msg"])
     except Exception as e:
         print(e)
 
