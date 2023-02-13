@@ -36,7 +36,6 @@ const Record = () => {
         } else {
             if (to) {
                 startRecord();
-                console.log(` to useEffect 안에서 ${recording}`)
                 setInterval(() => {
                     setTimer( (timer) => {
                             return timer+1
@@ -59,7 +58,6 @@ const Record = () => {
                 }, 3000)
             } else if (recording === true) { 
                 console.log("녹화가 시작됩니다.")
-                console.log(`recording useEffect 안에서 ${recording}`)
                 setTimeout(() => {
                     stopRecord()
                 },30000)
