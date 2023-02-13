@@ -20,7 +20,7 @@ function SEE() {
         });
 
     sse.addEventListener('send', () => {
-        console.log("test")
+        console.log("test!")
 
     });
   }
