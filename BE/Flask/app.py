@@ -108,6 +108,7 @@ def index1():
 
     return os.path.join("upfiles", request.headers['title'], filename)
 
+print(__name__)
 
 idx = 0
 
