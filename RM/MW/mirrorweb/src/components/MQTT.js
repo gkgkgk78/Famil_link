@@ -304,6 +304,27 @@ function MQTT() {
     
   },[noneList])
 
+  useEffect(()=> {
+    if (soundData) {
+      if (me) {
+        if (location.pathname !== "/record") {
+          if (soundData.includes("녹화") || soundData.includes("노콰")) {
+            Navigate("/record")
+            setSoundData("")
+          }
+        } else if (location.pathname === "/record") {
+          if (toMember === null) {
+            if (Object.keys(memInfo).includes(soundData)) {
+              saveToMember(memInfo[soundData])
+              setSoundData("")
+            }
+          }
+        }
+      } 
+    }
+  },[soundData])
+
+
   const mounted00 = useRef(false);
 
   useEffect(() => {
