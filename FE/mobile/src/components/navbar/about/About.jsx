@@ -1,6 +1,7 @@
 import React from "react";
 import "./about.css";
 import Image from "../../images/다운로드.jpg";
+import AboutBox from "./AboutBox";
 
 const About = () => {
   return (
@@ -28,34 +29,34 @@ const About = () => {
                 <span className="skills__number">90%</span>
               </div>
               <div className="skills__bar">
-                <span className="skills__percentage"></span>
+                <span className="skills__percentage development"></span>
               </div>
             </div>
-          </div>
 
-          <div className="skills__data">
-            <div className="skills__titles">
-              <h3 className="skills__name">UI/ UX design</h3>
-              <span className="skills__number">80%</span>
+            <div className="skills__data">
+              <div className="skills__titles">
+                <h3 className="skills__name">UI/ UX design</h3>
+                <span className="skills__number">80%</span>
+              </div>
+              <div className="skills__bar">
+                <span className="skills__percentage ui__design"></span>
+              </div>
             </div>
-            <div className="skills__bar">
-              <span className="skills__percentage"></span>
-            </div>
-          </div>
 
-          <div className="about__skills grid">
             <div className="skills__data">
               <div className="skills__titles">
                 <h3 className="skills__name">Photography</h3>
                 <span className="skills__number">60%</span>
               </div>
-            </div>
-            <div className="skills__bar">
-              <span className="skills__percentage"></span>
+              <div className="skills__bar">
+                <span className="skills__percentage photography"></span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <AboutBox />
     </section>
   );
 };
