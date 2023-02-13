@@ -1,0 +1,36 @@
+﻿<Window x:Class="FamilLinkProject.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FamilLinkProject"
+        mc:Ignorable="d"
+        Width="1080" Height="1920"
+        WindowState="Maximized"
+        WindowStyle="None" Background="Black" WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True" ShowInTaskbar="False"
+        ResizeMode="CanResizeWithGrip">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="300"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="300"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <!-- 시간 및 날씨 표시 -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <TextBlock Text="날씨" Foreground="white" FontSize="150"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <TextBlock Text="시간" Foreground="white" FontSize="150" HorizontalAlignment="Right"/>
+            </Grid>
+            
+        </Grid>
+        <ContentControl Grid.Row="1" x:Name="ContentPage" Content="{Binding Page}"/>
+    </Grid>
+</Window>
