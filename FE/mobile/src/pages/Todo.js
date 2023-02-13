@@ -12,76 +12,13 @@ import { Card, List, CardHeader, CardContent, CardActions, TextField, Typography
 import { getTodoList, deleteTodo, editTodo } from "../components/todo/service/ApiService";
 import TodoList from "../components/todo/TodoList";
 import palette from "../lib/styles/palette";
+import TodoListPage from "../components/todo/TodoListPage";
 
 
 const Todo = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const fatkn = localStorage.getItem('facesstoken')
-
-    const [items, setItems] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        getTodoList("", (response)=>{
-            setItems(response.data.todolist)
-            console.log(response.data.todolist)
-            setLoading(false);
-        },
-        (error)=> {
-            console.log("error: "+error)
-        })
-    }, []);
-
-
-    const deleteItem = (item) => {
-        deleteTodo(item, (item)=>{
-
-        }, 
-        (error)=>{
-            console.log("uid: "+item.uid+"//"+error)
-        })
-    }
-
-    const editItem = (item) => {
-        editTodo(item, (item)=>{
-            console.log("todo check")
-        },
-        (error)=>{
-            console.log(error)
-        })
-    }
-
-    let todoListPage = (
-    <Grid item xs={10}>
-        <Paper style={{margin: 16}}>
-        <List>
-            {items.map((item, index) => (
-                <TodoList
-                    item={item}
-                    key={index}
-                    editItem={editItem}
-                    deleteItem={deleteItem}
-                />
-            ))}
-        </List>
-        </Paper>
-    </Grid>
-    );
-
-
-    //로딩중일 때 렌더링할 부분
-    let loadingPage = (
-        <h1>
-        로딩중...
-        </h1>
-    );
-
-    let content = loadingPage;
-
-    if(!loading){
-        content = todoListPage;
-    }
 
     return (
         <div>
@@ -92,7 +29,7 @@ const Todo = () => {
                     <TodoInput className="temp"/>
                     <Grid item xs={1} />
                     <Grid item xs={1} />
-                    {content}
+                    <TodoListPage />
                     <Grid item xs={1} />
                 </Grid>
             </section>
