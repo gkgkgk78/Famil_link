@@ -20,6 +20,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def index():
+    global d_model, d_labels
     # upfiles\4\model.h5
     # upfiles\4\level.txt
     # 여기에서 위 두개의 파일이 모두 존재를 하는지 판단을 해봐야 함
@@ -101,6 +102,7 @@ def index1():
     os.makedirs((str)(os.path.join("upfiles", request.headers['title'])), exist_ok=True)
     file.save(os.path.join("upfiles", request.headers['title'], filename))
     # print(os.path.join("upfiles",request.headers['title'], filename))
+
     return os.path.join("upfiles", request.headers['title'], filename)
 
 
@@ -119,12 +121,7 @@ if __name__ == "__main__":
             d_model[filename] = []
             filenow = os.listdir(full_filename)
             for now in filenow:
-
-                # labels = open(path1, 'r', encoding='UTF8').readlines()
-                # # Load the model
-                # model = load_model(path2)
                 temp_route = os.path.join("upfiles", filename, now)
-
                 if now == "labels.txt":
                     d_labels[filename] = (open(temp_route, 'r', encoding='UTF8').readlines())
                 else:
