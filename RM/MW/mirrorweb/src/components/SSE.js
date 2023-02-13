@@ -1,5 +1,4 @@
-import './App.css';
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import axios from "axios";
 import {useSelector, useDispatch } from "react-redux";
@@ -18,10 +17,16 @@ function SSE() {
     const changeSSE = (bool) => dispatch(setSSEcondition(bool))
 
     useEffect(() => {
+      console.log("SSE MOUNTED")
+      let eventSource = new EventSourcePolyfill(`${BASE_URL}/subscribe`,
+          {
+            headers: {
+              "Authorization": `Bearer ${memactoken}`
+            },
+            withCredentials: true
+          });
       if (memactoken) {
         const ssesubscribe = async () => {
-          
-          
           
           eventSource.onmessage = () => {
             if (ssecondition === false) {
@@ -32,14 +37,6 @@ function SSE() {
 
         ssesubscribe();
         } else {
-          let eventSource = new EventSourcePolyfill(`${BASE_URL}/subscribe`,
-          {
-            headers: {
-              "Authorization": `Bearer ${memactoken}`
-            },
-            withCredentials: true
-          });
-          
           eventSource.close()
         }
     }, [memactoken])

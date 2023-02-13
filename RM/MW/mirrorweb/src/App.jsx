@@ -1,6 +1,7 @@
 import './App.css';
 
 import MQTT from './components/MQTT';
+import SSE from './components/SSE';
 
 import Clock from './components/Clock';
 import Weather from './components/Weather';
@@ -16,9 +17,7 @@ import { Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function App() {
-  const {me} = useSelector(state => ({
-    me : state.valid.me
-  }))
+  
 
   // 라즈베리파이와 웹소켓을 연결되어, 신호를 주고받는다.
   // 초음파 센서 신호가 오면 안면 인식 화면으로 이동한다.
@@ -32,7 +31,7 @@ function App() {
   return (
     <div className="App">
       <MQTT/>
-
+      <SSE />
       <Box sx={{
         display: "flex",
         justifyContent:"space-between",
@@ -43,7 +42,7 @@ function App() {
       </Box>
       
       <section style={style}>
-      <div>{me ? <p>멤버가 로그인 되었습니다.</p> : <p>아직 멤버가 로그인 되지 않았어요</p>}</div>
+      
       <Routes>
         <Route path="/" element= { <Main />} />
         <Route path="/qr" element={ <QR />} />

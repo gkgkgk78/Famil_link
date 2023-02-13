@@ -12,6 +12,7 @@ const START_RECORDING = "valid/START_RECORDING"
 const STOP_RECORDING = "valid/STOP_RECORDING"
 const SET_TOMEMBER = "valid/SET_TOMEMBER"
 const SET_SSECONDITION = "valid/SET_SSECONDITION"
+const SET_TOCOG = "valid/SET_TOCOG"
 
 const SET_VIDEOS = "valid/SET_VIDEOS"
 
@@ -36,6 +37,7 @@ export const setInfo = info => ({type: SET_INFO, info})
 export const startRecording = () => ({type: START_RECORDING})
 export const stopRecording = () => ({type: STOP_RECORDING})
 export const setToMember = memberID => ({type: SET_TOMEMBER, memberID}) 
+export const setToCog = bool => ({type:SET_TOCOG, bool})
 
 export const setVideos = videoList => ({type: SET_VIDEOS, videoList})
 export const setSSEcondition = bool => ({type: SET_SSECONDITION, bool})
@@ -62,13 +64,15 @@ const initialState = {
 
     memberInfo: null,
     toMember: null,
+    toCog: true,
+    
     videos: [],
     ssecondition: false,
 
     todos: [],
     schedules: false,
     weather: false,
-    caption:['안녕하세요','오늘 비가 예정되어있습니다','오늘 구름이 예정되어있습니다','오늘 님의 생일입니다','오늘 님의 시험입니다','영상편지를 남기시겠습니까?','오늘도 즐거운 하루 보내세요'],
+    caption:['안녕하세요'],
 }
 
 // 리듀서
@@ -139,6 +143,11 @@ export default function valid(state = initialState, action) {
             return {
                 ...state,
                 toMember: action.memberID
+            }
+        case SET_TOCOG:
+            return {
+                ...state,
+                toCog: action.bool
             }
         case SET_TODOS:
             return {

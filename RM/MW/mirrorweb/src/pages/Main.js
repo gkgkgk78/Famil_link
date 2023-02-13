@@ -8,6 +8,10 @@ import {useSelector} from "react-redux"
 
 
 const Main = () => {
+  const {me} = useSelector(state => ({
+    me : state.valid.me
+  }))
+  
   const Navigate = useNavigate()
   const { fatoken } = useSelector(state => ({
     fatoken : state.valid.familyAccessToken
@@ -20,6 +24,7 @@ const Main = () => {
 
     return ( 
         <div>
+          <div>{me ? <p>멤버가 로그인 되었습니다.</p> : <p>아직 멤버가 로그인 되지 않았어요</p>}</div>
           <div className='calendardiv'>
             <Calendar />  
           </div>
