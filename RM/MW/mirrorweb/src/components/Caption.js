@@ -30,7 +30,7 @@ const Caption = () => {
       } 
       if(!schedules) return;
       if(!weather) return;
-      if(!name) return;
+      // if(!name) return;
         setText({message : `${caption00[0]} ${name}님`})
         let idx =0;
         const textScript = [];
@@ -71,7 +71,8 @@ const Caption = () => {
 
             if (idx===textLength) clearInterval(changeText);
         },3000)
-    },[weather, schedules, name])
+    // },[weather, schedules, name])
+    },[weather, schedules])
 
     // useEffect(() => {
 
