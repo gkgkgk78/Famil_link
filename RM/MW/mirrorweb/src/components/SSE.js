@@ -1,53 +1,33 @@
+import { useSelector } from "react-redux";
 import {useState, useEffect} from "react";
-import { EventSourcePolyfill } from 'event-source-polyfill';
+import {EventSourcePolyfill} from 'event-source-polyfill';
 import axios from "axios";
-import {useSelector, useDispatch } from "react-redux";
-import { setSSEcondition } from '../modules/valid';
 
+const BASE_URL = "http://i8a208.p.ssafy.io:3000/sse"
 
-const BASE_URL = "http://http://i8a208.p.ssafy.io:3000/sse"
+function SEE() {
+  const {memactoken, me} = useSelector(state => ({
+    me : state.valid.me,
+    memactoken : state.valid.memberAccessToken
+  }))    
 
-function SSE() {
-    const { memactoken, ssecondition} = useSelector(state => ({
-      memactoken : state.valid.memberAccessToken,
-      ssecondition : state.valid.ssecondition
-    }))
-
-    const dispatch = useDispatch()
-    const changeSSE = (bool) => dispatch(setSSEcondition(bool))
-
-    useEffect(() => {
-      console.log("SSE MOUNTED")
-      let eventSource = new EventSourcePolyfill(`${BASE_URL}/subscribe`,
-          {
+  const handleConnect = () => {
+    const sse = new EventSourcePolyfill(`${BASE_URL}/subscribe`,
+        {
             headers: {
-              "Authorization": `Bearer ${memactoken}`
-            },
-            withCredentials: true
-          });
-      if (memactoken) {
-        const ssesubscribe = async () => {
-          
-          eventSource.onmessage = () => {
-            if (ssecondition === false) {
-              changeSSE(true)
+                "Authorization": `Bearer ${memactoken}`
             }
-          }
-        }
+        });
 
-        ssesubscribe();
-        } else {
-          eventSource.close()
-        }
-    }, [memactoken])
+    sse.addEventListener('send', () => {
+        console.log("test")
 
-        
-
-        
+    });
+  }
+  useEffect(() => {
+    handleConnect()
+  },[])
 
 }
 
-
-
-
-export default SSE;
+export default SEE;
