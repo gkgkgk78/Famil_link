@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import mqtt from "precompiled-mqtt";
 import axios from "axios"
-import { setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setToMember, setValid, setVideos, startRecording, stopRecording, setFamilyAccessToken, setTodos } from '../modules/valid';
+import { setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setToMember, setValid, setVideos, startRecording, stopRecording, setFamilyAccessToken, setTodos, setToCog } from '../modules/valid';
 import {useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -70,11 +70,10 @@ function MQTT() {
   
   useEffect(() => {
     // 브로커에 연결되면
-    client.on('message', async function (topic, message) {
+    client.on('message', function (topic, message) {
       // 토픽이 안면 인식 토픽이라면
       if (topic === "/local/face/result/") {
         // 녹화중이 아닐 때에는 계속 사람을 인식한다.
-        if (location.pathname !== "/record") {
           let jsonMsg = JSON.parse(message)
           let name = jsonMsg.name
           let image = jsonMsg.image
@@ -87,10 +86,7 @@ function MQTT() {
               setNoneList(oldNoneArray => [...oldNoneArray,name])
             }
           // 녹화 중이면 인식 중단 
-          } else {
-            setList(() => [])
-            setNoneList(() => [])
-          }
+
         } else if (topic === "/local/qrtoken/") {
         client.publish("/local/qr/","0")
         let msg = JSON.parse(message)
@@ -114,11 +110,15 @@ function MQTT() {
         setSoundData(JSON.parse(message))
       }
     })
-  },[me])
+  },[])
   
   useEffect(() => {
+    if (!userList) {
+      return
+    }
+
     if (!me) {
-      if (userAxiosActivated.current===5){
+      if (userAxiosActivated.current===0){
         if (userList.length>=5) {
           // 길이 5의 배열에서 4개 이상이 0번과 같으면
           if (userList.filter(el => el[0]===userList[0][0]).length>=4) {
@@ -229,7 +229,7 @@ function MQTT() {
       if (recording === false) {
         // 녹화가 끝났으면 녹화가 끝났다는 메세지를 보냄
         client.publish("/local/record/", "0")
-        // client.publish("/local/tts/","")
+        client.subscribe("/local/face/result/")
       } else {
         // 녹화가 시작되었으면 데이터와 신호를 쏴줌
         const publishData = {
@@ -242,6 +242,7 @@ function MQTT() {
           client.publish("/local/token/", jsonData)
 
           client.publish("/local/record/", "1")
+          client.unsubscribe("/local/face/result/")
           saveToMember(null)
         } else {
           console.log("받으실 분이 없어요")
@@ -279,19 +280,27 @@ function MQTT() {
 
   // 로그아웃 처리
   useEffect(() => {
+    if (!noneList) {
+      return
+    }
+
     if (me) {
-      if (noneList.length >=7) {
-        setVideoList(() => [])
-        saveMe(null)
-        saveMemberToken(null)
-        saveMemberRefreshToken(null)
-        changeStoreValid(false)
-        setNoneList(() => [])
-        console.log("로그아웃")
-        Navigate("/")
-        userAxiosActivated.current = 0
+      if (location.pathname !== "record/") {
+        if (noneList.length >=7) {
+            setVideoList(() => [])
+            saveMe(null)
+            saveMemberToken(null)
+            saveMemberRefreshToken(null)
+            changeStoreValid(false)
+            setNoneList(() => [])
+            console.log("로그아웃")
+            Navigate("/")
+            userAxiosActivated.current = 0
         }
+      } else {
+        setNoneList(() => [])
       }
+    }
     
   },[noneList])
 
