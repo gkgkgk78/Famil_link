@@ -68,7 +68,7 @@ const PlayVideo = () => {
                     method: "get",
                     url: `http://i8a208.p.ssafy.io:3000/movie/video-list`,
                     headers: {
-                      "Authorization": `Bearer ${memberAccessToken}`
+                      "Authorization": `Bearer ${memacctoken}`
                     }
                   })
                   .then ((res) => {
@@ -117,15 +117,19 @@ const PlayVideo = () => {
     }
 
     return (
-        <div> 
+        <div>
+          <div className="playercontainer">
           <ReactPlayer
             url = {videoData}
             muted={false}
             playing={true}
             controls
+            width="100%"
+            height="auto"
             progressInterval={1000}
             onEnded = {(() => nextVideo(nowVideoList, nowplaying))}
           />
+          </div>
         </div>
         
      );

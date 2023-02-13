@@ -12,6 +12,7 @@ const START_RECORDING = "valid/START_RECORDING"
 const STOP_RECORDING = "valid/STOP_RECORDING"
 const SET_TOMEMBER = "valid/SET_TOMEMBER"
 const SET_SSECONDITION = "valid/SET_SSECONDITION"
+const SET_TOCOG = "valid/SET_TOCOG"
 
 const SET_VIDEOS = "valid/SET_VIDEOS"
 
@@ -36,6 +37,7 @@ export const setInfo = info => ({type: SET_INFO, info})
 export const startRecording = () => ({type: START_RECORDING})
 export const stopRecording = () => ({type: STOP_RECORDING})
 export const setToMember = memberID => ({type: SET_TOMEMBER, memberID}) 
+export const setToCog = bool => ({type:SET_TOCOG, bool})
 
 export const setVideos = videoList => ({type: SET_VIDEOS, videoList})
 export const setSSEcondition = bool => ({type: SET_SSECONDITION, bool})
@@ -62,6 +64,8 @@ const initialState = {
 
     memberInfo: null,
     toMember: null,
+    toCog: true,
+    
     videos: [],
     ssecondition: false,
 
@@ -139,6 +143,11 @@ export default function valid(state = initialState, action) {
             return {
                 ...state,
                 toMember: action.memberID
+            }
+        case SET_TOCOG:
+            return {
+                ...state,
+                toCog: action.bool
             }
         case SET_TODOS:
             return {
