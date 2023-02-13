@@ -7,8 +7,6 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-d_model = None
-d_labels = None
 
 
 # CAMERA can be 0 or 1 based on default camera of your computer.
@@ -110,26 +108,27 @@ def index1():
 
     return os.path.join("upfiles", request.headers['title'], filename)
 
+print(__name__)
 
 idx = 0
-if __name__ == "__main__":
-    pathz = os.path.join("upfiles")
-    d_labels = dict()
-    d_model = dict()
 
-    if (os.path.exists(pathz)):
-        filenames = os.listdir(pathz)
-        for filename in filenames:
-            full_filename = os.path.join(pathz, filename)
-            d_labels[filename] = []
-            d_model[filename] = []
-            filenow = os.listdir(full_filename)
-            for now in filenow:
-                temp_route = os.path.join("upfiles", filename, now)
-                if now == "labels.txt":
-                    d_labels[filename] = (open(temp_route, 'r', encoding='UTF8').readlines())
-                else:
-                    d_model[filename] = load_model(temp_route)
+pathz = os.path.join("upfiles")
+d_labels = dict()
+d_model = dict()
 
-    app.debug = True
-    app.run(host="localhost", port=5000, use_reloader=False)
+if (os.path.exists(pathz)):
+    filenames = os.listdir(pathz)
+    for filename in filenames:
+        full_filename = os.path.join(pathz, filename)
+        d_labels[filename] = []
+        d_model[filename] = []
+        filenow = os.listdir(full_filename)
+        for now in filenow:
+            temp_route = os.path.join("upfiles", filename, now)
+            if now == "labels.txt":
+                d_labels[filename] = (open(temp_route, 'r', encoding='UTF8').readlines())
+            else:
+                d_model[filename] = load_model(temp_route)
+
+app.debug = True
+app.run(host="localhost", port=5000, use_reloader=False)
