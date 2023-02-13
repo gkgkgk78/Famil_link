@@ -21,7 +21,9 @@ const useStyles = makeStyles({
 const TodoList = (props) => {
 
     const [item, setItem] = useState(props.item);
-    const[readOnly, setReadOnly] = useState(true);
+    const [readOnly, setReadOnly] = useState(true);
+    const [done, setDone] = useState(props.item.status);
+
 
     const classes = useStyles();
     // const turnOffReadOnly = () => {
@@ -36,11 +38,22 @@ const TodoList = (props) => {
     // }
 
 
+
     const deleteItem = props.deleteItem;
 
     const deleteEventHandler = (e) => {
         deleteItem(item.uid)
     }
+
+    const editItem = props.editItem;
+
+    const checkBoxHandler = (e) => {
+        const newDoneState = e.target.checked;
+        setDone(newDoneState);
+        editItem(item.uid, newDoneState?1:0);
+    }
+
+    const content = (item.content).replace(/"/gi, '');
 
     return (
         <ListItem>
@@ -49,8 +62,8 @@ const TodoList = (props) => {
             checkedIcon={<Favorite />}
             className={classes.root}
             //edit handler 생성하고 활성화
-            //checked={item.done}
-            //onChange={checkBoxHandler} 
+            checked={done}
+            onChange={checkBoxHandler} 
             />
             <ListItemText>
                 <InputBase
@@ -62,7 +75,7 @@ const TodoList = (props) => {
                 type="text"
                 id={item.uid}
                 name={item.uid}
-                value={item.content}
+                value={content}
                 multiline={true}
                 fullWidth={true}/>
             </ListItemText>

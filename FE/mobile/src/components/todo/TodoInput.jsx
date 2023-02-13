@@ -81,8 +81,8 @@ const TodoInput = () => {
     //add 이벤트
     const onBtnClick = (e) => {
       const content = field;
+      e.preventDefault();
       addTodoList(content, (data)=>{
-        
       },
       (error)=>{
         console.log(error)
@@ -92,8 +92,10 @@ const TodoInput = () => {
 
     //엔터 등록 이벤트
     const enterKeyEventHandler = (e) => {
-      if(e.key === 'Enter'){
-        onBtnClick();
+      if(e.key == 'Enter'){
+        if(field.length>0){
+          onBtnClick();
+        }
       }
 
     }

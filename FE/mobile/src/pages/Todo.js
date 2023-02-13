@@ -9,7 +9,7 @@ import "../components/todo/todo.css";
 import axios from "axios";
 import StyledEngine, { StyledEngineProvider } from "@mui/styled-engine";
 import { Card, List, CardHeader, CardContent, CardActions, TextField, Typography, Grid, Icon, Button, Paper,  } from '@mui/material';
-import { getTodoList, deleteTodo } from "../components/todo/service/ApiService";
+import { getTodoList, deleteTodo, editTodo } from "../components/todo/service/ApiService";
 import TodoList from "../components/todo/TodoList";
 import palette from "../lib/styles/palette";
 
@@ -43,6 +43,15 @@ const Todo = () => {
         })
     }
 
+    const editItem = (item) => {
+        editTodo(item, (item)=>{
+            console.log("todo check")
+        },
+        (error)=>{
+            console.log(error)
+        })
+    }
+
     let todoListPage = (
     <Grid item xs={10}>
         <Paper style={{margin: 16}}>
@@ -51,6 +60,7 @@ const Todo = () => {
                 <TodoList
                     item={item}
                     key={index}
+                    editItem={editItem}
                     deleteItem={deleteItem}
                 />
             ))}

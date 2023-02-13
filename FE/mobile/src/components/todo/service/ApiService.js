@@ -9,6 +9,7 @@ function addTodoList(param, success, fail) {
     console.log(localStorage.getItem("faccesstoken").replace(/\"/gi, ''))
 
     console.log(localStorage.getItem("faccesstoken"));
+    console.log(param)
     api_headers.post(`/todo`, JSON.stringify(param)).then(success).catch(fail);
 }
 
@@ -22,8 +23,14 @@ function deleteTodo(param, success, fail){
     api_headers.delete(`/todo/`+param, JSON.stringify(param)).then(success).catch(fail);
 }
 
+function editTodo(param, success, fail){
+    api_headers.defaults.headers["Authorization"] = "Bearer " + localStorage.getItem("faccesstoken").replace(/\"/gi, '');
+    api_headers.put(`/todo/`+param, JSON.stringify(param)).then(success).catch(fail);
+}
+
 export {
     addTodoList,
     getTodoList,
-    deleteTodo
+    deleteTodo,
+    editTodo
 };
