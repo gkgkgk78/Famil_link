@@ -8,7 +8,6 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
 
-
 # CAMERA can be 0 or 1 based on default camera of your computer.
 # camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
@@ -98,6 +97,7 @@ def index():
 
 @app.route("/hihi", methods=["POST"])
 def index1():
+    global d_labels, d_model
     file = request.files['file']
     filename = secure_filename(file.filename)
     os.makedirs((str)(os.path.join("upfiles", request.headers['title'])), exist_ok=True)
@@ -106,7 +106,16 @@ def index1():
 
     uid = request.headers['title']
 
+    if filename == "labels.txt":
+        d_labels[uid] = []
+        d_labels[uid] = (
+            open(os.path.join("upfiles", request.headers['title'], filename), 'r', encoding='UTF8').readlines())
+    else:
+        d_model[uid] = []
+        d_model[uid] = load_model(os.path.join("upfiles", request.headers['title'], filename))
+
     return os.path.join("upfiles", request.headers['title'], filename)
+
 
 print(__name__)
 

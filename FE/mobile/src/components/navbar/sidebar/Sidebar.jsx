@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./sidebar.css";
 import Logo from "../../images/다운로드.jpg";
 import SimpleLineIcon from "react-simple-line-icons";
@@ -6,34 +6,44 @@ import Button from "../../common/Button";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-// const ButtonWithMarginTop = styled(Button)`
-//   margin-top: 1rem;
-// `;
-
 const Sidebar = ({ type }) => {
   const navigate = useNavigate();
-  // const token = localStorage.getItem("faccesstoken")
-  // const loginstatus = {
-  //     { token? "로그아웃" : "로그인"}
-  // }
-  // const text = loginstatus[type];
-  // const onLogin = () => {
-  //     navigate('/login')
-  // }
+
+  const [showSidebar, setShowSidebar] = useState(false);
+
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
+
   const onLogout = () => {
     localStorage.removeItem("faccesstoken");
     navigate("/login");
   };
 
-  // const onlog = {
-  //     {token ? onLogout : onLogin }
-  // }
+  const onLogin = () =>{
+    navigate("/login")
+  }
 
-  // const onlogg = onlog[type]
+  const token = localStorage.getItem("faccesstoken")
+
+  let loginCheck;
+  if(token != null){
+    loginCheck = (
+      <Button gray fullWidth onClick={onLogout}>
+                로그아웃
+      </Button>
+    )
+  } else {
+    loginCheck = (
+      <Button gray fullWidth onClick={onLogin}>
+                로그인
+      </Button>
+    )
+  }
 
   return (
     <>
-      <aside className="aside">
+      <aside className={showSidebar ? "aside show-menu" : "aside"}>
         <a href="/" className="nav__logo">
           <img src={Logo} alt="" />
         </a>
@@ -71,9 +81,7 @@ const Sidebar = ({ type }) => {
                 </a>
               </li>
               <li className="nav__item">
-                <Button gray fullWidth onClick={onLogout}>
-                  로그 아웃
-                </Button>
+                {loginCheck}
               </li>
             </ul>
           </div>
@@ -84,7 +92,10 @@ const Sidebar = ({ type }) => {
         </div>
       </aside>
 
-      <div className="nav__toggle">
+      <div
+        className={showSidebar ? "nav__toggle nav__toggle-open" : "nav__toggle"}
+        onClick={() => setShowSidebar(!showSidebar)}
+      >
         <SimpleLineIcon name="menu" />
       </div>
     </>

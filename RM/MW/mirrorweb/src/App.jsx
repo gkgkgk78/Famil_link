@@ -28,6 +28,7 @@ function App() {
     paddingTop : '200px',
     height : '900px'
   }
+
   return (
     <div className="App">
       <MQTT/>

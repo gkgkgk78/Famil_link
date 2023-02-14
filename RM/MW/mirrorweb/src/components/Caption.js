@@ -6,11 +6,12 @@ import secrets from "./secrets.json"
 
 const Caption = () => {
     //멘트 처리, text에 담기
-    const {caption00, name, weather, schedules} = useSelector((state) => ({
+    const {caption00, name, weather, schedules, memberAccessToken} = useSelector((state) => ({
         caption00 : state.valid.caption,
         name : state.valid.myname,
         weather : state.valid.weather,
-        schedules : state.valid.schedules
+        schedules : state.valid.schedules,
+        memberAccessToken : state.valid.memberAccessToken,
     }))
 
     
@@ -28,6 +29,7 @@ const Caption = () => {
         mounted.current = true;
         return;
       } 
+      if(!memberAccessToken) return;
       if(!schedules) return;
       if(!weather) return;
       // if(!name) return;
@@ -72,7 +74,7 @@ const Caption = () => {
             if (idx===textLength) clearInterval(changeText);
         },3000)
     // },[weather, schedules, name])
-    },[weather, schedules])
+    },[weather, schedules, memberAccessToken])
 
     // useEffect(() => {
 
