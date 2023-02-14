@@ -23,20 +23,20 @@ public class SseController {
     @ApiOperation(value = "알림 구독", notes = "알림을 구독한다.")
     @GetMapping(value = "/subscribe", produces = "text/event-stream")
     @ResponseStatus(HttpStatus.OK)
-    public SseEmitter subscribe(){
+    public SseEmitter subscribe(final Authentication authentication) {
 
         //Authentication authentication, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId
 
-        //Member member = (Member) authentication.getPrincipal();
+        Member member = (Member) authentication.getPrincipal();
 
         //member.getUid(), lastEventId
-        return sseService.subscribe(1L, "");
+        return sseService.subscribe(member.getUid(), "");
     }
 
     @ApiOperation(value = "알림 구독 해제", notes = "알림을 구독을 해제한다.")
     @GetMapping(value = "/logout", produces = "text/event-stream")
     @ResponseStatus(HttpStatus.OK)
-    public void logout(Long member_uid){
+    public void logout(Long member_uid) {
 
         String member_id = sseService.makeTimeIncludeUid(member_uid);
 

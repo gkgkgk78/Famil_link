@@ -29,7 +29,7 @@ public class PhotoController {
 
     @PostMapping("")
     @ApiOperation(value = "개인 멤버 사진 보내기", notes = "req_data : [token, img file, 보내는 사람 uid]")
-    public ResponseEntity<?> addPhoto( PhotoSenderDTO sender, @RequestPart(value = "img", required = true) MultipartFile file) throws Exception {
+    public ResponseEntity<?> addPhoto(PhotoSenderDTO sender, @RequestPart(value = "img", required = true) MultipartFile file) throws Exception {
         photoService.sender(sender, file);
         Map<String, Object> responseResult = new HashMap<>();
         responseResult.put("result", true);
@@ -37,9 +37,10 @@ public class PhotoController {
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
+
     //프사 넘겨줌
-    @GetMapping("/{name}}")
-    @ApiOperation(value = "개인 멤버 사진 보내기 불러오기", notes = "req_data : [token]")
+    @GetMapping("/{name}")
+    @ApiOperation(value = "개인 멤버 사진  불러오기", notes = "req_data : [token]")
     public ResponseEntity<?> getPhoto(@PathVariable String name, final Authentication authentication) throws Exception {
 
         InputStreamResource resource = photoService.download(name, authentication);
@@ -48,7 +49,7 @@ public class PhotoController {
 
     }
 
-    @DeleteMapping("/{name}}")
+    @DeleteMapping("/{name}")
     @ApiOperation(value = "개인 멤버 사진 삭제하기", notes = "req_data : [name,token]")
     public ResponseEntity<?> deletePhoto(@PathVariable String name, final Authentication authentication) throws Exception {
 
