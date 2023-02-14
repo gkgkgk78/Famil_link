@@ -301,7 +301,6 @@ def opencv_publish():
                     #                          #
                     # To improve performance, optionally mark the image as not writeable to
                     # pass by reference.
-                    image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
 
                     with mp_face_detection.FaceDetection(
                             model_selection=0, min_detection_confidence=0.5) as face_detection:
@@ -315,7 +314,8 @@ def opencv_publish():
 
                         if results.detections:
                             for detection in results.detections:
-
+                                if len(image.shape) != 3:
+                                    continue
                                 image_rows, image_cols, _ = image.shape
                                 location = detection.location_data
                                 relative_bounding_box = location.relative_bounding_box
@@ -339,7 +339,8 @@ def opencv_publish():
                                 image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
                                 np_image = np.asarray(image, dtype=np.float32).reshape(1, 224, 224, 3)
 
-                                image = (np_image / 127.5) - 1
+                                np_image = (np_image / 127.5) - 1
+                                print(end='')
                         else:
                             image = np.zeros((224, 224, 3), np.uint8)
                         # Flip the image horizontally for a selfie-view display.
@@ -353,7 +354,7 @@ def opencv_publish():
                     idx += 1
                     cv2.waitKey(500)  # MQTT 성능에 따라 유도리 있게 설정
         except Exception as e:
-            print(e)
+            raise e
 
 
 print("1")
