@@ -80,4 +80,4 @@ function Calendar(){
     )
 }
 
-export default Calendar;
+export default React.memo(Calendar);

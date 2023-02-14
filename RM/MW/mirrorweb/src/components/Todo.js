@@ -7,12 +7,13 @@ import "../pages/Main.css";
 function Todo(){
     const [todos, setTodos] = useState(null);
 
-    const {familyAccessToken,} =useSelector(state => ({
+    const {familyAccessToken, memberAccessToken,} =useSelector(state => ({
         familyAccessToken: state.valid.familyAccessToken,
+        memberAccessToken: state.valid.familyAccessToken,
     }));
 
-
     useEffect(()=>{
+        if(!memberAccessToken) return;
         axios({
         method: "get",
           url: `http://i8a208.p.ssafy.io:3000/todo`,
@@ -33,7 +34,7 @@ function Todo(){
         .catch ((err) => {
             console.log(err)
         })
-    },[])
+    },[memberAccessToken])
     
     return (
         <div className='Todo'>
@@ -52,4 +53,4 @@ function Todo(){
     );
 }
 
-export default Todo;
+export default React.memo(Todo);
