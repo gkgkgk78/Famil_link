@@ -128,11 +128,11 @@ public class MemberController {
 
     @ApiOperation(value = "개인멤버 로그인(얼굴인증 불필요)", notes = "req_data : [name, user_uid]")
     @PostMapping("/login/access")
-    public ResponseEntity<?> loginAccess(@RequestBody String member_name, @RequestBody Long user_uid) throws Exception {
+    public ResponseEntity<?> loginAccess(@RequestBody Member member) throws Exception {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("user_uid", user_uid);
-        map.put("name", member_name);
+        map.put("user_uid", member.getUser_uid());
+        map.put("name", member.getName());
         Optional<Member> temp = mapper.findUserByNametoAll(map);
         Member m1 = null;
         if (temp.isPresent()) {
