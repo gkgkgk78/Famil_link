@@ -20,7 +20,7 @@ services:
     container_name: springboot-deploy
     #    restart: always
     volumes:
-      - ./backend:/serv/springboot
+      - /springboot:/upfiles
     networks:
       - famil_link
     ports:
@@ -35,13 +35,26 @@ services:
     container_name: flask-deploy
     #    restart: always
     volumes:
-      - ./backend:/serv/flask
+      - /flask:/app/upfiles
     networks:
       - famil_link
     ports:
       - 5000:5000
     depends_on:
       - springboot
+      
+  react:
+    shm_size: '30gb'
+    build: ./FE/mobile
+    image: react-deploy
+    container_name: react-deploy
+    networks:
+      - famil_link
+    ports:
+      - 80:80
+   
+      
+   
 
 networks:
   famil_link:
