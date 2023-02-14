@@ -83,11 +83,13 @@ public class MovieController {
 
         if (movieList.isEmpty()) {
             responseResult.put("msg", "도착한 영상이 없습니다");
+            responseResult.put("result", false);
             return ResponseEntity.status(HttpStatus.OK).body(responseResult);
         }
 
         responseResult.put("movie-list", movieList);
         responseResult.put("msg", "최근 수신된 영상 리스트입니다");
+        responseResult.put("result", true);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
