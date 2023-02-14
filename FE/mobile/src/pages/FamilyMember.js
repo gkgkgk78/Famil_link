@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import Button from "../components/common/Button";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { familyMemberProfile, familyMemberName } from "../modules/token";
 // import Me from "/images/댜운로드.jpg";
 
@@ -51,13 +52,35 @@ const FamilyMember = () => {
   const [profile, setProfile] = useState({});
   const [photoUrls, setPhotoUrls] = useState({});
   const [families, setFamilies] = useState({});
+  const [fmname, setFmname] = useState();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const result = [];
-  const { fmpf, fmnm } = useSelector(({ token}) => ({
-    fmpf: token.familyMemberProfile,
-    fmnm: token.familyMemberName,
-  }))
+
+
+
+  useEffect(() => {
+    if (families && fmname) {
+      axios.post(`http://i8a208.p.ssafy.io:3000/member/login/access`, {
+        name:fmname.replace(/"/gi, ''),
+        user_uid: families
+      })
+      .then((res) => {
+        console.log(res)
+        if(res) {
+          localStorage.setItem('fmname', JSON.stringify(fmname))
+          localStorage.setItem('fmurl', JSON.stringify(photoUrls[fmname]))
+          // dispatch(familyMemberName(fmname))
+          // dispatch(familyMemberProfile(photoUrls[fmname]))
+          localStorage.setItem('fmccesstoken', JSON.stringify(res.data['access-token']))
+          navigate('/')
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
+
+  },[families, fmname])
 
   const token = localStorage.getItem("faccesstoken").replace(/"/gi, "");
   // const name = "토르"
@@ -94,7 +117,6 @@ const FamilyMember = () => {
           },
         })
         .then((res) => {
-          console.log(res)
           const url = window.URL.createObjectURL(
             new Blob([res.data], { type: res.headers["content-type"] })
           );
@@ -109,31 +131,19 @@ const FamilyMember = () => {
     }
   });
 
-  console.log(photoUrls)
-
   const handleProfile = (event, name) => {
     event.preventDefault();
     setFamilies(localStorage.getItem('fauid').replace(/"/gi, ''));
-    console.log(JSON.stringify(families))
-    axios.post(`http://i8a208.p.ssafy.io:3000/member/login/access`, {
-      name:name.replace(/"/gi, ''),
-      user_uid: families
-    })
-    .then((res) => {
-      console.log(res)
-      console.log('로그인 성공')
-      if(res) {
-        dispatch(familyMemberName(name))
-        // dispatch(familyMemberProfile(name))
-        navigate('/')
-      }
-    }).catch((err) => {
-      console.log(err)
-    })
-
+    setFmname(name);
   };
 
+  const handleClick = () => {
+    navigate("/FamilyMemberRegister")
+  }
+
   return (
+    <>
+    <h1>프로필 선택</h1>
     <StyledFM>
       {Object.values(profile).map(( ele ) => {
         if (photoUrls[ele.name]) {
@@ -150,6 +160,8 @@ const FamilyMember = () => {
         return null;
       })}
     </StyledFM>
+    <Button onClick={handleClick}>가족 추가</Button>
+    </>
   );
 };
 

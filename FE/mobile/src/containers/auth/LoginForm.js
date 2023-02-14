@@ -67,7 +67,7 @@ const LoginForm = ({ history }) => {
         localStorage.setItem('faccesstoken', JSON.stringify(res.data['access-token']))
         localStorage.setItem('fauid', JSON.stringify(res.data['uid']))
         if(res.data['result']) {
-        navigate('/')
+        navigate('/FamilyMember')
       }
     }).catch((err) => {
       console.log(err)
