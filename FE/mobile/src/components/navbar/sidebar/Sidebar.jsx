@@ -20,6 +20,27 @@ const Sidebar = ({ type }) => {
     navigate("/login");
   };
 
+  const onLogin = () =>{
+    navigate("/login")
+  }
+
+  const token = localStorage.getItem("faccesstoken")
+
+  let loginCheck;
+  if(token != null){
+    loginCheck = (
+      <Button gray fullWidth onClick={onLogout}>
+                로그아웃
+      </Button>
+    )
+  } else {
+    loginCheck = (
+      <Button gray fullWidth onClick={onLogin}>
+                로그인
+      </Button>
+    )
+  }
+
   return (
     <>
       <aside className={showSidebar ? "aside show-menu" : "aside"}>
@@ -60,9 +81,7 @@ const Sidebar = ({ type }) => {
                 </a>
               </li>
               <li className="nav__item">
-                <Button gray fullWidth onClick={onLogout}>
-                  로그 아웃
-                </Button>
+                {loginCheck}
               </li>
             </ul>
           </div>
