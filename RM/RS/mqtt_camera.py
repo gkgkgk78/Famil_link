@@ -349,7 +349,7 @@ def opencv_publish():
                     client.publish("/local/opencv/", json.dumps(data, cls=NumpyArrayEncoder), 2)  # TODO: 해제
                     print("publish opencv data " + str(idx))
                     idx += 1
-                    cv2.waitKey(333)  # MQTT 성능에 따라 유도리 있게 설정
+                    cv2.waitKey(1000)  # MQTT 성능에 따라 유도리 있게 설정
         except Exception as e:
             print(e)
 

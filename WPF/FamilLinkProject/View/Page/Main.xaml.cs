@@ -1,6 +1,4 @@
-﻿using FamilLinkProject.Model.Service;
-using FamilLinkProject.View.Page;
-using FamilLinkProject.ViewModel;
+﻿using FamilLinkProject.ViewModel.Page;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,20 +14,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FamilLinkProject
+namespace FamilLinkProject.View.Page
 {
     /// <summary>
-    /// MainWindow.xaml에 대한 상호 작용 논리
+    /// Main.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Main : UserControl
     {
-        public MainWindow()
+        public Main()
         {
             InitializeComponent();
-            ContentPage.DataContext = ContentBindingModel.GetInstance();
-            DataContext = new MainWindowViewModel();
-
-            ContentBindingModel.GetInstance().Page = new QRLogin();
+            DataContext = MainViewModel.GetInstnace();
         }
     }
 }

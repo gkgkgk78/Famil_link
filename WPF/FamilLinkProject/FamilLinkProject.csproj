@@ -41,6 +41,12 @@
     <Reference Include="MQTTnet.Extensions.ManagedClient, Version=4.1.4.563, Culture=neutral, PublicKeyToken=fdb7629f2e364a63, processorArchitecture=MSIL">
       <HintPath>..\packages\MQTTnet.Extensions.ManagedClient.4.1.4.563\lib\net461\MQTTnet.Extensions.ManagedClient.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -62,11 +68,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\AccountData.cs" />
+    <Compile Include="Core\domain\MemberDTO.cs" />
+    <Compile Include="Core\FaceDectionData.cs" />
+    <Compile Include="Core\MemberData.cs" />
+    <Compile Include="Model\Service\APIService.cs" />
     <Compile Include="Model\Service\MQTTService.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\Page\MainViewModel.cs" />
+    <Compile Include="ViewModel\Page\QRLoginViewModel.cs" />
+    <Compile Include="View\Page\Main.xaml.cs">
+      <DependentUpon>Main.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Page\QRLogin.xaml.cs">
       <DependentUpon>QRLogin.xaml</DependentUpon>
@@ -85,6 +102,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\Page\Main.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Page\QRLogin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

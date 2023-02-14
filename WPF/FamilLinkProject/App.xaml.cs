@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using FamilLinkProject.Model.Service;
+using System;
+using System.Windows;
 
 namespace FamilLinkProject
 {
@@ -7,6 +9,20 @@ namespace FamilLinkProject
     /// </summary>
     public partial class App : Application
     {
+        protected override async void OnStartup(StartupEventArgs e)
+        {
+            try
+            {
+                await MQTTService.Connected();
+                await MQTTService.OnMessage();
 
+                await MQTTService.Publish("/local/qr/", "1");
+                base.OnStartup(e);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
