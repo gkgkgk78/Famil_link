@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import mqtt from "precompiled-mqtt";
 import axios from "axios"
-import { setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setToMember, setValid, setVideos, startRecording, stopRecording, setFamilyAccessToken, setTodos } from '../modules/valid';
+import { setMyname, setInfo, setMe, setMemberAccessToken, setMemberRefreshToken, setToMember, setValid, setVideos, startRecording, stopRecording, setFamilyAccessToken, setTodos } from '../modules/valid';
 import {useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -32,6 +32,7 @@ function MQTT() {
   const saveMemberRefreshToken = (memreftoken) => dispatch(setMemberRefreshToken(memreftoken))
   const saveToMember = (tomember) => dispatch(setToMember(tomember))
   const saveFAToken = fatoken => dispatch(setFamilyAccessToken(fatoken))
+  const saveMyname = name => dispatch(setMyname(name))
 
 
   const Navigate = useNavigate()
@@ -137,6 +138,7 @@ function MQTT() {
             })
             .then ((res) => {
               saveMe(res.data["uid"])
+              saveMyname(res.data.name)
               saveMemberToken(res.data["access-token"])
               saveMemberRefreshToken(res.data["refresh-token"])
               setList(() => [])
@@ -283,6 +285,7 @@ function MQTT() {
       if (noneList.length >=7) {
         setVideoList(() => [])
         saveMe(null)
+        saveMyname(null)
         saveMemberToken(null)
         saveMemberRefreshToken(null)
         changeStoreValid(false)
@@ -302,8 +305,10 @@ function MQTT() {
         mounted00.current = true;
         return;
       }
+        if(!myname) return;
         if(!schedules) return;
         if(!weather) return;
+        if(!memberAccessToken) return;
         // if(!myname) return;
         client.publish("/local/tts/", JSON.stringify({msg:`안녕하세요 ${myname}님`}) )
         let idx =0;
@@ -331,7 +336,7 @@ function MQTT() {
         else textScript.push('메시지를 보내시겠습니까?')
         client.publish("/local/tts/", JSON.stringify({msg:textScript[idx++]}) )
     // },[weather, schedules, myname])
-    },[weather, schedules])
+    },[weather, schedules, memberAccessToken, myname])
 }
 
 export default MQTT;

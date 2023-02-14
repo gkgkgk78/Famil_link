@@ -29,6 +29,7 @@ function App() {
     paddingTop : '200px',
     height : '900px'
   }
+
   return (
     <div className="App">
       <MQTT/>
@@ -43,13 +44,13 @@ function App() {
       </Box>
       
       <section style={style}>
-      <div>{me ? <p>멤버가 로그인 되었습니다.</p> : <p>아직 멤버가 로그인 되지 않았어요</p>}</div>
-      <Routes>
-        <Route path="/" element= { <Main />} />
-        <Route path="/qr" element={ <QR />} />
-        <Route path="/playvideo" element={ <PlayVideo /> } />
-        <Route path="/record" element={<Record/>} />
-      </Routes>
+        <div>{me ? <p>멤버가 로그인 되었습니다.</p> : <p>아직 멤버가 로그인 되지 않았어요</p>}</div>
+        <Routes>
+          <Route path="/" element= { <Main />} />
+          <Route path="/qr" element={ <QR />} />
+          <Route path="/playvideo" element={ <PlayVideo /> } />
+          <Route path="/record" element={<Record/>} />
+        </Routes>
       </section>
 
     </div>
