@@ -5,22 +5,36 @@ import { Link } from "react-router-dom";
 
 
 const StyledButton = styled.button`
-  border: 1px solid;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 700;
-  margin-top: 2.5rem;
-  padding-top: 0.5rem;
-  justify-content: center;
-  //   padding: 0.25rem 1rem;
-  color: white;
-  // box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
-  outline: none;
-  cursor: pointer;
-  background: ${palette.gray[8]};
-  &:hover {
-    background: ${palette.gray[6]};
-  }
+padding: 0.75rem 2rem;
+line-height: 1;
+border-radius: 1.875rem;
+box-shadow: 0 0 1px rgb(0 0 0 / 0%);
+border: 1px solid transparent;
+color: #fff;
+display: inline-block;
+background-color: var(--first-color);
+font-weight: var(--font-bold);
+font-family: var(--body-font);
+font-size: var(--normal-font-size);
+&:hover {
+  animation: button-push 0.3s linear 1;
+}
+  // border: 1px solid;
+  // border-radius: 25px;
+  // font-size: 1rem;
+  // font-weight: 700;
+  // margin-top: 2.5rem;
+  // padding-top: 0.5rem;
+  // justify-content: center;
+  // //   padding: 0.25rem 1rem;
+  // color: white;
+  // // box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  // outline: none;
+  // cursor: pointer;
+  // background: ${palette.gray[8]};
+  // &:hover {
+  //   background: ${palette.gray[6]};
+  // }
   ${(props) =>
     props.fullWidth &&
     css`

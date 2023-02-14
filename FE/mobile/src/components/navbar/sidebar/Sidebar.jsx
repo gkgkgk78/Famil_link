@@ -16,9 +16,31 @@ const Sidebar = ({ type }) => {
   };
 
   const onLogout = () => {
-    localStorage.removeItem("faccesstoken");
+    localStorage.removeItem("faccesstoken")
+    localStorage.removeItem("fauid") 
+    localStorage.removeItem("profile");
     navigate("/login");
   };
+  const onLogin = () => {
+    navigate("/login");
+  };
+
+  const token = localStorage.getItem("faccesstoken")
+
+  let loginCheck;
+  if(token != null){
+    loginCheck = (
+      <Button gray fullWidth onClick={onLogout}>
+                로그아웃
+      </Button>
+    )
+  } else {
+    loginCheck = (
+      <Button gray fullWidth onClick={onLogin}>
+                로그인
+      </Button>
+    )
+  }
 
   return (
     <>
@@ -60,9 +82,7 @@ const Sidebar = ({ type }) => {
                 </a>
               </li>
               <li className="nav__item">
-                <Button gray fullWidth onClick={onLogout}>
-                  로그 아웃
-                </Button>
+                {loginCheck}
               </li>
             </ul>
           </div>
