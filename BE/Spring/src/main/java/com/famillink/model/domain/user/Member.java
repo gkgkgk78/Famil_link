@@ -102,6 +102,11 @@ public class Member implements UserDetails {
         this.nickname = nickname;
     }
 
+    public Member(String member_name, Long user_uid){
+        this.name = member_name;
+        this.user_uid = user_uid;
+    }
+
     public Member(Long uid) {
         this.uid = uid;
     }
