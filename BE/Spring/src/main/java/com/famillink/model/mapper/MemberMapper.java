@@ -4,6 +4,7 @@ import com.famillink.model.domain.user.Member;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Mapper
@@ -25,6 +26,9 @@ public interface MemberMapper {
 
 
     Boolean findTogether(Long uid1, Long uid2) throws Exception;
+
+
+    Optional<Member> findUserByNametoAll(Map<String,Object> map);
 
 
 }

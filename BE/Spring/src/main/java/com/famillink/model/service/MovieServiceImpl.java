@@ -2,21 +2,17 @@ package com.famillink.model.service;
 
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
+import com.famillink.model.domain.param.MovieDTO;
 import com.famillink.model.domain.param.MovieSenderDTO;
-import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.MemberMapper;
 import com.famillink.model.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -36,6 +32,9 @@ public class MovieServiceImpl implements MovieService {
     private final MemberMapper memberMapper;
     private final MemberService mservice;
 
+    private final SseService sseService;
+
+
     @Override
     @Transactional
     public void sender(MovieSenderDTO sender, MultipartFile file) throws Exception {
@@ -53,8 +52,18 @@ public class MovieServiceImpl implements MovieService {
 
         m = memberMapper.findUserByUid(sender.getFrom_member_uid()).get();
         //가족 uid로 폴더에 저장을 해줌
-        String get = fileService.store(file, m.getUser_uid());
+        String get = fileService.store(file, m.getUser_uid().toString());
+
+        //TODO: 이벤트 리스너
+        notifyStoreInfo(sender.getTo_member_uid());
+
         movieMapper.sendMovie(sender, get);
+
+    }
+
+    private void notifyStoreInfo(Long member_to) {
+
+        sseService.send(member_to, "new video", "http://i8a208.p.ssafy.io:3000/movie");
 
     }
 
@@ -69,7 +78,7 @@ public class MovieServiceImpl implements MovieService {
 
             Member auth = (Member) authentication.getPrincipal();
 
-            if(!get.equals(auth.getUid()))
+            if (!get.equals(auth.getUid()))
                 throw new BaseException(ErrorMessage.NOT_GET_FILE);
             //여기까지 해서 받은 사용자에게 온 영상인지를 파악을 했음
 
@@ -102,16 +111,21 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void setRead(Long movie_uid) throws Exception {
 
-        try {
-            movieMapper.setMovie(movie_uid);
-        } catch (Exception e) {
+        int now = movieMapper.getOneMovie(movie_uid);
+        if (now != 1) {
             throw new BaseException(ErrorMessage.NOT_READ_FILE);
+        } else {
+            movieMapper.setMovie(movie_uid);
         }
+
     }
 
     @Override
-    public List<MovieSenderDTO> showMovieList(Long to_member_uid) throws Exception {
-        return movieMapper.findMovieByMemberTo(to_member_uid);
+    public List<MovieDTO> showMovieList(Long member_to) throws Exception {
+
+        List<MovieDTO> list = movieMapper.findMovieByMemberTo(member_to);
+
+        return list;
     }
 
 

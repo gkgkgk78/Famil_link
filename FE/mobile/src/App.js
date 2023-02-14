@@ -9,6 +9,8 @@ import FamilyMember from "./pages/FamilyMember";
 import FamilyMemberRegister from "./pages/FamilyMemberRegister";
 import Record from "./pages/Record";
 import Calendars from "./pages/Calendars";
+import Todo from "./pages/Todo";
+
 
 function App() {
   const token = localStorage.getItem("faccesstoken");
@@ -25,6 +27,7 @@ function App() {
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/SignUpSuccess" element={<SignUpSuccess />} />
         <Route path="/FamilyMember" element={<FamilyMember />} />
+        <Route path="/todo" element={<Todo />}/>
         <Route
           path="/FamilyMemberRegister"
           element={<FamilyMemberRegister />}

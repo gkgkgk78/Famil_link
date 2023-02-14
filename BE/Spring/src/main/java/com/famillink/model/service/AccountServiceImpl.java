@@ -53,6 +53,12 @@ public class AccountServiceImpl implements AccountService {
         String route="./"+s1;
         accountMapper.setModelPath(acc.getEmail(),s1,acc.getUid());
 
+        //추가적으로 가족 계정의 model_path를 넣어주고자함
+
+        s1= String.valueOf(Paths.get("upfiles","Photo",acc.getUid().toString() ));
+        route="./"+s1;
+        accountMapper.setPhotoPath(acc.getEmail(),s1);
+
         return accountMapper.findUserByEmail(account.getEmail()).get();
     }
 

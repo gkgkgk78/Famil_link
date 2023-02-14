@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
 
         //찾은 회원이 가족 학습한 모델에 등록이 되었다면
         Member member = new Member(name, nickname);
-        member.setUser_uid(t1.toString());
+        member.setUser_uid(t1);
 
         try {
             mapper.signup(member);
@@ -129,9 +129,19 @@ public class MemberServiceImpl implements MemberService {
         return mapper.findUserByName(name);
     }
 
+
+
+
     @Override
     public Optional<Member> findMemberByUserUid(Long uid) throws Exception {
         return mapper.findUserByUid(uid);
+    }
+
+    @Override
+    public Optional<Member> findUserByNametoAll(Map<String, Object> map) {
+
+
+        return mapper.findUserByNametoAll(map);
     }
 
 

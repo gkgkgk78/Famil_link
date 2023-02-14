@@ -30,11 +30,13 @@ def on_connect(client, userdata, flags, rc):
 
 # ones = True
 
-
+prev = time.time()
 def on_message(client, userdata, msg):
-    global model, labels# , ones
+    global model, labels, prev # , ones
     # if not ones:
     #     return
+    print(time.time() - prev)
+    prev = time.time()
     if msg.topic == "/local/opencv/":
         data = json.loads(msg.payload.decode("utf-8"))
         # print(data)
@@ -48,7 +50,7 @@ def on_message(client, userdata, msg):
         pick = np.argmax(probabilities)
         percent = probabilities[0][pick]
         name = labels[pick].strip().split(' ')[1]
-        # print(name)
+        print(name, percent)
         if percent > 0.90:
             data = {
                 "name": name,

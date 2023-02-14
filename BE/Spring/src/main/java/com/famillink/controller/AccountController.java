@@ -4,31 +4,24 @@ package com.famillink.controller;
 import com.famillink.annotation.ValidationGroups;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
-import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.service.AccountService;
-import com.famillink.model.service.FlaskService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Api("Account Controller")
 @RequiredArgsConstructor
@@ -36,12 +29,13 @@ import org.springframework.web.multipart.MultipartFile;
 @JsonAutoDetect
 @RestController
 public class AccountController {
+
+
     private final AccountService accountService;
-    private final FlaskService flaskService;
 
     @ApiOperation(value = "회원가입", notes = "req_data : [pw, email, name]")
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody Account account) throws Exception {
+    public ResponseEntity<?> signup(@RequestBody @Validated(ValidationGroups.signup.class) Account account) throws Exception {
         Account savedAccount = accountService.signup(account);
 
         //비동기 처리
@@ -70,15 +64,13 @@ public class AccountController {
 
     @ApiOperation(value = "로그인", notes = "req_data : [id, pw]")
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody Account account) throws Exception {
+    public ResponseEntity<?> loginUser(@RequestBody @Validated(ValidationGroups.login.class) Account account) throws Exception {
 
         Map<String, Object> token = accountService.login(account); //access token, refresh token
 
         Map<String, Object> responseResult = new HashMap<>();
 
         HttpStatus sts = HttpStatus.BAD_REQUEST;
-
-        List<Member> members = accountService.allMembers(account);
 
         if (token != null) {
             sts = HttpStatus.OK;
@@ -88,16 +80,36 @@ public class AccountController {
             responseResult.put("refresh-token", token.get("refresh-token"));
             responseResult.put("uid", token.get("uid"));
             responseResult.put("nickname", token.get("nickname"));
-            responseResult.put("members", members);
         }
 
         return ResponseEntity.status(sts).body(responseResult);
     }
 
+    @ApiOperation(value = "멤버 리스트 반환", notes = "로그인 후 요청 시, 해당 account에 속해 있는 멤버 리스트를 반환하는 컨트롤러 입니다")
+    @GetMapping("/member-list")
+    public ResponseEntity<?> getMembers(Authentication authentication) throws Exception {
+
+        Account account = (Account) authentication.getPrincipal();
+
+        List<Member> members = accountService.allMembers(account);
+
+        if (members.isEmpty()) {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("result", true);
+        response.put("list", members);
+        response.put("msg", "멤버리스트입니다");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
     @ApiOperation(value = "Access Token 재발급", notes = "만료된 access token을 재발급받는다.")
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody Long uid, HttpServletRequest request) throws Exception {
+    public ResponseEntity<?> refreshToken(@RequestParam Long uid, HttpServletRequest request) throws Exception {
         HttpStatus status = HttpStatus.ACCEPTED;
         String token = request.getHeader("refresh-token");
         String result = accountService.refreshToken(uid, token);
@@ -116,7 +128,7 @@ public class AccountController {
 
     @ApiOperation(value = "인증 이메일 재발송", notes = "인증 메일을 재발송한다.")
     @PostMapping("/mail")
-    public ResponseEntity<?> resendCheckMail(@RequestBody Account loginAccount) throws Exception {
+    public ResponseEntity<?> resendCheckMail(@RequestBody @Validated(ValidationGroups.mail.class) Account loginAccount) throws Exception {
         accountService.resendCheckMail(loginAccount);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
@@ -155,61 +167,6 @@ public class AccountController {
             put("msg", "이메일로 임시 비밀번호를 발급하였습니다.");
         }}, HttpStatus.OK);
     }
-
-
-    @PostMapping("/flask/model")
-    @ApiOperation(value = "Flask 모델 저장 ", notes = "Flask 모델을 전송하는 컨트롤러입니다.")
-    public ResponseEntity<?> addModel(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
-        flaskService.send_model(account, file);
-        return null;
-    }
-
-    @GetMapping("/flask/model")
-    @ApiOperation(value = "Flask의 Model 불러오기", notes = "Flask의 Model을 다운받는 컨트롤러입니다.")
-    public ResponseEntity<?> returnModel(Account account) throws Exception {
-
-        if (account.getEmail() == null)
-            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
-
-        InputStreamResource resource = flaskService.read_model(account.getEmail());
-
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=model.h5").body(resource);
-
-    }
-
-
-    @PostMapping("/flask/label")
-    @ApiOperation(value = "Flask Label 저장 ", notes = "Flask Label을 전송하는 컨트롤러입니다.")
-    public ResponseEntity<?> addLabel(Account account, @RequestPart(value = "imgUrlBase", required = true) MultipartFile file) throws Exception {
-        flaskService.send_label(account, file);
-        return null;
-    }
-
-    @GetMapping("/flask/label")
-    @ApiOperation(value = "Flask의 Label 불러오기", notes = "Flask의 Label을 다운받는 컨트롤러입니다.")
-    public ResponseEntity<?> returnLabel(Account account) throws Exception {
-
-        if (account.getEmail() == null)
-            throw new BaseException(ErrorMessage.NOT_EXIST_EMAIL);
-
-        InputStreamResource resource = flaskService.read_label(account.getEmail());
-
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=labels.txt").body(resource);
-
-    }
-//
-//
-//    @GetMapping("/Flask/Label")
-//    @ApiOperation(value = "Flask 의 Label", notes = "Flask 의 Label을 다운받는 컨트롤러입니다.")
-//    public ResponseEntity<?> getMovie(@PathVariable("movie_uid") Long movie_uid) throws Exception {
-//
-//        InputStreamResource resource = flaskService.download(movie_uid);
-//
-//        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).cacheControl(CacheControl.noCache()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=movie.mp4").body(resource);
-//    }
-
-
-
 
 
 }

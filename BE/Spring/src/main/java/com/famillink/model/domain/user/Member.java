@@ -17,16 +17,18 @@ public class Member implements UserDetails {
 //    @ApiModelProperty(hidden = true)
     protected Long uid;
 
-    protected String user_uid;
+    protected Long user_uid;
 
-    public void setUser_uid(String user_uid) {
+    public void setUser_uid(Long user_uid) {
         this.user_uid = user_uid;
     }
 
-    protected String name;
 
     @ApiModelProperty(hidden = true)
     protected String sdate;
+
+
+    protected String name;
 
     protected String nickname;
 
@@ -93,11 +95,16 @@ public class Member implements UserDetails {
         this.nickname = nickname;
     }
 
-    public Member(Long uid, String user_uid, String name, String nickname) {
+    public Member(Long uid, Long user_uid, String name, String nickname) {
         this.uid = uid;
         this.user_uid = user_uid;
         this.name = name;
         this.nickname = nickname;
+    }
+
+    public Member(String name, Long user_uid){
+        this.name = name;
+        this.user_uid = user_uid;
     }
 
     public Member(Long uid) {
