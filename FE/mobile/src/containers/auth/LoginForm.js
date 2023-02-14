@@ -5,7 +5,7 @@ import AuthForm from "../../components/auth/AuthForm";
 import { check } from "../../modules/user";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { familyToken } from "../../modules/token";
+import { familyToken, familyUid } from "../../modules/token";
 
 // import { SET_TOKEN } from "../../store/Auth";
 // import { setRefreshToken } from "../../storage/Cookie";
@@ -17,12 +17,13 @@ const LoginForm = ({ history }) => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
-  const { form, auth, authError, user,  faccesstoken } = useSelector(({ auth, user, token }) => ({
+  const { form, auth, authError, user,  faccesstoken, fauid } = useSelector(({ auth, user, token }) => ({
     form: auth.login,
     auth: auth.auth,
     authError: auth.authError,
     user: user.user,
     faccesstoken: token.familyaccesstoken,
+    fauid: token.familyuid,
   }));
   
   //인풋 변경 이벤트 핸들러
@@ -62,9 +63,11 @@ const LoginForm = ({ history }) => {
       }).then((res) => {
         console.log(res)
         dispatch(familyToken(res.data['access-token']))
+        dispatch(familyUid(res.data['uid']))
         localStorage.setItem('faccesstoken', JSON.stringify(res.data['access-token']))
+        localStorage.setItem('fauid', JSON.stringify(res.data['uid']))
         if(res.data['result']) {
-        navigate('/')
+        navigate('/FamilyMember')
       }
     }).catch((err) => {
       console.log(err)

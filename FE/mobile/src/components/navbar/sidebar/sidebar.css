@@ -58,6 +58,13 @@
   transition: 0.3s;
 }
 
+.nav__logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    margin-bottom: 1.5rem;
+}
+
 @media screen and (max-width: 1024px) {
   .aside {
     left: -110px;
@@ -74,3 +81,4 @@
     left: 0;
   }
 }
+
