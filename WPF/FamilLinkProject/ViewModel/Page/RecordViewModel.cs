@@ -30,6 +30,7 @@ namespace FamilLinkProject.ViewModel.Page
             }
             JObject _payload = new JObject();
             _payload.Add("msg", "이름을 말씀해주세요.");
+            instance.TimeTextBlock = 0;
             MQTTService.Publish("/local/tts/", _payload.ToString());
             return instance;
         }
@@ -38,7 +39,7 @@ namespace FamilLinkProject.ViewModel.Page
         {
             MQTTService.addObserver("/local/sound/", recv);
             timerEvent = new EventHandler(timer_Tick);
-            TimeTextBlock = 0;
+            
         }
 
         public void recv(String topic, String message)
@@ -73,7 +74,7 @@ namespace FamilLinkProject.ViewModel.Page
                 }
                 else
                 {
-                    if (!isRecord && !name.Contains("녹화"))
+                    if (!isRecord && !name.Contains("녹화") && name.Length < 10)
                     {
                         JObject _payload = new JObject();
                         _payload.Add("msg", "다시 한 번 말씀해주세요.");

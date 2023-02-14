@@ -23,12 +23,12 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0">
-                <TextBlock Text="날씨" Foreground="white" FontSize="150"/>
-            </Grid>
-            <Grid Grid.Column="1">
-                <TextBlock Text="시간" Foreground="white" FontSize="150" HorizontalAlignment="Right"/>
-            </Grid>
+            <Viewbox Grid.Column="0">
+                <TextBlock Text="{Binding WeatherTextBlock}" Foreground="white" Margin="20"/>
+            </Viewbox>
+                <Viewbox Grid.Column="1">
+                    <TextBlock Text="{Binding TimeTextBlock}" Foreground="white" HorizontalAlignment="Center" Margin="20"/>
+                </Viewbox>
             
         </Grid>
         <ContentControl Grid.Row="1" x:Name="ContentPage" Content="{Binding Page}"/>

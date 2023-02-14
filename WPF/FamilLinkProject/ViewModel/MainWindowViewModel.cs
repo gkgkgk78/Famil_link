@@ -2,6 +2,7 @@
 using FamilLinkProject.Model.Service;
 using FamilLinkProject.View.Page;
 using FamilLinkProject.ViewModel.Page;
+using FamilLinkProject.ViewModel.util;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,17 @@ using System.Windows.Threading;
 
 namespace FamilLinkProject.ViewModel
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel : NotifyPropertyChanged
     {
+        private static MainWindowViewModel instance;
+
+        public static MainWindowViewModel GetInstance()
+        {
+            if (instance == null)
+                instance = new MainWindowViewModel();
+
+            return instance;
+        }
         public MainWindowViewModel()
         {
             MQTTService.addObserver("/local/face/result/", recv);
@@ -51,7 +61,6 @@ namespace FamilLinkProject.ViewModel
                     JObject payload = new JObject();
                     payload.Add("uid", member_uid);
                     payload.Add("json", json["image"]);
-                    Console.WriteLine(json["image"]);
                     APIService.API("/member/login", "POST", payload, AccountData.Token,
                         (_url, _json) =>
                         {
@@ -107,7 +116,7 @@ namespace FamilLinkProject.ViewModel
                                      );
 
 
-                                    
+
                                 }
                             }
                         }
@@ -145,6 +154,36 @@ namespace FamilLinkProject.ViewModel
                     }, DispatcherPriority.Loaded);
 
                 }
+            }
+        }
+
+        private string _timeTextBlock = DateTime.Now.ToString();
+
+        public string TimeTextBlock
+        {
+            get
+            {
+                return _timeTextBlock;
+            }
+
+            set
+            {
+                _timeTextBlock = value;
+                OnPropertyChanged(nameof(TimeTextBlock));
+            }
+        }
+        private string _weatherTextBlock;
+
+        public string WeatherTextBlock
+        {
+            get
+            {
+                return _weatherTextBlock;
+            }
+            set
+            {
+                _weatherTextBlock = value;
+                OnPropertyChanged(nameof(WeatherTextBlock));
             }
         }
     }

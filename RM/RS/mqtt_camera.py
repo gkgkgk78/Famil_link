@@ -273,13 +273,15 @@ def opencv_publish():
                         print("dont read cam")
                         break
                     # image = cv2.resize(image, None, fx=0.2, fy=0.2, interpolation=cv2.INTER_AREA)
-
-                    qr = cv2.QRCodeDetector()
-                    data, box, straight_qrcode = qr.detectAndDecode(image)
-                    if data:
-                        print('QR코드 데이터: {}'.format(data))
-                        client.publish("/local/qrtoken/", json.dumps(data), 2)
-                        print("publish qr data")
+                    try:
+                        qr = cv2.QRCodeDetector()
+                        data, box, straight_qrcode = qr.detectAndDecode(image)
+                        if data:
+                            print('QR코드 데이터: {}'.format(data))
+                            client.publish("/local/qrtoken/", json.dumps(data), 2)
+                            print("publish qr data")
+                    except Exception as e:
+                        print(e)
                     cv2.imshow("ㅇㅇ", image)
                     cv2.waitKey(100)
             else:

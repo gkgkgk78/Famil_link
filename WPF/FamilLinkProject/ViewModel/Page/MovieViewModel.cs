@@ -18,18 +18,5 @@ namespace FamilLinkProject.ViewModel.Page
 
             return instance;
         }
-
-        private Uri _movie;
-
-        public Uri Movie
-        {
-            get { return _movie; }
-            set
-            {
-                _movie = value;
-                OnPropertyChanged("Movie");
-            }
-        }
-
     }
 }
