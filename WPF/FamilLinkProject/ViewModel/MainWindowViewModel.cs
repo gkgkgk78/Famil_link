@@ -1,5 +1,6 @@
 ﻿using FamilLinkProject.Core;
 using FamilLinkProject.Model.Service;
+using FamilLinkProject.View.Page;
 using FamilLinkProject.ViewModel.Page;
 using Newtonsoft.Json.Linq;
 using System;
@@ -50,11 +51,11 @@ namespace FamilLinkProject.ViewModel
                     JObject payload = new JObject();
                     payload.Add("uid", member_uid);
                     payload.Add("json", json["image"]);
-
+                    Console.WriteLine(json["image"]);
                     APIService.API("/member/login", "POST", payload, AccountData.Token,
-                        (url, _json) =>
+                        (_url, _json) =>
                         {
-                            if (url.Equals("/member/login"))
+                            if (_url.Equals("/member/login"))
                             {
                                 if (_json["result"].ToString().Equals("True"))
                                 {
@@ -66,9 +67,47 @@ namespace FamilLinkProject.ViewModel
                                     }, DispatcherPriority.Loaded);
                                     Console.WriteLine("MainWIndowVM : 멤버 로그인에 성공하였습니다.");
 
-                                    JObject _payload = new JObject();
-                                    _payload.Add("msg", myname + "님 환영합니다");
-                                    MQTTService.Publish("/local/tts/", _payload.ToString());
+
+                                    APIService.API("/movie/video-list", "GET", payload, MemberData.Token,
+                                         (_url1, _json1) =>
+                                         {
+                                             if (_url1.Equals("/movie/video-list"))
+                                             {
+                                                 //if (_json1["result"].ToString().Equals("True"))
+                                                 //{
+
+                                                 //    Console.WriteLine("dd");
+
+                                                 //}
+                                                 if (_json1.ContainsKey("movie-list"))
+                                                 {
+                                                     List<long> temp = new List<long>();
+                                                     foreach (var item in _json1["movie-list"])
+                                                     {
+                                                         temp.Add(long.Parse(item["uid"].ToString()));
+                                                     }
+                                                     MovieData.setMovieList(temp);
+
+                                                     Application.Current.Dispatcher.InvokeAsync(delegate
+                                                     {
+                                                         ContentBindingModel.GetInstance().Page = new Movie();
+                                                     }, DispatcherPriority.Loaded);
+                                                 }
+                                                 Console.WriteLine("MainWIndowVM : 멤버 로그인에 성공하였습니다.");
+
+                                             }
+
+                                             JObject _payload = new JObject();
+                                             _payload.Add("msg", myname + "님 환영합니다");
+                                             MQTTService.Publish("/local/tts/", _payload.ToString());
+
+                                             MQTTService.Subscribe("/local/sound/");
+                                             MQTTService.addObserver("/local/sound/", recv);
+                                         }
+                                     );
+
+
+                                    
                                 }
                             }
                         }
@@ -77,13 +116,34 @@ namespace FamilLinkProject.ViewModel
                 else
                 {
                     MainViewModel.GetInstnace().TextBlockBody = "얼굴인식 중입니다.";
+                    if (MemberData.Uid != -1)
+                    {
+                        MQTTService.UnSubscribe("/local/sound/");
+                        MQTTService.removeObserver("/local/sound/", recv);
+                        JObject _payload = new JObject();
+                        _payload.Add("msg", "안녕히가세요");
+                        MQTTService.Publish("/local/tts/", _payload.ToString());
 
-                    JObject _payload = new JObject();
-                    _payload.Add("msg", "안녕히가세요");
-                    MQTTService.Publish("/local/tts/", _payload.ToString());
+                        Application.Current.Dispatcher.InvokeAsync(delegate
+                        {
+                            ContentBindingModel.GetInstance().Page = new Main();
+                        }, DispatcherPriority.Loaded);
+                    }
 
                     MemberData.Token = null;
                     MemberData.Uid = -1;
+                }
+            }
+            else if (topic.Equals("/local/sound/"))
+            {
+                JObject json = JObject.Parse(message);
+                if (json["text"].ToString().Contains("녹화"))
+                {
+                    Application.Current.Dispatcher.InvokeAsync(delegate
+                    {
+                        ContentBindingModel.GetInstance().Page = new Record();
+                    }, DispatcherPriority.Loaded);
+
                 }
             }
         }

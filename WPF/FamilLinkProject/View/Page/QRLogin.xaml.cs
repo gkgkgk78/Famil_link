@@ -26,7 +26,7 @@ namespace FamilLinkProject.View.Page
         public QRLogin()
         {
             InitializeComponent();
-            DataContext = new QRLoginViewModel();
+            DataContext = QRLoginViewModel.GetInstance();
         }
 
     }

@@ -14,6 +14,14 @@ namespace FamilLinkProject.ViewModel.Page
 {
     public class QRLoginViewModel
     {
+        private static QRLoginViewModel instance;
+
+        public static QRLoginViewModel GetInstance()
+        {
+            if(instance==null)
+                instance = new QRLoginViewModel();
+            return instance;
+        }
         public QRLoginViewModel()
         {
             MQTTService.addObserver("/local/qrtoken/", recv);

@@ -257,7 +257,7 @@ def on_message(client, userdata, msg):
 
 
 def opencv_publish():
-    global camera, client, isRecord, isQr
+    global camera, client, isRecord, isQr, model
     idx = 0
 
     while True:
@@ -280,7 +280,7 @@ def opencv_publish():
                         print('QR코드 데이터: {}'.format(data))
                         client.publish("/local/qrtoken/", json.dumps(data), 2)
                         print("publish qr data")
-                    cv2.imshow("ㅇㅇ" , image)
+                    cv2.imshow("ㅇㅇ", image)
                     cv2.waitKey(100)
             else:
                 while True:
@@ -301,6 +301,8 @@ def opencv_publish():
                     #                          #
                     # To improve performance, optionally mark the image as not writeable to
                     # pass by reference.
+                    image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
+
                     with mp_face_detection.FaceDetection(
                             model_selection=0, min_detection_confidence=0.5) as face_detection:
 
@@ -308,15 +310,12 @@ def opencv_publish():
                         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                         results = face_detection.process(image)
 
-                        # Draw the face detection annotations on the image.
                         image.flags.writeable = True
                         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
                         if results.detections:
                             for detection in results.detections:
-                                # mp_drawing.draw_detection(image, detection)
-                                # bbox_drawing_spec = mp_drawing.DrawingSpec()
-                                # mp_drawing.draw_detection(image, detection)
+
                                 image_rows, image_cols, _ = image.shape
                                 location = detection.location_data
                                 relative_bounding_box = location.relative_bounding_box
@@ -338,6 +337,9 @@ def opencv_publish():
                                 image = image[rect_start_point[1]:rect_end_point[1],
                                         rect_start_point[0]:rect_end_point[0]]
                                 image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
+                                np_image = np.asarray(image, dtype=np.float32).reshape(1, 224, 224, 3)
+
+                                image = (np_image / 127.5) - 1
                         else:
                             image = np.zeros((224, 224, 3), np.uint8)
                         # Flip the image horizontally for a selfie-view display.
@@ -349,7 +351,7 @@ def opencv_publish():
                     client.publish("/local/opencv/", json.dumps(data, cls=NumpyArrayEncoder), 2)  # TODO: 해제
                     print("publish opencv data " + str(idx))
                     idx += 1
-                    cv2.waitKey(1000)  # MQTT 성능에 따라 유도리 있게 설정
+                    cv2.waitKey(500)  # MQTT 성능에 따라 유도리 있게 설정
         except Exception as e:
             print(e)
 
@@ -358,8 +360,8 @@ print("1")
 camera = cv2.VideoCapture(0 + cv2.CAP_DSHOW)
 print("2")
 fourcc = cv2.VideoWriter_fourcc(*"MJPG")  # 인코딩 포맷 문자
-camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # 1280
-camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # 720
+camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)  # 1280
+camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)  # 720
 print("3")
 width = camera.get(cv2.CAP_PROP_FRAME_WIDTH)
 height = camera.get(cv2.CAP_PROP_FRAME_HEIGHT)

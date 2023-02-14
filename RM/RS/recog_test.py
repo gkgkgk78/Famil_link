@@ -10,8 +10,8 @@ mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 
 camera = cv2.VideoCapture(0 + cv2.CAP_DSHOW)
-camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # 1280
-camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # 720
+camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)  # 1280
+camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)  # 720
 width = camera.get(cv2.CAP_PROP_FRAME_WIDTH)
 height = camera.get(cv2.CAP_PROP_FRAME_HEIGHT)
 size = (int(width), int(height))  # 프레임 크기

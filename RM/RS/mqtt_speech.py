@@ -34,7 +34,7 @@ try:
         with sr.Microphone() as source:
             print("Say Something")
             try:
-                speech = r.listen(source, timeout=1)
+                speech = r.listen(source)
             except Exception as e:
                 print(e)
 
@@ -43,7 +43,7 @@ try:
         try:
             if speech is not None:
                 audio = r.recognize_google(speech, language="ko-KR")
-                client.publish("/local/sound/", json.dumps(audio), 2)
+                client.publish("/local/sound/", json.dumps({'text': audio}), 2)
                 print("publish : " + audio)
         except sr.UnknownValueError:
             print("Your speech can not understand")
