@@ -102,8 +102,8 @@ public class Member implements UserDetails {
         this.nickname = nickname;
     }
 
-    public Member(String member_name, Long user_uid){
-        this.name = member_name;
+    public Member(String name, Long user_uid){
+        this.name = name;
         this.user_uid = user_uid;
     }
 
