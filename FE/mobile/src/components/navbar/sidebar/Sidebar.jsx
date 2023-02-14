@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import "./sidebar.css";
-import Logo from "../../images/다운로드.jpg";
 import SimpleLineIcon from "react-simple-line-icons";
-import Button from "../../common/Button";
+// import button from "../../common/button";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Sidebar = ({ type }) => {
   const navigate = useNavigate();
+  const [sidebarProfile, setSidebarProfile]  = useState();
+
+  useEffect(() => {
+    if(localStorage.getItem("fmurl")) {
+    setSidebarProfile(localStorage.getItem("fmurl").replace(/"/gi, ""))
+    }
+  },[])
 
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -16,28 +23,32 @@ const Sidebar = ({ type }) => {
   };
 
   const onLogout = () => {
-    localStorage.removeItem("faccesstoken");
+    localStorage.removeItem("faccesstoken")
+    localStorage.removeItem("fmccesstoken")
+    localStorage.removeItem("fauid") 
+    localStorage.removeItem("profile");
+    localStorage.removeItem("fmname");
+    localStorage.removeItem("fmurl");
     navigate("/login");
   };
-
-  const onLogin = () =>{
-    navigate("/login")
-  }
+  const onLogin = () => {
+    navigate("/login");
+  };
 
   const token = localStorage.getItem("faccesstoken")
 
   let loginCheck;
   if(token != null){
     loginCheck = (
-      <Button gray fullWidth onClick={onLogout}>
+      <button className="btn" onClick={onLogout}>
                 로그아웃
-      </Button>
+      </button>
     )
   } else {
     loginCheck = (
-      <Button gray fullWidth onClick={onLogin}>
+      <button className="btn" onClick={onLogin}>
                 로그인
-      </Button>
+      </button>
     )
   }
 
@@ -45,7 +56,7 @@ const Sidebar = ({ type }) => {
     <>
       <aside className={showSidebar ? "aside show-menu" : "aside"}>
         <a href="/" className="nav__logo">
-          <img src={Logo} alt="" />
+          <img src={sidebarProfile} alt="" />
         </a>
         <nav className="nav">
           <div className="nav__menu">
@@ -56,12 +67,12 @@ const Sidebar = ({ type }) => {
                 </a>
               </li>
               <li className="nav__item">
-                <a href="#about" className="nav__link">
+                <a href="/FamilyMember" className="nav__link">
                   <SimpleLineIcon name="user-following" />
                 </a>
               </li>
               <li className="nav__item">
-                <a href="#services" className="nav__link">
+                <a href="#about" className="nav__link">
                   <SimpleLineIcon name="briefcase" />
                 </a>
               </li>
