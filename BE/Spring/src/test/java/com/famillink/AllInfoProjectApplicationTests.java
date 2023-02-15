@@ -215,10 +215,10 @@ class AllInfoProjectApplicationTests {
             //    public ResponseEntity<?> signup(Member_Login member, @RequestPart(value = "img", required = true) MultipartFile file, final Authentication authentication) throws Exception {
 
 
-            Member_Login memberLogin=new Member_Login(member_name,member_nickname);
+            Member memberLogin=new Member(member_name,member_nickname);
             MultipartFile label = new MockMultipartFile("pic.png", Files.newInputStream(new File("C:\\Users\\SSAFY\\Downloads\\pic.png").toPath()));
 
-            ResponseEntity<?> temp = memberController.signup( memberLogin, label, authentication);
+            ResponseEntity<?> temp = memberController.signup( memberLogin, authentication);
             assert temp.getStatusCode().value() == 200;
         } catch (Exception e) {
             throw e;

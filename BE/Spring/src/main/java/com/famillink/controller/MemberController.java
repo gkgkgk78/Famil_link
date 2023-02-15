@@ -60,7 +60,7 @@ public class MemberController {
 //(@RequestBody @Validated(ValidationGroups.member_login.class) ImageDTO imageDTO
     @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [image file,uid]")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody  ImageDTO imageDTO, final Authentication authentication) throws Exception {
+    public ResponseEntity<?> login(@RequestBody @Validated(ValidationGroups.member_login.class) ImageDTO imageDTO, final Authentication authentication) throws Exception {
 
         //안면인식으로 추출한 멤버
         String member_name = fservice.getMemberUidByFace(imageDTO.getJson(), authentication);
