@@ -22,4 +22,9 @@ public interface MovieMapper {
 
     int getOneMovie(Long movie_uid) throws Exception;
 
+
+// <select id="findMinDate" parameterType="long" resultType="long">
+    Long findMinDate(Long user_uid) throws Exception;
+
+
 }
