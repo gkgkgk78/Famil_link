@@ -14,8 +14,9 @@ public class Member implements UserDetails {
 
 
     @NotNull
-//    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(hidden = true)
     protected Long uid;
+
 
     protected Long user_uid;
 
