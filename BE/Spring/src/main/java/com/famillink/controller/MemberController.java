@@ -39,7 +39,9 @@ public class MemberController {
     private final MemberMapper mapper;
     private final PhotoService photoService;
 
-
+/*
+* required: com.famillink.model.domain.user.Member,org.springframework.security.core.Authentication
+  found: com.famillink.model.domain.user.Member_Login,org.springframework.web.multipart.MultipartFile,org.springframework.security.core.Authentication*/
     @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname,account_token]")
     @PostMapping("/signup")
 
@@ -55,10 +57,10 @@ public class MemberController {
         }}, HttpStatus.OK);
     }
 
-
+//(@RequestBody @Validated(ValidationGroups.member_login.class) ImageDTO imageDTO
     @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [image file,uid]")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Validated(ValidationGroups.member_login.class) ImageDTO imageDTO, final Authentication authentication) throws Exception {
+    public ResponseEntity<?> login(@RequestBody  ImageDTO imageDTO, final Authentication authentication) throws Exception {
 
         //안면인식으로 추출한 멤버
         String member_name = fservice.getMemberUidByFace(imageDTO.getJson(), authentication);
