@@ -43,18 +43,7 @@ services:
     depends_on:
       - springboot
       
-  react:
-    shm_size: '30gb'
-    build: ./FE/mobile
-    image: react-deploy
-    container_name: react-deploy
-    networks:
-      - famil_link
-    ports:
-      - 80:80
-   
-      
-   
+
 
 networks:
   famil_link:
