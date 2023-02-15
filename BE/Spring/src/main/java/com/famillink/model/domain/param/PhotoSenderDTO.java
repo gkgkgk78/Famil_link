@@ -15,4 +15,5 @@ public class PhotoSenderDTO {
         this.from_account_uid = from_account_uid;
         this.name = name;
     }
+
 }

@@ -35,33 +35,24 @@ import java.util.Optional;
 
 public class MemberController {
     private final MemberService memberservice;
-
     private final FaceDetection fservice;
-
     private final MemberMapper mapper;
-
-
     private final PhotoService photoService;
 
-    @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname,account_token]")
-    //@PostMapping("/signup")
-    @PostMapping(value = "/signup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> signup(@ModelAttribute  Member_Login member, @RequestPart(value = "img", required = true) MultipartFile file, final Authentication authentication) throws Exception {
 
+    @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname,account_token]")
+    @PostMapping("/signup")
+
+    public ResponseEntity<?> signup(@RequestBody Member member, final Authentication authentication) throws Exception {
 
         Account auth = (Account) authentication.getPrincipal();
         Long tt = auth.getUid();
-
-
         Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
-        PhotoSenderDTO sender=new PhotoSenderDTO(auth.getUid(),member.getName());
-        photoService.sender(sender, file);
+
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
-            put("msg", "멤버 가입과 사진등록 성공");
+            put("msg", "멤버 가입성공");
         }}, HttpStatus.OK);
-
-
     }
 
 
@@ -69,13 +60,12 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Validated(ValidationGroups.member_login.class) ImageDTO imageDTO, final Authentication authentication) throws Exception {
 
-
         //안면인식으로 추출한 멤버
         String member_name = fservice.getMemberUidByFace(imageDTO.getJson(), authentication);
         if (member_name.equals("NONE")) {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
-
         }
+
 
         //멤버 정보는 존재를 했지만 찾아온 멤버 정보가 지금 로그인한 가족 계정에 속하는지 아닌지를 판단을 해야함
         //즉, 판단한 얼굴 정보 <=> 로그인한 token이 찾은 얼굴에 속하는지 판단
@@ -84,12 +74,9 @@ public class MemberController {
         if (account.getUid() != member.getUser_uid())
             throw new BaseException(ErrorMessage.NOT_MATCH_FAMILY);
 
-
         //두 멤버의 이름이 일치하면
         if (member.getName().equals(member_name)) {
 
-            //하나 만들고자 함
-            //여기서 하나 만 찾아 내야 하는데
             Map<String, Object> map = new HashMap<>();
             map.put("user_uid", account.getUid());
             map.put("name", member_name);
@@ -100,11 +87,7 @@ public class MemberController {
             } else {
                 throw new BaseException(ErrorMessage.NOT_USER_INFO);//보낸 가족 정보와 일치하는 유저 정보가 없음을 의미를 함
             }
-
-
             Long member_uid = m1.getUid();
-
-
             //임시로 uid8로 넣은후 인증 되는지 확인(download시)
             Map<String, Object> token = memberservice.login(member_uid);
 
@@ -145,6 +128,7 @@ public class MemberController {
 
         //임시로 uid8로 넣은후 인증 되는지 확인(download시)
         Map<String, Object> token = memberservice.login(member_uid);
+
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);

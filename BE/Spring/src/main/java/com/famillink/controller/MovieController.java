@@ -38,7 +38,7 @@ public class MovieController {
 
     @PostMapping()
     @ApiOperation(value = "동영상 보내기", notes = "req_data : [image,fromuid,touid]")
-    public ResponseEntity<?> addMovie( MovieSenderDTO sender, @RequestPart(value = "mp4", required = true) MultipartFile file) throws Exception {
+    public ResponseEntity<?> addMovie(MovieSenderDTO sender, @RequestPart(value = "mp4", required = true) MultipartFile file) throws Exception {
         movieService.sender(sender, file);
         Map<String, Object> responseResult = new HashMap<>();
         responseResult.put("result", true);
@@ -74,11 +74,8 @@ public class MovieController {
     public ResponseEntity<?> sendList(Authentication authentication) throws Exception {
 
         Member member = (Member) authentication.getPrincipal();
-
         Long member_to = member.getUid();
-
         List<MovieDTO> movieList = movieService.showMovieList(member_to);
-
         Map<String, Object> responseResult = new HashMap<>();
 
         if (movieList.isEmpty()) {
@@ -96,7 +93,7 @@ public class MovieController {
 
     @PostMapping(value = "/member", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation(value = "멤버 등록 영상 저장", notes = "이 컨트롤러는 멤버 등록 영상을 저장합니다.")
-    public ResponseEntity<?> registMember(@RequestPart("name") String name ,@RequestPart("file") MultipartFile file, Authentication authentication) throws IOException {
+    public ResponseEntity<?> registMember(@RequestPart("name") String name, @RequestPart("file") MultipartFile file, Authentication authentication) throws IOException {
 
         Account account = (Account) authentication.getPrincipal();
 
@@ -116,6 +113,23 @@ public class MovieController {
 
         return ResponseEntity.status(HttpStatus.OK).body("delete OK");
     }
+
+
+//    //가족한테 보낸지 오래된 영상이 있는지 없는지 보내주는 메서드
+//    @GetMapping("/{movie_uid}")
+//    @ApiOperation(value = "동영상 보기", notes = "req_data : [token, movie uid]")
+//    public ResponseEntity<StreamingResponseBody> getMovieTo(Authentication authentication) throws Exception {
+//        final HttpHeaders responseHeaders = new HttpHeaders();
+//
+//        // TODO: Service단에서 http 관련 작업을 하면 안된다.
+//        StreamingResponseBody resource = movieService.download(movie_uid, responseHeaders, authentication);
+//        responseHeaders.add("Content-Type", "video/mp4");
+//
+//
+//        return ResponseEntity.ok().headers(responseHeaders).body(resource);
+//    }
+
+
 
 
 }
