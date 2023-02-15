@@ -22,7 +22,7 @@ while True:
     if not ret:
         print("dont read cam")
         break
-    image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
+    # image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
 
     with mp_face_detection.FaceDetection(
             model_selection=0, min_detection_confidence=0.5) as face_detection:

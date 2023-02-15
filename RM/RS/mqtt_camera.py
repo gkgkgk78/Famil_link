@@ -339,9 +339,7 @@ def opencv_publish():
                                 image = image[rect_start_point[1]:rect_end_point[1],
                                         rect_start_point[0]:rect_end_point[0]]
                                 image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
-                                np_image = np.asarray(image, dtype=np.float32).reshape(1, 224, 224, 3)
 
-                                np_image = (np_image / 127.5) - 1
                                 print(end='')
                         else:
                             image = np.zeros((224, 224, 3), np.uint8)
@@ -351,6 +349,7 @@ def opencv_publish():
                     data = {
                         "image": image
                     }
+                    cv2.imshow("dd", image)
                     client.publish("/local/opencv/", json.dumps(data, cls=NumpyArrayEncoder), 2)  # TODO: 해제
                     print("publish opencv data " + str(idx))
                     idx += 1
