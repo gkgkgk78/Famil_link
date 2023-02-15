@@ -57,6 +57,12 @@
     </select>
 
 
+    <select id="findMovieCount" parameterType="hashMap" resultType="int">
+        select count(*)
+        from movie
+        where member_from=#{member_from} and member_to=#{member_to} and status="0";
+    </select>
+
 
 
 

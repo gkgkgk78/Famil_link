@@ -23,7 +23,7 @@ public interface MovieService {
     List<MovieDTO> showMovieList(Long member_to) throws Exception;
 
 
-    List<Long> getAccountList(Member member)throws Exception;
+    String getAccountList(Member member) throws Exception;
 
 
 }

@@ -117,16 +117,17 @@ public class MovieController {
 
     //가족한테 보낸지 오래된 영상이 있는지 없는지 보내주는 메서드
     @GetMapping("/allmovie")
-    @ApiOperation(value = "동영상 안보낸 가족 목록 확인 하도록 하자", notes = "req_data : [token]")
+    @ApiOperation(value = "동영상 안보낸 가족 목록 확인", notes = "req_data : [token]")
     public ResponseEntity<?> getMovieTo(Authentication authentication) throws Exception {
 
         Member member = (Member) authentication.getPrincipal();
-        movieService.getAccountList(member);
+        String name=movieService.getAccountList(member);
         Map<String, Object> responseResult = new HashMap<>();
 
 
-        responseResult.put("msg", "도착한 영상이 없습니다");
-        responseResult.put("result", false);
+        responseResult.put("msg", "동영상 알림 보낼 가족이 존재합니다.");
+        responseResult.put("result", true);
+        responseResult.put("data",name);
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
