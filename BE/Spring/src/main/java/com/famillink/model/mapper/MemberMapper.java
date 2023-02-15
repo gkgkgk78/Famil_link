@@ -4,6 +4,7 @@ import com.famillink.model.domain.user.Member;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,6 +30,9 @@ public interface MemberMapper {
 
 
     Optional<Member> findUserByNametoAll(Map<String,Object> map);
+
+
+    List<Long> getAccount(Long user_uid) throws Exception;
 
 
 }

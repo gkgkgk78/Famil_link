@@ -38,60 +38,55 @@ function MQTT() {
   const Navigate = useNavigate()
   const location = useLocation();
 
-  // mqtt 연결 준비
-  const URL = "ws://localhost:9001";
-  const client = mqtt.connect(URL);
 
   // 사용할 변수 정의
-  const [userList, setList] = useState([])
-  const [noneList, setNoneList] = useState([]) 
+  const [userList, setList] = useState([null,null,null,null,null])
+  const [isConnect, setConnect] = useState(false) 
   const [soundData, setSoundData] = useState("")
-  const [imageData, setImage] = useState("")
 
   const recordMounted = useRef(false);
   const memberMounted = useRef(false);
   const familyMounted = useRef(false);
 
-  const userAxiosActivated = useRef(0)
+
 
 
   // 마운트 될 때 한 번 구독한다.
   useEffect(() => {
+    const URL = "ws://localhost:9001";
+    const client = mqtt.connect(URL);
     client.on('connect', () => {
-      // 연결 되면 토픽을 구독
-      client.subscribe(["/local/face/result/", "/local/qrtoken/", "/local/sound/"], function (err) {
-        console.log("구독")      
-        if (err) {
-          console.log(err)
-        }
-      })
+      console.log("첫 연결")
+      setConnect(true)
     })
-  },[])
-  
-  
-  useEffect(() => {
-    // 브로커에 연결되면
+    client.subscribe(["/local/face/result/", "/local/qrtoken/", "/local/sound/"], function (err) { 
+      console.log("토픽 구독")
+      if (err) {
+        console.log(err)
+      }
+    })
+    client.on("close", () => {
+      console.log("연결 끊김")
+      setConnect(false)
+    })
+    client.on("error", () => {
+      console.log("에러")
+    })
     client.on('message', function (topic, message) {
       // 토픽이 안면 인식 토픽이라면
       if (topic === "/local/face/result/") {
         // 녹화중이 아닐 때에는 계속 사람을 인식한다.
-          let jsonMsg = JSON.parse(message)
-          let name = jsonMsg.name
-          let image = jsonMsg.image
-          let userData = [name, image]
-          // 리스트에 이름을 계속 담다가
-            if (name !== "NONE"){
-              setList(oldArray => [...oldArray,userData])
-              setNoneList(() => [])
-            }  else {
-              setNoneList(oldNoneArray => [...oldNoneArray,name])
-            }
-          // 녹화 중이면 인식 중단 
-
+        let userData = JSON.parse(message)
+        setList(oldArray => {
+          return [...oldArray.slice(1,5), userData]
+        })
+          // 리스트 길이를 5로 유지하면서 계속 담는다.
+  
         } else if (topic === "/local/qrtoken/") {
         client.publish("/local/qr/","0")
         let msg = JSON.parse(message)
-
+        
+        // 어카운트 요청 보내기
         axios({
           method:"get",
           url:"http://i8a208.p.ssafy.io:3000/account/auth",
@@ -108,23 +103,43 @@ function MQTT() {
           client.publish("/local/qr/","1")
         })
       } else if (topic === "/local/sound/") {
-        setSoundData(JSON.parse(message))
+        setSoundData(JSON.parse(message.text))
       }
     })
-  },[])
+  }, [])
   
   useEffect(() => {
-    if (!userList) {
-      return
+    const URL = "ws://localhost:9001";
+    const client = mqtt.connect(URL);
+    if (isConnect === false) {
+      client.on('connect', () => {
+        console.log("재연결")
+        setConnect(true)
+      })
+      client.subscribe(["/local/face/result/", "/local/qrtoken/", "/local/sound/"], function (err) { 
+        console.log("토픽 구독")
+        if (err) {
+          console.log(err)
+        }
+      })
+      client.on("close", () => {
+        console.log("연결 다시 끊김")
+        setConnect(false)
+      })
     }
+  },[isConnect])
 
-    if (!me) {
-      if (userAxiosActivated.current===0){
-        if (userList.length>=5) {
-          // 길이 5의 배열에서 4개 이상이 0번과 같으면
-          if (userList.filter(el => el[0]===userList[0][0]).length>=4) {
-            userAxiosActivated.current = 1
-            const cognizedUID = memInfo[userList[0][0]]
+  useEffect(() => {
+    // null이 있을 때에는 동작 안 함
+    if (userList.filter(el => el === null).length<=0) {
+      // 길이 5의 배열에서 4개 이상이 0번과 같으면
+      if (userList.filter(el => el.name===userList[0].name).length>=4) {
+        // 만약 0번이 NONE이 아니면
+        if (userList[0].name !== "NONE") {
+          // 0번 멤버가 내가 아니라면
+          if (me !== memInfo[userList[0].name]) {
+            // 멤버 로그인
+            const cognizedUID = memInfo[userList[0].name]
             axios({
               method:"post",
               url:"http://i8a208.p.ssafy.io:3000/member/login",
@@ -132,60 +147,82 @@ function MQTT() {
                 "Authorization": `Bearer ${familyAccessToken}`
               },
               data: {
-                "json":userList[0][1],
+                "json":userList[0].image,
                 "uid": cognizedUID
               }
             })
             .then ((res) => {
+              // 나의 uid, 토큰을 저장
+              console.log(res)
               saveMe(res.data["uid"])
-              saveMyname(res.data.name)
               saveMemberToken(res.data["access-token"])
               saveMemberRefreshToken(res.data["refresh-token"])
-              setList(() => [])
-              setNoneList(() => [])
+              saveMyname(userList[0].name)
+              console.log("로그인")
             })
             .catch((err) => {
               console.log(err)
             })
-          // 길이 4의 배열에서 0번만 다를 때 = 4개는 똑같음
-          } else if (userList.filter(el => el[0]===userList[0][0]).length === 1)  {
-            userAxiosActivated.current = 1
-            const cognizedUID = memInfo[userList[1][0]]
-            axios({
-              method:"post",
-              url:"http://i8a208.p.ssafy.io:3000/member/login",
-              headers:{
-                "Authorization": `Bearer ${familyAccessToken}`
-              },
-              data: {
-                "json":userList[1][1],
-                "uid": cognizedUID
-              }
-            })
-            .then ((res) => {
-              saveMe(res.data["uid"])
-              saveMemberToken(res.data["access-token"])
-              saveMemberRefreshToken(res.data["refresh-token"])
-              setList(() => [])
-              setNoneList(() => [])
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-          // 길이 4의 배열에서 비율이 3:2면 
-          } else {
-            // 리스트를 비우기
-            setList(() => [])
+          }
+          // 만약 0번이 NONE이고 NONE 4번 이상이면
+        } else {
+          // 로그인 상태이면 로그아웃
+          if (me) {
+            saveMe(null)
+            saveMemberToken(null)
+            saveMemberRefreshToken(null)
+            saveMyname(null)
+            changeStoreValid(false)
+            console.log("로그아웃")
+            Navigate("/")
           }
         }
-      }
-    // 이미 로그인 상태면
-    } else {
-      if (userList.length === 5) {
-        // 리스트 비우기
-        setList(() => [])
-      }
+      // 길이 4의 배열에서 0번만 다를 때 = 4개는 똑같음
+      } else if (userList.filter(el => el.name===userList[0].name).length === 1)  {
+        // 만약 1번이 NONE이 아니면(NONE이 아닌 게 4개)
+          // 1번과 같은 놈이 4개 이상이면
+          if (userList.filter(el => el.name===userList[1].name).length >=4) {
+            if (userList[1].name !== "NONE") {
+              if (me !== memInfo[userList[1].name]) {
+                // 멤버 로그인
+                const cognizedUID = memInfo[userList[1].name]
+                axios({
+                  method:"post",
+                  url:"http://i8a208.p.ssafy.io:3000/member/login",
+                  headers:{
+                    "Authorization": `Bearer ${familyAccessToken}`
+                  },
+                  data: {
+                    "json":userList[1].image,
+                    "uid": cognizedUID
+                  }
+                })
+                .then ((res) => {
+                  console.log(res)
+                  saveMe(res.data["uid"])
+                  saveMemberToken(res.data["access-token"])
+                  saveMemberRefreshToken(res.data["refresh-token"])
+                  saveMyname(userList[1].name)
+                  console.log("로그인")
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+              }
+            } else {
+              if (me) {
+                saveMe(null)
+                saveMemberToken(null)
+                saveMemberRefreshToken(null)
+                saveMyname(null)
+                changeStoreValid(false)
+                console.log("로그아웃")
+                Navigate("/")
+            }
+          }
+      } 
     }
+  }
     
   },[userList])
   
@@ -225,6 +262,8 @@ function MQTT() {
 
   // 녹화 상태가 변경될 때 브로커로 메세지 보냄
   useEffect(() => {
+    const URL = "ws://localhost:9001";
+    const client = mqtt.connect(URL);
     if (!recordMounted) {
       recordMounted.current = true
     } else {
@@ -280,31 +319,6 @@ function MQTT() {
     }
   },[familyAccessToken])
 
-  // 로그아웃 처리
-  useEffect(() => {
-    if (!noneList) {
-      return
-    }
-
-    if (me) {
-      if (noneList.length >=7) {
-        setVideoList(() => [])
-        saveMe(null)
-        saveMyname(null)
-        saveMemberToken(null)
-        saveMemberRefreshToken(null)
-        changeStoreValid(false)
-        setNoneList(() => [])
-        console.log("로그아웃")
-        Navigate("/")
-        userAxiosActivated.current = 0
-        }
-      } else {
-        setNoneList(() => [])
-      }
-    }
-    
-  },[noneList])
 
   useEffect(()=> {
     if (soundData) {
@@ -330,6 +344,8 @@ function MQTT() {
   const mounted00 = useRef(false);
 
   useEffect(() => {
+    const URL = "ws://localhost:9001";
+    const client = mqtt.connect(URL);
     if (!mounted00.current) {
         mounted00.current = true;
         return;
