@@ -103,7 +103,7 @@ function MQTT() {
           client.publish("/local/qr/","1")
         })
       } else if (topic === "/local/sound/") {
-        setSoundData(JSON.parse(message))
+        setSoundData(JSON.parse(message.text))
       }
     })
   }, [])
@@ -133,7 +133,6 @@ function MQTT() {
     // null이 있을 때에는 동작 안 함
     if (userList.filter(el => el === null).length<=0) {
       // 길이 5의 배열에서 4개 이상이 0번과 같으면
-      console.log(userList)
       if (userList.filter(el => el.name===userList[0].name).length>=4) {
         // 만약 0번이 NONE이 아니면
         if (userList[0].name !== "NONE") {
@@ -154,10 +153,12 @@ function MQTT() {
             })
             .then ((res) => {
               // 나의 uid, 토큰을 저장
+              console.log(res)
               saveMe(res.data["uid"])
               saveMemberToken(res.data["access-token"])
               saveMemberRefreshToken(res.data["refresh-token"])
               saveMyname(userList[0].name)
+              console.log("로그인")
             })
             .catch((err) => {
               console.log(err)
@@ -197,10 +198,12 @@ function MQTT() {
                   }
                 })
                 .then ((res) => {
+                  console.log(res)
                   saveMe(res.data["uid"])
                   saveMemberToken(res.data["access-token"])
                   saveMemberRefreshToken(res.data["refresh-token"])
                   saveMyname(userList[1].name)
+                  console.log("로그인")
                 })
                 .catch((err) => {
                   console.log(err)
@@ -259,6 +262,8 @@ function MQTT() {
 
   // 녹화 상태가 변경될 때 브로커로 메세지 보냄
   useEffect(() => {
+    const URL = "ws://localhost:9001";
+    const client = mqtt.connect(URL);
     if (!recordMounted) {
       recordMounted.current = true
     } else {
@@ -339,6 +344,8 @@ function MQTT() {
   const mounted00 = useRef(false);
 
   useEffect(() => {
+    const URL = "ws://localhost:9001";
+    const client = mqtt.connect(URL);
     if (!mounted00.current) {
         mounted00.current = true;
         return;
