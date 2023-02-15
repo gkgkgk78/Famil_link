@@ -20,13 +20,19 @@ function SEE() {
         });
 
     sse.addEventListener('send', () => {
-        console.log("test!")
+        if(me) {
+          
+        }
 
     });
   }
   useEffect(() => {
-    handleConnect()
-  },[])
+    if (memactoken) {
+      setInterval(() => {
+        handleConnect()
+      }, 46000)
+    }
+  },[memactoken])
 
 }
 
