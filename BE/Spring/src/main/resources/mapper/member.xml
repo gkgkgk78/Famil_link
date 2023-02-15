@@ -85,4 +85,13 @@
     </update>
 
 
+    <select id="getAccount" parameterType="long" resultType="long">
+        select `uid`
+        from member
+        where `user_uid`=${user_uid}
+        order by `uid`;
+    </select>
+
+
+
 </mapper>

@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -124,8 +124,44 @@ public class MovieServiceImpl implements MovieService {
     public List<MovieDTO> showMovieList(Long member_to) throws Exception {
 
         List<MovieDTO> list = movieMapper.findMovieByMemberTo(member_to);
-
         return list;
+    }
+
+    @Override
+    public String getAccountList(Member member) throws Exception {
+
+        //속한 모든 가족을 찾음
+        List<Long> allaccount = memberMapper.getAccount(member.getUser_uid());
+
+        //이제가족에 해당이 되는 모든것을 찾았으니 한번 연산을 해보도록 하자
+        Long result = movieMapper.findMinDate(member.getUid());
+
+
+        //내가 보낸 영상이 없는 경우
+        if (result == null) {
+            throw new BaseException(ErrorMessage.NOT_EXIST_RECORD);
+
+        } else {
+            //보내지 않은 가족이 존재하다면 보내줘야함
+            //돌면서 안보낸 가족이 있는지 확인을 해야함
+            for (Long l1 : allaccount) {
+                if (!l1.equals(member.getUid())) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("member_from", member.getUser_uid());
+                    map.put("member_to", l1);
+                    int check = movieMapper.findMovieCount(map);
+                    if (check == 0) {
+                        result = l1;
+                        break;
+                    }
+                }
+            }
+        }
+
+        Member mm = memberMapper.findUserByUid(result).get();
+
+        return mm.getName();
+
     }
 
 

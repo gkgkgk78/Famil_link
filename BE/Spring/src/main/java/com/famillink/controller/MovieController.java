@@ -115,21 +115,21 @@ public class MovieController {
     }
 
 
-//    //가족한테 보낸지 오래된 영상이 있는지 없는지 보내주는 메서드
-//    @GetMapping("/{movie_uid}")
-//    @ApiOperation(value = "동영상 보기", notes = "req_data : [token, movie uid]")
-//    public ResponseEntity<StreamingResponseBody> getMovieTo(Authentication authentication) throws Exception {
-//        final HttpHeaders responseHeaders = new HttpHeaders();
-//
-//        // TODO: Service단에서 http 관련 작업을 하면 안된다.
-//        StreamingResponseBody resource = movieService.download(movie_uid, responseHeaders, authentication);
-//        responseHeaders.add("Content-Type", "video/mp4");
-//
-//
-//        return ResponseEntity.ok().headers(responseHeaders).body(resource);
-//    }
+    //가족한테 보낸지 오래된 영상이 있는지 없는지 보내주는 메서드
+    @GetMapping("/allmovie")
+    @ApiOperation(value = "동영상 안보낸 가족 목록 확인", notes = "req_data : [token]")
+    public ResponseEntity<?> getMovieTo(Authentication authentication) throws Exception {
+
+        Member member = (Member) authentication.getPrincipal();
+        String name=movieService.getAccountList(member);
+        Map<String, Object> responseResult = new HashMap<>();
 
 
+        responseResult.put("msg", "동영상 알림 보낼 가족이 존재합니다.");
+        responseResult.put("result", true);
+        responseResult.put("data",name);
+        return ResponseEntity.status(HttpStatus.OK).body(responseResult);
+    }
 
 
 }
