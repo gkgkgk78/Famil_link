@@ -8,19 +8,10 @@ public class MovieOccur {
     // 보내는 사람
     private Long uid;
 
-    public Long getUid() {
-        return uid;
-    }
-
-    public String getSdate() {
-        return sdate;
-    }
-
     // 받는 사람
-    private String sdate;
+    private Integer absent;
 
-    public MovieOccur(Long uid, String sdate) {
-        this.uid = uid;
-        this.sdate = sdate;
-    }
+    private String recently_date;
+
+
 }

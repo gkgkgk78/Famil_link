@@ -103,8 +103,7 @@ function MQTT() {
           client.publish("/local/qr/","1")
         })
       } else if (topic === "/local/sound/") {
-        console.log(message)
-        setSoundData(JSON.parse(message["text"]))
+        setSoundData(JSON.parse(message)["text"])
       }
     })
   }, [])
@@ -131,101 +130,104 @@ function MQTT() {
   },[isConnect])
 
   useEffect(() => {
-    // null이 있을 때에는 동작 안 함
-    if (userList.filter(el => el === null).length<=0) {
-      // 길이 5의 배열에서 4개 이상이 0번과 같으면
-      if (userList.filter(el => el.name===userList[0].name).length>=4) {
-        // 만약 0번이 NONE이 아니면
-        if (userList[0].name !== "NONE") {
-          // 0번 멤버가 내가 아니라면
-          if (me !== memInfo[userList[0].name]) {
-            // 멤버 로그인
-            const cognizedUID = memInfo[userList[0].name]
-            axios({
-              method:"post",
-              url:"http://i8a208.p.ssafy.io:3000/member/login",
-              headers:{
-                "Authorization": `Bearer ${familyAccessToken}`
-              },
-              data: {
-                "json":userList[0].image,
-                "uid": cognizedUID
-              }
-            })
-            .then ((res) => {
-              // 나의 uid, 토큰을 저장
-              console.log(res)
-              saveMe(res.data["uid"])
-              saveMemberToken(res.data["access-token"])
-              saveMemberRefreshToken(res.data["refresh-token"])
-              saveMyname(userList[0].name)
-              console.log(`${userList[0].name} 로그인`)
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-          }
-          // 만약 0번이 NONE이고 NONE 4번 이상이면
-        } else {
-          // 로그인 상태이면 로그아웃
-          if (me) {
-            saveMe(null)
-            saveMemberToken(null)
-            saveMemberRefreshToken(null)
-            saveMyname(null)
-            changeStoreValid(false)
-            console.log("로그아웃")
-            Navigate("/")
-          }
-        }
-      // 길이 4의 배열에서 0번만 다를 때 = 4개는 똑같음
-      } else if (userList.filter(el => el.name===userList[0].name).length === 1)  {
-        // 만약 1번이 NONE이 아니면(NONE이 아닌 게 4개)
-          // 1번과 같은 놈이 4개 이상이면
-          if (userList.filter(el => el.name===userList[1].name).length >=4) {
-            if (userList[1].name !== "NONE") {
-              if (me !== memInfo[userList[1].name]) {
-                // 멤버 로그인
-                const cognizedUID = memInfo[userList[1].name]
-                axios({
-                  method:"post",
-                  url:"http://i8a208.p.ssafy.io:3000/member/login",
-                  headers:{
-                    "Authorization": `Bearer ${familyAccessToken}`
-                  },
-                  data: {
-                    "json":userList[1].image,
-                    "uid": cognizedUID
-                  }
-                })
-                .then ((res) => {
-                  console.log(res)
-                  saveMe(res.data["uid"])
-                  saveMemberToken(res.data["access-token"])
-                  saveMemberRefreshToken(res.data["refresh-token"])
-                  saveMyname(userList[1].name)
-                  console.log(`${userList[1].name} 로그인`)
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
-              }
-            } else {
-              if (me) {
-                saveMe(null)
-                saveMemberToken(null)
-                saveMemberRefreshToken(null)
-                saveMyname(null)
-                changeStoreValid(false)
-                console.log("로그아웃")
-                Navigate("/")
+    if (memInfo){
+      // null이 있을 때에는 동작 안 함
+      if (userList.filter(el => el === null).length<=0) {
+        // 길이 5의 배열에서 4개 이상이 0번과 같으면
+        if (userList.filter(el => el.name===userList[0].name).length>=4) {
+          // 만약 0번이 NONE이 아니면
+          if (userList[0].name !== "NONE") {
+            // 0번 멤버가 내가 아니라면(로그인 시도하는 사람이 현재 로그인 된 사람이 아니면)
+            if (me !== memInfo[userList[0].name]) {
+              // 멤버 로그인
+              const cognizedUID = memInfo[userList[0].name]
+              axios({
+                method:"post",
+                url:"http://i8a208.p.ssafy.io:3000/member/login",
+                headers:{
+                  "Authorization": `Bearer ${familyAccessToken}`
+                },
+                data: {
+                  "json":userList[0].image,
+                  "uid": cognizedUID
+                }
+              })
+              .then ((res) => {
+                // 나의 uid, 토큰을 저장
+                console.log(res)
+                saveMe(res.data["uid"])
+                saveMemberToken(res.data["access-token"])
+                saveMemberRefreshToken(res.data["refresh-token"])
+                saveMyname(userList[0].name)
+                console.log(`${userList[0].name} 로그인`)
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+            }
+            // 만약 0번이 NONE이고 NONE 4번 이상이면
+          } else {
+            // 로그인 상태이면 로그아웃
+            if (me) {
+              saveMe(null)
+              saveMemberToken(null)
+              saveMemberRefreshToken(null)
+              saveMyname(null)
+              changeStoreValid(false)
+              console.log("로그아웃")
+              Navigate("/")
             }
           }
-      } 
+        // 길이 4의 배열에서 0번만 다를 때 = 4개는 똑같음
+        } else if (userList.filter(el => el.name===userList[0].name).length === 1)  {
+          // 만약 1번이 NONE이 아니면(NONE이 아닌 게 4개)
+            // 1번과 같은 놈이 4개 이상이면
+            if (userList.filter(el => el.name===userList[1].name).length >=4) {
+              if (userList[1].name !== "NONE") {
+                // 로그인 시도하려는 사람이 내가 아니면
+                if (me !== memInfo[userList[1].name]) {
+                  // 멤버 로그인
+                  const cognizedUID = memInfo[userList[1].name]
+                  axios({
+                    method:"post",
+                    url:"http://i8a208.p.ssafy.io:3000/member/login",
+                    headers:{
+                      "Authorization": `Bearer ${familyAccessToken}`
+                    },
+                    data: {
+                      "json":userList[1].image,
+                      "uid": cognizedUID
+                    }
+                  })
+                  .then ((res) => {
+                    console.log(res)
+                    saveMe(res.data["uid"])
+                    saveMemberToken(res.data["access-token"])
+                    saveMemberRefreshToken(res.data["refresh-token"])
+                    saveMyname(userList[1].name)
+                    console.log(`${userList[1].name} 로그인`)
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  })
+                }
+              } else {
+                if (me) {
+                  saveMe(null)
+                  saveMemberToken(null)
+                  saveMemberRefreshToken(null)
+                  saveMyname(null)
+                  changeStoreValid(false)
+                  console.log("로그아웃")
+                  Navigate("/")
+              }
+            }
+          } 
+        }
+      }
     }
-  }
     
-  },[userList])
+  },[userList, memInfo])
   
 
   // 멤버 토큰이 저장되었을 때 비디오 리스트 요청
@@ -249,7 +251,18 @@ function MQTT() {
                emptyList.push(movie["uid"])
               }
             setVideoList(emptyList)
-            Navigate("/playvideo")
+            // 영상 재생 페이지 이외에서 다른 사람으로 로그인 되면
+            if (location.pathname !=="/playvideo"){
+              Navigate("/playvideo")
+              // 영상 재생 페이지에서 다른 사람으로 로그인 되면
+            } else {
+              //
+              Navigate("/")
+              setTimeout(() => {
+                Navigate("/playvideo")
+              },500)
+              
+            }
           }
   
         })
@@ -271,6 +284,7 @@ function MQTT() {
       if (recording === false) {
         // 녹화가 끝났으면 녹화가 끝났다는 메세지를 보냄
         client.publish("/local/record/", "0")
+        client.publish("/local/tts/", "녹화가 종료되었습니다. 메인 페이지로 돌아갑니다." )
         client.subscribe("/local/face/result/")
       } else {
         // 녹화가 시작되었으면 데이터와 신호를 쏴줌
@@ -281,11 +295,14 @@ function MQTT() {
         }
         const jsonData = JSON.stringify(publishData)
         if (publishData["to"]) {
-          client.publish("/local/token/", jsonData)
-
-          client.publish("/local/record/", "1")
-          client.unsubscribe("/local/face/result/")
-          saveToMember(null)
+          client.publish("/local/tts/", "녹화가 시작됩니다." )
+          console.log("녹화가 시작됩니다.")
+          setTimeout(() => {
+            client.publish("/local/token/", jsonData)
+            client.publish("/local/record/", "1")
+            client.unsubscribe("/local/face/result/")
+            saveToMember(null)
+          },1000)
         } else {
           console.log("받으실 분이 없어요")
         }
@@ -333,6 +350,7 @@ function MQTT() {
         } else if (location.pathname === "/record") {
           if (toMember === null) {
             for (let mem in memInfo) {
+              console.log(mem)
               if (soundData.includes(mem)) {
                 saveToMember(memInfo[mem])
                 setSoundData("")
@@ -387,6 +405,7 @@ function MQTT() {
         client.publish("/local/tts/", JSON.stringify({msg:textScript[idx++]}) )
     // },[weather, schedules, myname])
     },[weather, schedules, memberAccessToken, myname])
+
 }
 
 export default MQTT;

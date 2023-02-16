@@ -20,29 +20,26 @@ const Record = () => {
     const [publicMsg, setMsg] = useState("받으시는 분 이름을 말씀해주세요");
 
     const navMounted = useRef(false)
-    const toMounted = useRef(false)
+    const timeMounted = useRef(false)
     
     const Navigate = useNavigate();
 
     // STT를 통해 받는 멤버가 바뀌었을 때(설정되었을 때)
+    const [seconds, setSeconds] = useState(0)
+
     useEffect(() => {
-        if (!toMounted.current) {
-            toMounted.current = true
+        if (!timeMounted.current) {
+            timeMounted.current = true
         } else {
-            if (to) {
-                startRecord();
-                setInterval(() => {
-                    setTimer( (timer) => {
-                        if (0<=timer<=14) {
-                            return timer+1
-                        } else {
-                            return 15
-                        } 
-                    })
-                }, 1000)
-            }
+            const countdown = setInterval(() => {
+              if (parseInt(seconds) < 15) {
+                setSeconds(parseInt(seconds) + 1);
+              }
+            }, 1000);
+            return () => clearInterval(countdown);
         }
-    }, [to])
+      }, [seconds,to]);
+
 
     // 현재 recording에 따라 
     useEffect(() => {
@@ -53,7 +50,7 @@ const Record = () => {
                 setMsg("녹화가 종료되었습니다. 메인 페이지로 돌아갑니다.")
                 setTimeout(() => {
                     Navigate("/")
-                }, 2000)
+                }, 2500)
             } else if (recording === true) { 
                 setTimeout(() => {
                     stopRecord()
@@ -65,12 +62,16 @@ const Record = () => {
 
     useEffect(() => {
         if (to) {
+            startRecord()
             setMsg("녹화 중입니다.")
-        } else {
-            setTimeout(setMsg("다시 한 번 말씀해주세요"),
-            3000)
         }
     },[to])
+
+    useEffect(() => {
+        setTimeout(() => {
+            setMsg("다시 한 번 말씀해주세요")
+        },4000)
+    },[])
 
 
     return ( 
@@ -79,7 +80,7 @@ const Record = () => {
                 <p>{publicMsg}</p>
             </div>
             <div className="timer">
-                <p>00:{timer <= 9 ? `0${timer}` :`${timer}`}</p>
+                <p>00:{seconds < 10 ? `0${seconds}` : seconds}</p>
             </div>
         </div>
      );

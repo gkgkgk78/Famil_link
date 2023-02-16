@@ -25,8 +25,6 @@ const Caption = () => {
     const mounted = useRef(false);
     
     useEffect(() => {
-      console.log(weather)
-      console.log(schedules)
       if (!mounted.current) {
         mounted.current = true;
         return;
