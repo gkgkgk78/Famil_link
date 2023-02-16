@@ -50,14 +50,22 @@ namespace FamilLinkProject.ViewModel.Page
                         {
                             if (url.Equals("/account/auth"))
                             {
-                                Console.WriteLine("QRLoginVM : 로그인에 성공하였습니다.");
-                                AccountData.Uid = long.Parse(_json["data"]["uid"].ToString());
-                                AccountData.Token = message;
-                                Application.Current.Dispatcher.InvokeAsync(delegate {
-                                    ContentBindingModel.GetInstance().Page = new Main();
-                                }, DispatcherPriority.Loaded);
+                                if (_json["result"].ToString().Equals("True"))
+                                {
+                                    Console.WriteLine("QRLoginVM : 로그인에 성공하였습니다.");
+                                    AccountData.Uid = long.Parse(_json["data"]["uid"].ToString());
+                                    AccountData.Token = message;
+                                    Application.Current.Dispatcher.InvokeAsync(delegate
+                                    {
+                                        ContentBindingModel.GetInstance().Page = new Main();
+                                    }, DispatcherPriority.Loaded);
 
-                                MQTTService.Subscribe("/local/face/result/");
+                                    MQTTService.Subscribe("/local/face/result/");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("가족계정 로그인 실패!");
                             }
                         }
                     );

@@ -116,7 +116,7 @@ namespace FamilLinkProject.ViewModel
                                                                  if (int.Parse(_json2["date"].ToString()) == -1)
                                                                  {
                                                                      // date가 -1이면 한번도 안보낸거
-                                                                     payload.Add("msg", myname + "님 " + _json2["name"] + " 한번도 연락하지 않으셨네요. 연락해보시는건 어떠신가요?");
+                                                                     payload.Add("msg", myname + "님 " + _json2["name"] + "님과 한번도 연락하지 않으셨네요. 연락해보시는건 어떠신가요?");
                                                                  }
                                                                  else
                                                                  {
