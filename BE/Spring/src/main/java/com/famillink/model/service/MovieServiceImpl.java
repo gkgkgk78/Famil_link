@@ -138,10 +138,11 @@ public class MovieServiceImpl implements MovieService {
 
         Optional<MovieOccur> object = movieMapper.findMinDate(member.getUid());
         Long result = null;
+        Map<String, Object> response = new HashMap<>();
         if (!object.isPresent()) {
-            throw new BaseException(ErrorMessage.NOT_EXIST_RECORD);
+            return null;
         } else {
-            result = object.get().getUid();
+            result = object.get().getMember_to();
             //보내지 않은 가족이 존재하다면 보내줘야함
             //돌면서 안보낸 가족이 있는지 확인을 해야함
             for (Long l1 : allaccount) {
@@ -158,7 +159,7 @@ public class MovieServiceImpl implements MovieService {
                 }
             }
         }
-        Map<String, Object> response = new HashMap<>();
+
         Member mm = memberMapper.findUserByUid(result).get();
         response.put("name", mm.getName());
 

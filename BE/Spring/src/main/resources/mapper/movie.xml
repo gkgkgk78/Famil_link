@@ -47,12 +47,19 @@
     </select>
 
     <select id="findMinDate" parameterType="long" resultType="MovieOccur">
-        select member_to,datediff(CURRENT_TIMESTAMP(),sdate)
-        from movie
-        where sdate=(
-            select min(sdate)
-            from movie
-            where member_from=#{uid_from} and member_to!=#{uid_from} );
+        SELECT
+            member_to,
+            datediff(CURRENT_TIMESTAMP(),max(sdate)) as absent,
+            max(sdate) as recently_date
+        FROM
+            movie
+        WHERE
+            member_from = #{uid} AND member_to != #{uid}
+        GROUP BY
+            member_to
+        ORDER BY
+            recently_date
+            LIMIT 1;
 
     </select>
 
