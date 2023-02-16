@@ -24,4 +24,6 @@ public interface MemberService {
 
     Optional<Member> findUserByNametoAll(Map<String,Object> map);
 
+    void deleteMember(Long uid) throws Exception;
+
 }
