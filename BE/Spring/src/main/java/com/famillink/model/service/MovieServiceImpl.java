@@ -153,7 +153,7 @@ public class MovieServiceImpl implements MovieService {
                     System.out.println("현재 찾고있는 가족들 " +l1.toString());
 
                     Map<String, Object> map = new HashMap<>();
-                    map.put("member_from", member.getUser_uid());
+                    map.put("member_from", member.getUid());
                     map.put("member_to", l1);
                     int check = movieMapper.findMovieCount(map);
                     if (check == 0) {

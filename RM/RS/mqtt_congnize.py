@@ -31,8 +31,10 @@ def on_connect(client, userdata, flags, rc):
 # ones = True
 
 prev = time.time()
+
+
 def on_message(client, userdata, msg):
-    global model, labels, prev # , ones
+    global model, labels, prev  # , ones
     # if not ones:
     #     return
     print(time.time() - prev)
@@ -72,7 +74,7 @@ def on_message(client, userdata, msg):
 def file_check():
     global isFile, folder_path
     while True:
-        isFile = os.path.isfile(folder_path + '\\keras_model.h5') and os.path.isfile(folder_path + '\\labels.txt')
+        isFile = os.path.isfile('keras_model.h5') and os.path.isfile('labels.txt')
 
 
 file_thread = threading.Thread(target=file_check)
@@ -83,8 +85,8 @@ while not isFile:
     time.sleep(1)
 
 print('load model')
-labels = open(folder_path + '\\labels.txt', 'r', encoding="UTF-8").readlines()
-model = load_model(folder_path + '\\keras_model.h5')
+labels = open('labels.txt', 'r', encoding="UTF-8").readlines()
+model = load_model('keras_model.h5')
 print('success load model')
 
 client = mqtt.Client()

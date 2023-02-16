@@ -130,8 +130,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
-
-
     @Override
     public Optional<Member> findMemberByUserUid(Long uid) throws Exception {
         return mapper.findUserByUid(uid);
@@ -142,6 +140,21 @@ public class MemberServiceImpl implements MemberService {
 
 
         return mapper.findUserByNametoAll(map);
+    }
+
+    @Override
+    public void deleteMember(Long uid) throws Exception {
+
+        Optional<Member> object = mapper.findUserByUid(uid);
+        if (object.isPresent()) {
+
+            mapper.deleteMember(uid);
+
+        } else {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+        }
+
+
     }
 
 

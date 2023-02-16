@@ -10,8 +10,8 @@ mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 
 camera = cv2.VideoCapture(0 + cv2.CAP_DSHOW)
-camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # 1280
-camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # 720
+camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)  # 1280
+camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)  # 720
 width = camera.get(cv2.CAP_PROP_FRAME_WIDTH)
 height = camera.get(cv2.CAP_PROP_FRAME_HEIGHT)
 size = (int(width), int(height))  # 프레임 크기
@@ -22,7 +22,7 @@ while True:
     if not ret:
         print("dont read cam")
         break
-    image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
+    # image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
 
     with mp_face_detection.FaceDetection(
             model_selection=0, min_detection_confidence=0.5) as face_detection:
@@ -70,7 +70,7 @@ while True:
                 print(name, percent)
         else:
             image = np.zeros((224, 224, 3), np.uint8)
-    cv2.imshow("dd", image)
+    # cv2.imshow("dd", image)
     idx += 1
 
     cv2.waitKey(1)  # MQTT 성능에 따라 유도리 있게 설정

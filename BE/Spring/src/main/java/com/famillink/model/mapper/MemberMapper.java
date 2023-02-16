@@ -35,4 +35,6 @@ public interface MemberMapper {
     List<Long> getAccount(Long user_uid) throws Exception;
 
 
+    void deleteMember(Long uid) throws Exception;
+
 }
