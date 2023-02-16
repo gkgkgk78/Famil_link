@@ -52,7 +52,7 @@
         where sdate=(
             select min(sdate)
             from movie
-            where member_from=#{uid} and status="0");
+            where member_from=#{uid});
 
     </select>
 
@@ -60,7 +60,7 @@
     <select id="findMovieCount" parameterType="hashMap" resultType="int">
         select count(*)
         from movie
-        where member_from=#{member_from} and member_to=#{member_to} and status="0";
+        where member_from=#{member_from} and member_to=#{member_to};
     </select>
 
 
