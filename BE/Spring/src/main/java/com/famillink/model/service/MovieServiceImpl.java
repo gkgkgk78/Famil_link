@@ -3,6 +3,7 @@ package com.famillink.model.service;
 import com.famillink.exception.BaseException;
 import com.famillink.exception.ErrorMessage;
 import com.famillink.model.domain.param.MovieDTO;
+import com.famillink.model.domain.param.MovieOccur;
 import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Member;
 import com.famillink.model.mapper.MemberMapper;
@@ -128,47 +129,46 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public String getAccountList(Member member) throws Exception {
+    public Map<String, Object> getAccountList(Member member) throws Exception {
 
         //속한 모든 가족을 찾음
         List<Long> allaccount = memberMapper.getAccount(member.getUser_uid());
-
-
-
-
+        int checkz = 0;
         //이제가족에 해당이 되는 모든것을 찾았으니 한번 연산을 해보도록 하자
-        Long result = movieMapper.findMinDate(member.getUid());
-        System.out.println("찾은 멤버  uid"+result.toString());
 
-
-        //내가 보낸 영상이 없는 경우
-        if (result == null) {
+        Optional<MovieOccur> object = movieMapper.findMinDate(member.getUid());
+        Long result = null;
+        if (!object.isPresent()) {
             throw new BaseException(ErrorMessage.NOT_EXIST_RECORD);
-
         } else {
+            result = object.get().getUid();
             //보내지 않은 가족이 존재하다면 보내줘야함
             //돌면서 안보낸 가족이 있는지 확인을 해야함
             for (Long l1 : allaccount) {
                 if (!l1.equals(member.getUid())) {
-                    System.out.println("현재 찾고있는 가족들 " +l1.toString());
-
                     Map<String, Object> map = new HashMap<>();
                     map.put("member_from", member.getUid());
                     map.put("member_to", l1);
                     int check = movieMapper.findMovieCount(map);
                     if (check == 0) {
                         result = l1;
+                        checkz = 1;
                         break;
                     }
                 }
             }
         }
-
+        Map<String, Object> response = new HashMap<>();
         Member mm = memberMapper.findUserByUid(result).get();
-        System.out.println(mm.getName());
 
-        return mm.getName();
+        response.put("name", mm.getName());
+        if (checkz == 1) {
+            response.put("date", "-1");
+        } else {
+            response.put("date", object.get().getSdate());
+        }
 
+        return response;
     }
 
 

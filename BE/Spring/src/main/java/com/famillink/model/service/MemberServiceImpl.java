@@ -105,6 +105,7 @@ public class MemberServiceImpl implements MemberService {
         } else {
             throw new BaseException(ErrorMessage.NOT_USER_INFO);
         }
+
     }
 
 

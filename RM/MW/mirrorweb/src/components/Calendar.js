@@ -16,52 +16,57 @@ function Calendar(){
     }));
 
     useEffect(()=>{
-        if(!memberAccessToken) return;
-        axios({
-        method: "get",
-        url: `http://i8a208.p.ssafy.io:3000/schedule/list/five-list`,
-        headers: {
-            "Authorization": `Bearer ${memberAccessToken}`
-          }
-        })
-        .then ((res) => {
-            
-            if (res.data.topList) {
-                const objectList = res.data.topList
-                let emptyList = []
-                for (let sched of objectList){                    
-                    var js_date = new Date(sched.date);
-                    js_date.setHours(js_date.getHours() - 9);
-                    // 연도, 월, 일 추출
-                    var year = js_date.getFullYear();
-                    var month = js_date.getMonth() + 1;
-                    var day = js_date.getDate();
-                
-                    var hour = js_date.getHours();
-                    var min = js_date.getMinutes();
-                    var sec = js_date.getSeconds();
-                
-                    // 월, 일의 경우 한자리 수 값이 있기 때문에 공백에 0 처리
-                    if (month < 10) {
-                        month = '0' + month;
-                    }
-
-                    if (day < 10) {
-                        day = '0' + day;
-                    }
-
-                    sched.parseDate=`${month}월 ${day}일`;
+        if (memberAccessToken) {
+            console.log("일정 요청 보낸다.")
+            axios({
+            method: "get",
+            url: `http://i8a208.p.ssafy.io:3000/schedule/list/five-list`,
+            headers: {
+                "Authorization": `Bearer ${memberAccessToken}`
+              }
+            })
+            .then ((res) => {
+                if (res.data.topList) {
+                    console.log("스케쥴이 있어")
+                    const objectList = res.data.topList
+                    let emptyList = []
+                    for (let sched of objectList){                    
+                        var js_date = new Date(sched.date);
+                        js_date.setHours(js_date.getHours() - 9);
+                        // 연도, 월, 일 추출
+                        var year = js_date.getFullYear();
+                        var month = js_date.getMonth() + 1;
+                        var day = js_date.getDate();
                     
-                    emptyList.push(sched)
+                        var hour = js_date.getHours();
+                        var min = js_date.getMinutes();
+                        var sec = js_date.getSeconds();
+                    
+                        // 월, 일의 경우 한자리 수 값이 있기 때문에 공백에 0 처리
+                        if (month < 10) {
+                            month = '0' + month;
+                        }
+    
+                        if (day < 10) {
+                            day = '0' + day;
+                        }
+    
+                        sched.parseDate=`${month}월 ${day}일`;
+                        
+                        emptyList.push(sched)
+                    }
+                    setSchedule00(emptyList);
+                    onsetSchedule(emptyList);
+                } 
+                else {
+                    console.log("스케쥴을 요청 보냈으나 존재하지 않았다.")
+                    setSchedule("일정이 없습니다.")
                 }
-                setSchedule00(emptyList);
-                onsetSchedule(emptyList);
-            } 
-            else console.log("일정이 없어")
-        })  
-        .catch ((err) => {
-            console.log(err)
-        })
+            })  
+            .catch ((err) => {
+                console.log(err)
+            })
+        }
     },[memberAccessToken])
         
 
