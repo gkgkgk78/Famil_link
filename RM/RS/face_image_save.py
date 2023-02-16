@@ -18,7 +18,7 @@ while True:
     if not ret:
         print("dont read cam")
         break
-    image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
+    # image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
     # client.publish("/local/opencv/", json.dumps(image, cls=NumpyArrayEncoder), 2)
 
     # Show the image in a window
