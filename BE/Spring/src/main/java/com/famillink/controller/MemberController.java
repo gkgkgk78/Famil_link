@@ -39,9 +39,9 @@ public class MemberController {
     private final MemberMapper mapper;
     private final PhotoService photoService;
 
-/*
-* required: com.famillink.model.domain.user.Member,org.springframework.security.core.Authentication
-  found: com.famillink.model.domain.user.Member_Login,org.springframework.web.multipart.MultipartFile,org.springframework.security.core.Authentication*/
+    /*
+    * required: com.famillink.model.domain.user.Member,org.springframework.security.core.Authentication
+      found: com.famillink.model.domain.user.Member_Login,org.springframework.web.multipart.MultipartFile,org.springframework.security.core.Authentication*/
     @ApiOperation(value = "회원가입", notes = "req_data : [name,nickname,account_token]")
     @PostMapping("/signup")
 
@@ -57,7 +57,7 @@ public class MemberController {
         }}, HttpStatus.OK);
     }
 
-//(@RequestBody @Validated(ValidationGroups.member_login.class) ImageDTO imageDTO
+    //(@RequestBody @Validated(ValidationGroups.member_login.class) ImageDTO imageDTO
     @ApiOperation(value = "개인멤버 로그인", notes = "req_data : [image file,uid]")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Validated(ValidationGroups.member_login.class) ImageDTO imageDTO, final Authentication authentication) throws Exception {
@@ -170,6 +170,22 @@ public class MemberController {
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("data", auth);
+        }}, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("")
+    @ApiOperation(value = "멤버 삭제", notes = "req data : token]")
+    public ResponseEntity<?> deleteMember(final Authentication authentication) throws Exception {
+
+        Member auth = (Member) authentication.getPrincipal();
+
+        memberservice.deleteMember(auth.getUid());
+
+
+        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+            put("result", true);
+            put("msg", "멤버 삭제 성공");
         }}, HttpStatus.OK);
     }
 
