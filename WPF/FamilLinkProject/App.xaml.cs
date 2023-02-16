@@ -1,4 +1,5 @@
-﻿using FamilLinkProject.Model.Service;
+﻿using FamilLinkProject.Core;
+using FamilLinkProject.Model.Service;
 using System;
 using System.Windows;
 
@@ -17,6 +18,7 @@ namespace FamilLinkProject
                 await MQTTService.OnMessage();
 
                 await MQTTService.Publish("/local/qr/", "1");
+                MemberData.Uid = -1;
                 base.OnStartup(e);
             }
             catch (Exception ex)

@@ -76,6 +76,7 @@ namespace FamilLinkProject.ViewModel
                                     }, DispatcherPriority.Loaded);
                                     Console.WriteLine("MainWIndowVM : 멤버 로그인에 성공하였습니다.");
 
+                                    MemberData.Name = myname;
 
                                     APIService.API("/movie/video-list", "GET", payload, MemberData.Token,
                                          (_url1, _json1) =>
@@ -104,7 +105,26 @@ namespace FamilLinkProject.ViewModel
                                                  }
                                                  else
                                                  {
-                                                     // TODO: 소통유도
+                                                     // 소통유도
+                                                     APIService.API("/movie/allmovie", "GET", null, MemberData.Token,
+                                                         (_url2, _json2) =>
+                                                         {
+                                                             if (_json2["result"].ToString().Equals("True"))
+                                                             {
+                                                                 payload = new JObject();
+
+                                                                 if (int.Parse(_json2["date"].ToString()) == -1)
+                                                                 {
+                                                                     // date가 -1이면 한번도 안보낸거
+                                                                     payload.Add("msg", myname + "님 " + _json2["name"] + " 한번도 연락하지 않으셨네요. 연락해보시는건 어떠신가요?");
+                                                                 }
+                                                                 else
+                                                                 {
+                                                                     payload.Add("msg", myname + "님 " + _json2["name"] + " 님과 연락하지 않은지 " + _json2["date"] + " 일이 지났습니다.");
+                                                                 }
+                                                                 MQTTService.Publish("/local/tts/", payload.ToString());
+                                                             }
+                                                         });
 
                                                  }
                                                  Console.WriteLine("MainWIndowVM : 멤버 로그인에 성공하였습니다.");

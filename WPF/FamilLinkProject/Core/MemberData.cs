@@ -16,5 +16,10 @@ namespace FamilLinkProject.Core
         {
             get; set;
         }
+
+        public static string Name
+        {
+            get; set;
+        }
     }
 }
