@@ -88,17 +88,15 @@
     <select id="getAccount" parameterType="long" resultType="long">
         select `uid`
         from member
-        where `user_uid`=${user_uid}
+        where `user_uid` = ${user_uid}
         order by `uid`;
     </select>
 
 
-
     <delete id="deleteMember" parameterType="long">
-        drop table member
+        delete from member
             where uid=#{uid}
     </delete>
-
 
 
 </mapper>
