@@ -94,4 +94,11 @@
 
 
 
+    <delete id="deleteMember" parameterType="long">
+        drop table member
+            where uid=#{uid}
+    </delete>
+
+
+
 </mapper>

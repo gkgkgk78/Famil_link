@@ -174,4 +174,20 @@ public class MemberController {
     }
 
 
+    @DeleteMapping("")
+    @ApiOperation(value = "멤버 삭제", notes = "req data : token]")
+    public ResponseEntity<?> deleteMember(final Authentication authentication) throws Exception {
+
+        Member auth = (Member) authentication.getPrincipal();
+
+
+
+
+
+        return ResponseEntity.status(HttpStatus.OK).body("delete OK");
+    }
+
+
+
+
 }
