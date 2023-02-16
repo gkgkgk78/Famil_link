@@ -70,7 +70,7 @@ while True:
                 print(name, percent)
         else:
             image = np.zeros((224, 224, 3), np.uint8)
-    cv2.imshow("dd", image)
+    # cv2.imshow("dd", image)
     idx += 1
 
     cv2.waitKey(1)  # MQTT 성능에 따라 유도리 있게 설정

@@ -102,6 +102,11 @@ namespace FamilLinkProject.ViewModel
                                                          ContentBindingModel.GetInstance().Page = new Movie();
                                                      }, DispatcherPriority.Loaded);
                                                  }
+                                                 else
+                                                 {
+                                                     // TODO: 소통유도
+
+                                                 }
                                                  Console.WriteLine("MainWIndowVM : 멤버 로그인에 성공하였습니다.");
 
                                              }
@@ -163,7 +168,8 @@ namespace FamilLinkProject.ViewModel
         {
             get
             {
-                return _timeTextBlock;
+                var temp = _timeTextBlock.Split(' ');
+                return temp[0] + "\n" + temp[1] + temp[2];
             }
 
             set

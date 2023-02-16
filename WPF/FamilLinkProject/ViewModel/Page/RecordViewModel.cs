@@ -17,6 +17,7 @@ namespace FamilLinkProject.ViewModel.Page
     public class RecordViewModel : NotifyPropertyChanged
     {
         private static bool isRecord = false;
+        private static bool listen = false;
 
         private EventHandler timerEvent;
         private DispatcherTimer timer = new DispatcherTimer();    //객체생성
@@ -31,6 +32,7 @@ namespace FamilLinkProject.ViewModel.Page
             JObject _payload = new JObject();
             _payload.Add("msg", "이름을 말씀해주세요.");
             instance.TimeTextBlock = 0;
+            listen = true;
             MQTTService.Publish("/local/tts/", _payload.ToString());
             return instance;
         }
@@ -64,9 +66,13 @@ namespace FamilLinkProject.ViewModel.Page
                     // 녹화시작
                     MQTTService.Publish("/local/record/", "1");
 
+                    JObject _payload = new JObject();
+                    _payload.Add("msg", "녹화를 시작합니다");
+                    MQTTService.Publish("/local/tts/", _payload.ToString());
+
                     MQTTService.UnSubscribe("/local/face/result/");
                     isRecord = true;
-
+                    listen = false;
 
                     timer.Interval = TimeSpan.FromMilliseconds(1000);    //시간간격 설정
                     timer.Tick += timerEvent;          //이벤트 추가
@@ -74,7 +80,7 @@ namespace FamilLinkProject.ViewModel.Page
                 }
                 else
                 {
-                    if (!isRecord && !name.Contains("녹화") && name.Length < 10)
+                    if (!isRecord && listen)
                     {
                         JObject _payload = new JObject();
                         _payload.Add("msg", "다시 한 번 말씀해주세요.");
@@ -92,7 +98,9 @@ namespace FamilLinkProject.ViewModel.Page
                 timer.Tick -= timerEvent;
                 // 녹화 중지
                 MQTTService.Publish("/local/record/", "0");
-
+                JObject _payload = new JObject();
+                _payload.Add("msg", "녹화를 종료합니다");
+                MQTTService.Publish("/local/tts/", _payload.ToString());
                 MQTTService.Subscribe("/local/face/result/");
                 isRecord = false;
                 Application.Current.Dispatcher.InvokeAsync(delegate
