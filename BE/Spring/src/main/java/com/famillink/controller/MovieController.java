@@ -125,12 +125,17 @@ public class MovieController {
         Map<String, Object> occur = movieService.getAccountList(member);
         Map<String, Object> responseResult = new HashMap<>();
 
+        if (occur==null)
 
-        responseResult.put("msg", "동영상 알림 보낼 가족이 존재합니다.");
-        responseResult.put("result", true);
-        responseResult.put("name", occur.get("name"));
-        responseResult.put("date", occur.get("date"));
-
+        {
+            responseResult.put("result", false);
+        }
+        else {
+            responseResult.put("msg", "동영상 알림 보낼 가족이 존재합니다.");
+            responseResult.put("result", true);
+            responseResult.put("name", occur.get("name"));
+            responseResult.put("date", occur.get("date"));
+        }
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 
