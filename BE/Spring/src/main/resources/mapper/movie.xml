@@ -46,13 +46,13 @@
         LIMIT 0, 5;
     </select>
 
-    <select id="findMinDate" parameterType="long" resultType="long">
-        select member_to
+    <select id="findMinDate" parameterType="long" resultType="MovieOccur">
+        select member_to,datediff(CURRENT_TIMESTAMP(),sdate)
         from movie
         where sdate=(
             select min(sdate)
             from movie
-            where member_from=#{uid});
+            where member_from=#{uid_from} and member_to!=#{uid_from} );
 
     </select>
 

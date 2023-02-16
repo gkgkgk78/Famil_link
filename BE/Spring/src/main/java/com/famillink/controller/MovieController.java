@@ -1,6 +1,7 @@
 package com.famillink.controller;
 
 import com.famillink.model.domain.param.MovieDTO;
+import com.famillink.model.domain.param.MovieOccur;
 import com.famillink.model.domain.param.MovieSenderDTO;
 import com.famillink.model.domain.user.Account;
 import com.famillink.model.domain.user.Member;
@@ -121,13 +122,15 @@ public class MovieController {
     public ResponseEntity<?> getMovieTo(Authentication authentication) throws Exception {
 
         Member member = (Member) authentication.getPrincipal();
-        String name=movieService.getAccountList(member);
+        Map<String, Object> occur = movieService.getAccountList(member);
         Map<String, Object> responseResult = new HashMap<>();
 
 
         responseResult.put("msg", "동영상 알림 보낼 가족이 존재합니다.");
         responseResult.put("result", true);
-        responseResult.put("data",name);
+        responseResult.put("name", occur.get("name"));
+        responseResult.put("date", occur.get("date"));
+
         return ResponseEntity.status(HttpStatus.OK).body(responseResult);
     }
 

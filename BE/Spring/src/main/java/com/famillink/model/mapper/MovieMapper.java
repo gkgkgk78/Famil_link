@@ -1,12 +1,14 @@
 package com.famillink.model.mapper;
 
 import com.famillink.model.domain.param.MovieDTO;
+import com.famillink.model.domain.param.MovieOccur;
 import com.famillink.model.domain.param.MovieSenderDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Mapper
 public interface MovieMapper {
@@ -25,7 +27,7 @@ public interface MovieMapper {
 
 
 // <select id="findMinDate" parameterType="long" resultType="long">
-    Long findMinDate(Long user_uid) throws Exception;
+    Optional<MovieOccur> findMinDate(Long user_uid) throws Exception;
 
 // <select id="findMovieCount" parameterType="hashMap" resultType="int">
     int findMovieCount(Map<String,Object> map) throws Exception;
