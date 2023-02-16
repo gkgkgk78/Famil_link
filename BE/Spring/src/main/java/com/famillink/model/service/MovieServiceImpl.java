@@ -160,12 +160,12 @@ public class MovieServiceImpl implements MovieService {
         }
         Map<String, Object> response = new HashMap<>();
         Member mm = memberMapper.findUserByUid(result).get();
-
         response.put("name", mm.getName());
+
         if (checkz == 1) {
             response.put("date", "-1");
         } else {
-            response.put("date", object.get().getSdate());
+            response.put("date", object.get().getAbsent());
         }
 
         return response;
