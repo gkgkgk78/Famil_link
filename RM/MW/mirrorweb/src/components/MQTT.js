@@ -103,7 +103,9 @@ function MQTT() {
           client.publish("/local/qr/","1")
         })
       } else if (topic === "/local/sound/") {
-        setSoundData(JSON.parse(message.text))
+        console.log(JSON.parse(message))
+        setSoundData(JSON.parse(message))
+        /* setSoundData(JSON.parse(message.text)) */
       }
     })
   }, [])
@@ -158,7 +160,7 @@ function MQTT() {
               saveMemberToken(res.data["access-token"])
               saveMemberRefreshToken(res.data["refresh-token"])
               saveMyname(userList[0].name)
-              console.log("로그인")
+              console.log(`${userList[0].name} 로그인`)
             })
             .catch((err) => {
               console.log(err)
@@ -203,7 +205,7 @@ function MQTT() {
                   saveMemberToken(res.data["access-token"])
                   saveMemberRefreshToken(res.data["refresh-token"])
                   saveMyname(userList[1].name)
-                  console.log("로그인")
+                  console.log(`${userList[1].name} 로그인`)
                 })
                 .catch((err) => {
                   console.log(err)
@@ -330,15 +332,18 @@ function MQTT() {
           }
         } else if (location.pathname === "/record") {
           if (toMember === null) {
-            if (Object.keys(memInfo).includes(soundData)) {
-              saveToMember(memInfo[soundData])
-              setSoundData("")
+            for (let mem in memInfo) {
+              if (soundData.includes(mem)) {
+                saveToMember(memInfo[mem])
+                setSoundData("")
+                break
+              }
+            }
             }
           }
         }
       } 
-    }
-  },[soundData])
+    },[soundData])
 
 
   const mounted00 = useRef(false);
