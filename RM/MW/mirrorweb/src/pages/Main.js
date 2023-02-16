@@ -28,7 +28,7 @@ const Main = () => {
           <div className='calendardiv'>
             <Calendar />  
           </div>
-          <Caption></Caption>
+          <Caption />
           <div className='tododiv'>
             <Todo />
           </div>

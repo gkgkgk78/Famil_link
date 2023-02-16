@@ -103,9 +103,8 @@ function MQTT() {
           client.publish("/local/qr/","1")
         })
       } else if (topic === "/local/sound/") {
-        console.log(JSON.parse(message))
-        setSoundData(JSON.parse(message))
-        /* setSoundData(JSON.parse(message.text)) */
+        console.log(message)
+        setSoundData(JSON.parse(message["text"]))
       }
     })
   }, [])
@@ -324,6 +323,7 @@ function MQTT() {
 
   useEffect(()=> {
     if (soundData) {
+      console.log(soundData)
       if (me) {
         if (location.pathname !== "/record") {
           if (soundData.includes("녹화") || soundData.includes("노콰")) {

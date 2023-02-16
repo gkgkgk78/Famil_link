@@ -70,7 +70,7 @@ const initialState = {
     ssecondition: false,
 
     todos: [],
-    schedules: false,
+    schedules: null,
     weather: false,
     caption:['안녕하세요'],
 }
