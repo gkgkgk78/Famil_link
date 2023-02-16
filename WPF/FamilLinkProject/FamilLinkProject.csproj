@@ -97,6 +97,7 @@
     <Compile Include="ViewModel\Page\MovieViewModel.cs" />
     <Compile Include="ViewModel\Page\QRLoginViewModel.cs" />
     <Compile Include="ViewModel\Page\RecordViewModel.cs" />
+    <Compile Include="ViewModel\Util\Command.cs" />
     <Compile Include="View\Controll\Weather.xaml.cs">
       <DependentUpon>Weather.xaml</DependentUpon>
     </Compile>

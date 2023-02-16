@@ -54,13 +54,14 @@ namespace FamilLinkProject.ViewModel.Page
                                 {
                                     Console.WriteLine("QRLoginVM : 로그인에 성공하였습니다.");
                                     AccountData.Uid = long.Parse(_json["data"]["uid"].ToString());
-                                    AccountData.Token = message;
+                                    AccountData.Token = message.Replace("\"", "");
                                     Application.Current.Dispatcher.InvokeAsync(delegate
                                     {
                                         ContentBindingModel.GetInstance().Page = new Main();
                                     }, DispatcherPriority.Loaded);
 
-                                    MQTTService.Subscribe("/local/face/result/");
+                                    // TODO: Face Recognition
+                                    //MQTTService.Subscribe("/local/face/result/");
                                 }
                             }
                             else
