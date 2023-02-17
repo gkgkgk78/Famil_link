@@ -2,6 +2,7 @@
 using FamilLinkProject.Model.Service;
 using FamilLinkProject.ViewModel;
 using FamilLinkProject.ViewModel.Page;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Xml.Linq;
 
 namespace FamilLinkProject.View.Page
 {
@@ -79,6 +81,20 @@ namespace FamilLinkProject.View.Page
             if (!movieService())
             {
                 ContentBindingModel.GetInstance().Page = new Main();
+                // 소통유도
+                APIService.API("/movie/allmovie",
+                    "GET",
+                    null,
+                    MemberData.Token,
+                    (_url2, _json2) =>
+                    {
+                        if (_json2["result"].ToString().Equals("True"))
+                        {
+                            JObject payload = new JObject();
+                            payload.Add("msg", MemberData.Name + " 님 " + _json2["name"] + " 님과 연락하지 않은지 " + _json2["date"] + " 일이 지났습니다.");
+                            MQTTService.Publish("/local/tts/", payload.ToString());
+                        }
+                    });
             }
         }
     }

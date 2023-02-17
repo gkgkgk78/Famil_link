@@ -22,7 +22,7 @@ namespace FamilLinkProject.ViewModel.Page
             return instance;
         }
 
-        private string _textBlockBody = "얼굴인식중입니다.";
+        private string _textBlockBody = "얼굴인식 중입니다.";
         public string TextBlockBody
         {
             get
@@ -38,7 +38,8 @@ namespace FamilLinkProject.ViewModel.Page
 
         public MainViewModel()
         {
-            MQTTService.Subscribe("/local/face/result/");
+            // TODO: Face Recognition
+            //MQTTService.Subscribe("/local/face/result/");
 
             APIService.API("/account/member-list", "GET", null, AccountData.Token,
                         (url, _json) =>
