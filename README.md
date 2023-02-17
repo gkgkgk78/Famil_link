@@ -8,7 +8,7 @@
 
 ### 🎦 소개 영상 
 
-
+[Famil_link 소개영상](https://youtu.be/d2Xw3gKlAFk)
 
 ---
 
