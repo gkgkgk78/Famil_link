@@ -101,7 +101,9 @@ namespace FamilLinkProject.ViewModel.Page
                 JObject _payload = new JObject();
                 _payload.Add("msg", "녹화를 종료합니다");
                 MQTTService.Publish("/local/tts/", _payload.ToString());
-                MQTTService.Subscribe("/local/face/result/");
+
+                // TODO: Face Recognition
+                //MQTTService.Subscribe("/local/face/result/");
                 isRecord = false;
                 Application.Current.Dispatcher.InvokeAsync(delegate
                 {

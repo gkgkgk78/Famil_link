@@ -53,7 +53,8 @@ namespace FamilLinkProject.Model.Service
             }
             catch (Exception e)
             {
-                throw e;
+                Console.WriteLine(e.ToString());
+             //   throw e;
             }
         }
 

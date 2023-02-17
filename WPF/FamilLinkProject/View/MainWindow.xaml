@@ -11,6 +11,23 @@
         WindowStyle="None" Background="Black" WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" ShowInTaskbar="False"
         ResizeMode="CanResizeWithGrip">
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Alt"
+                    Key="A"
+                    Command="{Binding LogoutCommand}"/>
+
+        <KeyBinding Modifiers="Alt"
+                    Key="S"
+                    Command="{Binding CJWCommand}"/>
+
+        <KeyBinding Modifiers="Alt"
+                    Key="D"
+                    Command="{Binding JWJCommand}"/>
+
+        <KeyBinding Modifiers="Alt"
+                    Key="F"
+                    Command="{Binding CDHCommand}"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
