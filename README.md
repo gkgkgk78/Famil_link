@@ -112,6 +112,6 @@
 ### ✅ 프로젝트 결과물
 
 [중간 발표 자료](https://lab.ssafy.com/s08-webmobile2-sub2/S08P12A208/-/blob/master/PRESENTATION/A208%20%EA%B8%B0%ED%9A%8D%20%EB%B0%9C%ED%91%9C%EC%9E%90%EB%A3%8C.pdf)<br>
-[최종 발표 자료](https://lab.ssafy.com/s08-webmobile2-sub2/S08P12A208/-/blob/master/PRESENTATION/%EC%84%9C%EC%9A%B8_2%EB%B0%98_A208_%EB%B0%9C%ED%91%9C%EC%9E%90%EB%A3%8C.pdf)
+
 
 ---
