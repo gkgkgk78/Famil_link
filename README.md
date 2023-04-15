@@ -91,7 +91,7 @@
 
 ### ✅ 시스템 구성도
 
-![시스템구성도](exec/시스템 구성도.jpg)
+![시스템-구성도](https://user-images.githubusercontent.com/78834028/232195726-84da1552-ba36-49cf-8316-9fc89463e6c4.jpg)
 
 ---
 
